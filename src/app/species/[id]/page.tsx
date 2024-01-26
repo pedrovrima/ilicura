@@ -1,37 +1,47 @@
-import { unstable_noStore as noStore } from "next/cache";
+import AddMoltStrategy from "@/app/_components/add-molt-strategy";
+import AddMoltExtension from "@/app/_components/add-molt-extension";
 import { api } from "@/trpc/server";
+import { moltStrategies } from "@/server/db/schema";
+import DeleteMoltStrategy from "@/app/_components/delete-molt-strategy";
 
-export default async function Home() {
-  noStore();
-  const hello = await api.species.hello.query({ text: "from tRPC" });
+export default async function Home({ params }: { params: { id: string } }) {
+  const id = +params.id;
+  if (!id) return <p>no id</p>;
+
+  const speciesData = await api.species.getById.query({ id });
+
+  if (!speciesData) return <p>no data</p>;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#65590c] to-[#272c15] text-white">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-        <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-          Wiki<span className="text-[hsl(50,100%,70%)]">Mudas</span>
-        </h1>
-
-        <CrudShowcase />
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-extrabold italic tracking-tight ">
+            {speciesData.scientificName}
+          </h1>
+          <p className="text-xl  ">{speciesData.ptName}</p>
+          <p className="text-xl ">{speciesData.enName}</p>
+        </div>
+        <div>
+          <h2 className="text-2xl font-bold">Molt Strategies</h2>
+          <p>
+            {speciesData.moltStrategies?.map((strategy, i) => (
+              <span key={strategy?.id}>
+                {i > 0 && " / "}
+                {strategy?.strategy}
+              </span>
+            ))}
+          </p>
+        </div>
       </div>
-    </main>
-  );
-}
-
-async function CrudShowcase() {
-  const latestPost = await api.species.getAll.query();
-
-  return (
-    <div className="w-full max-w-xs">
-      {latestPost.length > 0 ? (
-        latestPost.map((post) => (
-          <div key={post.id} className="flex flex-col gap-2">
-            <h3 className="text-2xl font-bold">{post.scientificName}</h3>
-          </div>
-        ))
-      ) : (
-        <p>You have no posts yet.</p>
+      {speciesData.moltStrategies && (
+        <DeleteMoltStrategy
+          speciesId={id}
+          moltStrategies={speciesData.moltStrategies}
+        />
       )}
-    </div>
+      <AddMoltStrategy speciesId={id} />
+      <AddMoltExtension speciesId={id} />
+    </main>
   );
 }

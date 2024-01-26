@@ -131,19 +131,10 @@ export const moltStrategies = createTable("molt_strategy", {
   speciesId: integer("species_id").references(() => species.id),
 });
 
-export const speciesMolt = createTable("species_molt", {
+export const speciesMoltExtensions = createTable("species_molt_extensions", {
   id: serial("id").primaryKey(),
   speciesId: integer("species_id").references(() => species.id),
   moltType: moltTypesEnum("molt_type"),
-  createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: timestamp("updatedAt"),
-});
-
-export const speciesMoltExtensions = createTable("species_molt_extensions", {
-  id: serial("id").primaryKey(),
-  speciesMoltId: integer("species_molt_id").references(() => speciesMolt.id),
   extension: moltExtensionEnum("extension"),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
