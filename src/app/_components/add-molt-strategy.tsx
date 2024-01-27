@@ -1,13 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { api } from "@/trpc/react";
 import { moltStrategiesEnum } from "@/server/db/schema";
 
 export default function AddMoltStrategy({ speciesId }: { speciesId: number }) {
-  const router = useRouter();
   const [strategy, setStrategy] = useState<"SBS" | "SAS" | "CBS" | "CAS" | "">(
     "",
   ); // Set initial value to an empty string

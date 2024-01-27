@@ -16,7 +16,7 @@ export default function DeleteMoltStrategy({
   return (
     <div>
       {moltStrategies?.map((strategy) => (
-        <div>
+        <div key={strategy.id}>
           <p>{strategy?.strategy}</p>
           <button
             onClick={() =>
