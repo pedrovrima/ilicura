@@ -65,6 +65,17 @@ export const speciesInfoRouter = createTRPCRouter({
         .where(eq(speciesMoltExtensions.id, input.id));
     }),
 
+  getSpeciesRawMoltExtensions: publicProcedure
+    .input(z.object({ speciesId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .select()
+        .from(speciesMoltExtensions)
+        .where(eq(speciesMoltExtensions.speciesId, input.speciesId));
+
+      return data;
+    }),
+
   getSpeciesMoltExtensions: publicProcedure
     .input(z.object({ speciesId: z.number() }))
     .query(async ({ ctx, input }) => {

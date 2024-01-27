@@ -11,6 +11,7 @@ import {
   integer,
   pgEnum,
   boolean,
+  unique,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -131,16 +132,26 @@ export const moltStrategies = createTable("molt_strategy", {
   speciesId: integer("species_id").references(() => species.id),
 });
 
-export const speciesMoltExtensions = createTable("species_molt_extensions", {
-  id: serial("id").primaryKey(),
-  speciesId: integer("species_id").references(() => species.id),
-  moltType: moltTypesEnum("molt_type"),
-  extension: moltExtensionEnum("extension"),
-  createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: timestamp("updatedAt"),
-});
+export const speciesMoltExtensions = createTable(
+  "species_molt_extensions",
+  {
+    id: serial("id").primaryKey(),
+    speciesId: integer("species_id").references(() => species.id),
+    moltType: moltTypesEnum("molt_type"),
+    extension: moltExtensionEnum("extension"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+  (table) => ({
+    uniqueTest: unique("extension").on(
+      table.speciesId,
+      table.moltType,
+      table.extension,
+    ),
+  }),
+);
 
 export const sexualDimorphism = createTable("sexual_dimorphism", {
   id: serial("id").primaryKey(),

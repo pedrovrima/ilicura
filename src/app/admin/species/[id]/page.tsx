@@ -1,4 +1,9 @@
+import AddMoltStrategy from "@/components/admin-mode/molt-strategy/add-molt-strategy";
+import AddMoltExtension from "@/components/admin-mode/add-molt-extension";
 import { api } from "@/trpc/server";
+import { moltStrategies } from "@/server/db/schema";
+import DeleteMoltStrategy from "@/components/admin-mode/molt-strategy/delete-molt-strategy";
+import { AdminMode } from "@/components/admin-mode/admin-mode";
 
 export default async function Home({ params }: { params: { id: string } }) {
   const id = +params.id;
@@ -15,23 +20,8 @@ export default async function Home({ params }: { params: { id: string } }) {
           <h1 className="text-3xl font-extrabold italic tracking-tight ">
             {speciesData.scientificName}
           </h1>
-          <p className="text-xl  ">{speciesData.ptName}</p>
-          <p className="text-xl ">{speciesData.enName}</p>
         </div>
-        <div>
-          <h2 className="text-2xl font-bold">Molt Strategies</h2>
-          <p>
-            <span className="text-gray-600">
-              {speciesData.moltStrategies.length === 0 && "Sem registros"}
-            </span>
-            {speciesData.moltStrategies?.map((strategy, i) => (
-              <span key={strategy?.id}>
-                {i > 0 && " / "}
-                {strategy?.strategy}
-              </span>
-            ))}
-          </p>
-        </div>
+        <AdminMode id={id} />
       </div>
     </main>
   );

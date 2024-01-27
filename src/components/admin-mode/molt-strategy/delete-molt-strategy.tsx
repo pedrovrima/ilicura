@@ -1,37 +1,36 @@
 "use client";
 
+import DeleteButton from "@/components/ui/delete-button";
 import { moltStrategies as strategiesType } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 
 export default function DeleteMoltStrategy({
-  speciesId,
   moltStrategies,
+  refetch,
 }: {
-  speciesId: number;
   moltStrategies: (typeof strategiesType.$inferSelect)[];
+  refetch: () => void;
 }) {
   const deleteStrategy = api.speciesInfo.deleteSpeciesStrategy.useMutation();
 
-  console.log(moltStrategies);
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       {moltStrategies?.map((strategy) => (
-        <div key={strategy.id}>
+        <div key={strategy.id} className="flex items-center justify-between">
           <p>{strategy?.strategy}</p>
-          <button
+          <DeleteButton
             onClick={() =>
               deleteStrategy.mutate(
                 { id: strategy.id },
                 {
                   onSuccess: () => {
-                    console.log("deleted ");
+                    refetch();
                   },
                 },
               )
             }
-          >
-            delete
-          </button>
+            isLoading={deleteStrategy.isLoading}
+          />
         </div>
       ))}
     </div>
