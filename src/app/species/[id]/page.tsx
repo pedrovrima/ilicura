@@ -21,7 +21,7 @@ export default async function Home({ params }: { params: { id: string } }) {
         <div>
           <h2 className="text-2xl font-bold">Molt Strategies</h2>
           <p>
-            <span className="text-gray-600">
+            <span className="text-gray-600  ">
               {speciesData.moltStrategies.length === 0 && "Sem registros"}
             </span>
             {speciesData.moltStrategies?.map((strategy, i) => (

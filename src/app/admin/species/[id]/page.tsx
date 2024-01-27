@@ -1,8 +1,4 @@
-import AddMoltStrategy from "@/components/admin-mode/molt-strategy/add-molt-strategy";
-import AddMoltExtension from "@/components/admin-mode/add-molt-extension";
 import { api } from "@/trpc/server";
-import { moltStrategies } from "@/server/db/schema";
-import DeleteMoltStrategy from "@/components/admin-mode/molt-strategy/delete-molt-strategy";
 import { AdminMode } from "@/components/admin-mode/admin-mode";
 
 export default async function Home({ params }: { params: { id: string } }) {

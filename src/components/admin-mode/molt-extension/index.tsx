@@ -1,7 +1,5 @@
 "use client";
 
-import { moltStrategies as strategiesType } from "@/server/db/schema";
-import DeleteButton from "@/components/ui/delete-button";
 import { api } from "@/trpc/react";
 import AddMoltExtension from "./add-molt-extension";
 import DeleteMoltExtension from "./delete-molt-extension";
