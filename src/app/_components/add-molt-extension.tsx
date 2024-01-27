@@ -11,7 +11,7 @@ const moltTypes = moltTypesEnum.enumValues;
 type moltExtesionsType = (typeof moltExtensions)[number];
 type moltTypesType = (typeof moltTypes)[number];
 
-export default function addMoltExtension({ speciesId }: { speciesId: number }) {
+export default function AddMoltExtension({ speciesId }: { speciesId: number }) {
   const [extension, setExtension] = useState<moltExtesionsType>(); // Set initial value to an empty string
   const [moltType, setMoltType] = useState<moltTypesType>();
 
