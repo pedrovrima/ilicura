@@ -8,6 +8,7 @@ export default async function Home({ params }: { params: { id: string } }) {
   const speciesData = await api.species.getById.query({ id });
 
   type moltTypesType = (typeof moltTypesEnum.enumValues)[number];
+  type moltExtesionsType = (typeof moltExtensionEnum.enumValues)[number];
 
   if (!speciesData) return <p>no data</p>;
 
@@ -22,7 +23,20 @@ export default async function Home({ params }: { params: { id: string } }) {
           <p className="text-xl ">{speciesData.enName}</p>
         </div>
         <div>
-          <h2 className="text-2xl font-bold">Molt Strategies</h2>
+          <h2 className="text-2xl font-bold">Crânio</h2>
+          <p>
+            <span className="text-gray-600  ">
+              {speciesData.skull.length === 0 && "Sem registros"}
+            </span>
+          </p>
+          {speciesData.skull?.map((strategy, i) => (
+            <p key={strategy?.id}>
+              {strategy?.closes ? "Fecha" : "Não fecha"}: {strategy?.notes}
+            </p>
+          ))}
+        </div>
+        <div>
+          <h2 className="text-2xl font-bold">Estratégias de Muda</h2>
           <p>
             <span className="text-gray-600  ">
               {speciesData.moltStrategies.length === 0 && "Sem registros"}
@@ -56,12 +70,23 @@ export default async function Home({ params }: { params: { id: string } }) {
                 .map((extension, i) => (
                   <li key={extension?.moltType}>
                     {extension?.moltType}:{" "}
-                    {extension?.extensions.map((ext, i) => (
-                      <span key={ext.id}>
-                        {i > 0 && ", "}
-                        {ext.extension}
-                      </span>
-                    ))}
+                    {extension?.extensions
+                      .sort(
+                        (a, b) =>
+                          moltExtensionEnum.enumValues.indexOf(
+                            a.extension as moltExtesionsType,
+                          ) -
+                          moltExtensionEnum.enumValues.indexOf(
+                            b.extension as moltExtesionsType,
+                          ),
+                      )
+
+                      .map((ext, i) => (
+                        <span key={ext.id}>
+                          {i > 0 && ", "}
+                          {ext.extension}
+                        </span>
+                      ))}
                   </li>
                 ))}
             </ul>

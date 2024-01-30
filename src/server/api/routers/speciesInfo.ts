@@ -7,11 +7,33 @@ import {
   moltStrategies,
   moltStrategiesEnum,
   moltTypesEnum,
+  skull,
   species,
   speciesMoltExtensions,
 } from "@/server/db/schema";
 
 export const speciesInfoRouter = createTRPCRouter({
+  addSpeciesSkullInfo: publicProcedure
+    .input(
+      z.object({
+        speciesId: z.number(),
+        closes: z.boolean(),
+        notes: z.string(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.db.insert(skull).values({
+        speciesId: input.speciesId,
+        closes: input.closes,
+        notes: input.notes,
+      });
+    }),
+  deleteSpeciesSkullInfo: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.db.delete(skull).where(eq(skull.id, input.id));
+    }),
+
   addSpeciesStrategy: publicProcedure
     .input(
       z.object({
@@ -73,6 +95,16 @@ export const speciesInfoRouter = createTRPCRouter({
         .from(speciesMoltExtensions)
         .where(eq(speciesMoltExtensions.speciesId, input.speciesId));
 
+      return data;
+    }),
+
+  getSkullInfo: publicProcedure
+    .input(z.object({ speciesId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .select()
+        .from(skull)
+        .where(eq(skull.speciesId, input.speciesId));
       return data;
     }),
 

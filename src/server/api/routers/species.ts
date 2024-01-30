@@ -6,12 +6,14 @@ import {
   moltStrategies,
   species,
   speciesMoltExtensions,
+  skull,
 } from "@/server/db/schema";
 
 type SpeciesData = typeof species.$inferSelect;
 
 interface SpeciesByIdReturn extends SpeciesData {
   moltStrategies: (typeof moltStrategies.$inferSelect)[] | [];
+  skull: (typeof skull.$inferSelect)[] | [];
   moltExtensions: {
     moltType: string;
     extensions: { id: number; extension: string }[];
@@ -32,6 +34,11 @@ export const speciesRouter = createTRPCRouter({
         .select()
         .from(speciesMoltExtensions)
         .where(eq(speciesMoltExtensions.speciesId, input.id));
+
+      const skullData = await ctx.db
+        .select()
+        .from(skull)
+        .where(eq(skull.speciesId, input.id));
 
       //group extensionData by moltType, using it as moltType key
       const groupedExtensions = extensionsData.reduce(
@@ -73,6 +80,7 @@ export const speciesRouter = createTRPCRouter({
         ...speciesData,
         moltStrategies:
           moltStrategiesData as (typeof moltStrategies.$inferSelect)[],
+        skull: skullData as (typeof skull.$inferSelect)[],
         moltExtensions: groupedExtensions as {
           moltType: string;
           extensions: { id: number; extension: string }[];
