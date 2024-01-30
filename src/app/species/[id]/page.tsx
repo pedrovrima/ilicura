@@ -1,10 +1,13 @@
 import { api } from "@/trpc/server";
+import { moltExtensionEnum, moltTypesEnum } from "@/server/db/schema";
 
 export default async function Home({ params }: { params: { id: string } }) {
   const id = +params.id;
   if (!id) return <p>no id</p>;
 
   const speciesData = await api.species.getById.query({ id });
+
+  type moltTypesType = (typeof moltTypesEnum.enumValues)[number];
 
   if (!speciesData) return <p>no data</p>;
 
@@ -31,6 +34,38 @@ export default async function Home({ params }: { params: { id: string } }) {
               </span>
             ))}
           </p>
+        </div>
+        <div>
+          <h2 className="text-2xl font-bold">Extensões de Muda</h2>
+          <div>
+            {speciesData.moltExtensions.length === 0 && (
+              <p className="text-gray-600  ">Sem registros</p>
+            )}
+            <ul>
+              {speciesData.moltExtensions
+                ?.sort(
+                  //sort by enum order
+                  (a, b) =>
+                    moltTypesEnum.enumValues.indexOf(
+                      a.moltType as moltTypesType,
+                    ) -
+                    moltTypesEnum.enumValues.indexOf(
+                      b.moltType as moltTypesType,
+                    ),
+                )
+                .map((extension, i) => (
+                  <li key={extension?.moltType}>
+                    {extension?.moltType}:{" "}
+                    {extension?.extensions.map((ext, i) => (
+                      <span key={ext.id}>
+                        {i > 0 && ", "}
+                        {ext.extension}
+                      </span>
+                    ))}
+                  </li>
+                ))}
+            </ul>
+          </div>
         </div>
       </div>
     </main>
