@@ -49,7 +49,7 @@ export default function AddSkull({
         e.preventDefault();
         if (skullData.closes === undefined) return; // If the value is an empty string, return early
         addSkull.mutate(
-          { speciesId, notes: skullData.notes || "", closes: skullData.closes },
+          { speciesId, notes: skullData.notes ?? "", closes: skullData.closes },
           {
             onSuccess: () => {
               console.log("sucess");
