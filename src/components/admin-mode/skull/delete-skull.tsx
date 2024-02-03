@@ -2,6 +2,7 @@
 
 import DeleteButton from "@/components/ui/delete-button";
 import { skull as skullTable } from "@/server/db/schema";
+import { skullEnumTranslation } from "@/translations/translation";
 import { api } from "@/trpc/react";
 
 export default function DeleteSkull({
@@ -17,7 +18,9 @@ export default function DeleteSkull({
     <div className="flex flex-col gap-4">
       {skullData?.map((skullDatum) => (
         <div key={skullDatum.id} className="flex items-center justify-between">
-          <p>{`${skullDatum.closes}: ${skullDatum.notes}`}</p>
+          <p>{`${
+            skullEnumTranslation[skullDatum.closes]
+          }: ${skullDatum.notes}`}</p>
           <DeleteButton
             onClick={() =>
               deleteSkull.mutate(

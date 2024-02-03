@@ -3,21 +3,56 @@ import { eq } from "drizzle-orm";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import {
+  agesEnum,
   moltExtensionEnum,
   moltStrategies,
   moltStrategiesEnum,
   moltTypesEnum,
+  sexualDimorphism,
   skull,
+  skullClosesEnum,
   species,
   speciesMoltExtensions,
 } from "@/server/db/schema";
 
 export const speciesInfoRouter = createTRPCRouter({
+  addSexualDimorphism: publicProcedure
+    .input(
+      z.object({
+        speciesId: z.number(),
+        sexualDimorphism: z.boolean(),
+        age: z.enum(agesEnum.enumValues),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.db.insert(sexualDimorphism).values({
+        speciesId: input.speciesId,
+        sexualDimorphism: input.sexualDimorphism,
+        age: input.age,
+      });
+    }),
+  deleteSexualDimorphism: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.db
+        .delete(sexualDimorphism)
+        .where(eq(sexualDimorphism.id, input.id));
+    }),
+  getSexualDimorphism: publicProcedure
+    .input(z.object({ speciesId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .select()
+        .from(sexualDimorphism)
+        .where(eq(sexualDimorphism.speciesId, input.speciesId));
+      return data;
+    }),
+
   addSpeciesSkullInfo: publicProcedure
     .input(
       z.object({
         speciesId: z.number(),
-        closes: z.boolean(),
+        closes: z.enum(skullClosesEnum.enumValues),
         notes: z.string(),
       }),
     )
@@ -72,7 +107,6 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(({ ctx, input }) => {
-      console.log(input);
       return ctx.db.insert(speciesMoltExtensions).values({
         speciesId: input.speciesId,
         moltType: input.moltType,

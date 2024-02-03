@@ -29,6 +29,19 @@ export const moltStrategiesEnum = pgEnum("molt_strategies_enum", [
   "CAS",
 ]);
 
+export const moltLimitsEnum = pgEnum("molt_limits_enum", [
+  "alula",
+  "body",
+  "primaries",
+  "secondaries",
+  "tertials",
+  "great coverts",
+  "lesser-median coverts",
+  "vs great-coverts and primaries",
+  "primary coverts",
+  "underwing coverts",
+]);
+
 export const moltExtensionEnum = pgEnum("molt_extension_enum", [
   "complete",
   "incomplete",
@@ -52,7 +65,7 @@ export const moltTypesEnum = pgEnum("molt_types_enum", [
   "4PA",
 ]);
 
-export const agesEnum = pgEnum("molt_types_enum", [
+export const agesEnum = pgEnum("ages_enum", [
   "FCJ",
   "FCF",
   "FCA",
@@ -82,6 +95,12 @@ export const agesEnum = pgEnum("molt_types_enum", [
   "M-6CA",
 ]);
 
+export const skullClosesEnum = pgEnum("skull_closes_enum", [
+  "true",
+  "maybe",
+  "false",
+]);
+
 export const families = createTable(
   "families",
   {
@@ -97,9 +116,20 @@ export const families = createTable(
   }),
 );
 
+export const familiesInfo = createTable("families_info", {
+  id: serial("id").primaryKey(),
+  familyId: integer("family_id").references(() => families.id),
+  description: varchar("description", { length: 512 }),
+  n_primary_feathers: integer("n_primary_feathers"),
+  n_secondary_feathers: integer("n_secondary_feathers"),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
+});
+
 export const genus = createTable("genus", {
   id: serial("id").primaryKey(),
-
   genusName: varchar("name", { length: 256 }),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
@@ -110,7 +140,6 @@ export const genus = createTable("genus", {
 
 export const species = createTable("species", {
   id: serial("id").primaryKey(),
-
   scientificName: varchar("scientificName", { length: 256 }),
   ptName: varchar("ptName", { length: 256 }),
   enName: varchar("enName", { length: 256 }),
@@ -121,9 +150,30 @@ export const species = createTable("species", {
   genusId: integer("genus_id").references(() => genus.id),
 });
 
+export const totalCapturesBySpecies = createTable("total_captures_by_species", {
+  id: serial("id").primaryKey(),
+  speciesId: integer("species_id").references(() => species.id),
+  total: integer("total"),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
+});
+
+export const moltLimits = createTable("molt_limits", {
+  id: serial("id").primaryKey(),
+  speciesId: integer("species_id").references(() => species.id),
+  age: agesEnum("age"),
+  limit: moltLimitsEnum("limit"),
+  notes: varchar("notes", { length: 256 }),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
+});
+
 export const moltStrategies = createTable("molt_strategy", {
   id: serial("id").primaryKey(),
-
   strategy: moltStrategiesEnum("strategy"),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
@@ -167,7 +217,7 @@ export const sexualDimorphism = createTable("sexual_dimorphism", {
 export const skull = createTable("skull", {
   id: serial("id").primaryKey(),
   speciesId: integer("species_id").references(() => species.id),
-  closes: boolean("skull"),
+  closes: skullClosesEnum("closes"),
   notes: varchar("notes", { length: 256 }),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)

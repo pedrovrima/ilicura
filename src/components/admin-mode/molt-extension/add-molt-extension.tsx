@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { moltExtensionEnumTranslation } from "@/translations/translation";
 
 const moltExtensions = moltExtensionEnum.enumValues;
 const moltTypes = moltTypesEnum.enumValues;
@@ -76,7 +77,7 @@ export default function AddMoltExtension({
         <SelectContent>
           {moltExtensions.map((extension) => (
             <SelectItem key={extension} value={extension}>
-              {extension}
+              {moltExtensionEnumTranslation[extension as moltExtesionsType]}
             </SelectItem>
           ))}
         </SelectContent>
