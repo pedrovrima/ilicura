@@ -25,7 +25,7 @@ export default function SpeciesSearch() {
         className="w-[600px]"
         onChange={(e) => setSearchValue(e.target.value)}
       />
-      {(search.data || search.isFetching) && (
+      {(search.data ?? search.isFetching) && (
         <div className="bg-white   text-black">
           {search.isFetching ? (
             <div className="px-4 py-2 ">
