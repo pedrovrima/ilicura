@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import * as jose from "jose";
+
 import ImageKit from "imagekit";
 
 type FileWithPreview = File & { preview: string };
@@ -53,7 +53,7 @@ export default function Dropzone() {
           data.append("useUniqueFileName", "true");
 
           const upload = await imagek.upload({
-            //@ts-ignore next line
+            //@ts-expect-error next line
             file: file,
             fileName: file.name,
             useUniqueFileName: true,
@@ -74,7 +74,9 @@ export default function Dropzone() {
     <section className="container">
       <div {...getRootProps({ className: "dropzone" })}>
         <input {...getInputProps()} />
-        <p>Drag 'n' drop some files here, or click to select files</p>
+        <p>
+          Drag `&apos;`n`&apos;` drop some files here, or click to select files
+        </p>
       </div>
       <aside className="mt-[16px] flex flex-row flex-wrap">{thumbs}</aside>
     </section>

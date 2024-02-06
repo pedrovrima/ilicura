@@ -1,7 +1,7 @@
 "use client";
 
 import DeleteButton from "@/components/ui/delete-button";
-import { speciesMoltExtensions as sppMoltExtensions } from "@/server/db/schema";
+import type { speciesMoltExtensions as sppMoltExtensions } from "@/server/db/schema";
 import { moltExtensionEnumTranslation } from "@/translations/translation";
 import { api } from "@/trpc/react";
 
@@ -20,9 +20,7 @@ export default function DeleteMoltExtension({
       {moltExtensions?.map((extension) => (
         <div key={extension.id} className="flex items-center justify-between">
           <p>{`${extension.moltType}: ${
-            moltExtensionEnumTranslation[
-              extension.extension as keyof typeof moltExtensionEnumTranslation
-            ]
+            moltExtensionEnumTranslation[extension.extension!]
           }`}</p>
           <DeleteButton
             onClick={() =>

@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { moltExtensionEnumTranslation } from "@/translations/translation";
+
 import { Textarea } from "@/components/ui/textarea";
 
 const agesEnum = _agesEnum.enumValues;
@@ -30,7 +30,7 @@ type moltLimitObject = {
   notes: string | undefined;
 };
 
-export default function addMoltLimit({
+export default function AddMoltLimit({
   speciesId,
   refetch,
 }: {

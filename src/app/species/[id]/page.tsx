@@ -35,10 +35,9 @@ export default async function Home({ params }: { params: { id: string } }) {
           {speciesData.sexualDimorphism
             ?.sort(
               (a, b) =>
-                agesEnumValues.indexOf(a.age as agesType) -
-                agesEnumValues.indexOf(b.age as agesType),
+                agesEnumValues.indexOf(a.age!) - agesEnumValues.indexOf(b.age!),
             )
-            .map((sexDim, i) => (
+            .map((sexDim) => (
               <p key={sexDim?.id}>
                 {sexDim?.age}: {sexDim?.sexualDimorphism ? "Sim" : "Não"}
               </p>
@@ -51,7 +50,7 @@ export default async function Home({ params }: { params: { id: string } }) {
               {speciesData.skull.length === 0 && "Sem registros"}
             </span>
           </p>
-          {speciesData.skull?.map((strategy, i) => {
+          {speciesData.skull?.map((strategy) => {
             if (strategy.closes)
               return (
                 <p key={strategy?.id}>
@@ -88,7 +87,7 @@ export default async function Home({ params }: { params: { id: string } }) {
                   agesEnumValues.indexOf(a.age as agesType) -
                   agesEnumValues.indexOf(b.age as agesType),
               )
-              .map((limit, i) => (
+              .map((limit) => (
                 <li key={limit.age}>
                   {limit?.age}:{" "}
                   {limit.limits.map(
@@ -118,7 +117,7 @@ export default async function Home({ params }: { params: { id: string } }) {
                       b.moltType as moltTypesType,
                     ),
                 )
-                .map((extension, i) => (
+                .map((extension) => (
                   <li key={extension?.moltType}>
                     {extension?.moltType}:{" "}
                     {extension?.extensions
