@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { eq } from "drizzle-orm";
+import { eq, ilike, or } from "drizzle-orm";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import {
@@ -28,6 +28,23 @@ interface SpeciesByIdReturn extends SpeciesData {
 }
 
 export const speciesRouter = createTRPCRouter({
+  search: publicProcedure
+    .input(z.object({ query: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .select()
+        .from(species)
+        .where(
+          or(
+            ilike(species.enName, `%${input.query}%`),
+            ilike(species.ptName, `%${input.query}%`),
+            ilike(species.scientificName, `%${input.query}%`),
+            ilike(species.sciCode, `%${input.query}%`),
+          ),
+        );
+
+      return data;
+    }),
   getById: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }): Promise<SpeciesByIdReturn> => {

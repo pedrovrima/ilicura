@@ -2,6 +2,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 
 import { api } from "@/trpc/server";
+import SpeciesSearch from "@/components/species-search/search";
 
 export default async function Home() {
   noStore();
@@ -12,6 +13,7 @@ export default async function Home() {
         <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
           Wiki<span className="text-[hsl(50,100%,70%)]">Mudas</span>
         </h1>
+        <SpeciesSearch />
       </div>
     </main>
   );
