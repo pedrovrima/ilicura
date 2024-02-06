@@ -75,6 +75,32 @@ export default async function Home({ params }: { params: { id: string } }) {
           </p>
         </div>
         <div>
+          <h2 className="text-2xl font-bold">Limites de Muda</h2>
+          <div>
+            {speciesData.moltLimits.length === 0 && (
+              <p className="text-gray-600  ">Sem registros</p>
+            )}
+          </div>
+          <ul>
+            {speciesData.moltLimits
+              ?.sort(
+                (a, b) =>
+                  agesEnumValues.indexOf(a.age as agesType) -
+                  agesEnumValues.indexOf(b.age as agesType),
+              )
+              .map((limit, i) => (
+                <li key={limit.age}>
+                  {limit?.age}:{" "}
+                  {limit.limits.map(
+                    (l, i) =>
+                      `${l.limit} ${l.notes && `(${l.notes})`}${i < limit.limits.length - 1 ? ", " : ""}`,
+                  )}
+                </li>
+              ))}
+          </ul>
+        </div>
+
+        <div>
           <h2 className="text-2xl font-bold">Extensões de Muda</h2>
           <div>
             {speciesData.moltExtensions.length === 0 && (

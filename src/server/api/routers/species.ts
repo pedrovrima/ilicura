@@ -8,6 +8,7 @@ import {
   speciesMoltExtensions,
   skull,
   sexualDimorphism,
+  moltLimits,
 } from "@/server/db/schema";
 
 type SpeciesData = typeof species.$inferSelect;
@@ -20,6 +21,10 @@ interface SpeciesByIdReturn extends SpeciesData {
     extensions: { id: number; extension: string }[];
   }[];
   sexualDimorphism: (typeof sexualDimorphism.$inferSelect)[] | [];
+  moltLimits: {
+    age: string;
+    limits: { id: number; limit: string; notes: string | null }[];
+  }[];
 }
 
 export const speciesRouter = createTRPCRouter({
@@ -46,6 +51,36 @@ export const speciesRouter = createTRPCRouter({
         .select()
         .from(sexualDimorphism)
         .where(eq(sexualDimorphism.speciesId, input.id));
+
+      const moltLimitData = await ctx.db
+        .select()
+        .from(moltLimits)
+        .where(eq(moltLimits.speciesId, input.id));
+
+      const moltLimitsByAge = moltLimitData.reduce(
+        (acc, curr) => {
+          const key = curr.age;
+          if (!curr.limit || !key) return acc;
+          if (!acc.find((d) => d.age === key)) {
+            acc.push({
+              age: key,
+              limits: [{ id: curr.id, limit: curr.limit, notes: curr.notes }],
+            });
+            return acc;
+          }
+          const index = acc.findIndex((d) => d.age === key);
+          acc[index]?.limits.push({
+            id: curr.id,
+            limit: curr.limit,
+            notes: curr.notes,
+          });
+          return acc;
+        },
+        [] as {
+          age: string;
+          limits: { id: number; limit: string; notes: string | null }[];
+        }[],
+      );
 
       //group extensionData by moltType, using it as moltType key
       const groupedExtensions = extensionsData.reduce(
@@ -79,7 +114,6 @@ export const speciesRouter = createTRPCRouter({
       const moltStrategiesData = filteredData
         .map((d) => d.molt_strategy)
         .filter((d) => d !== null);
-      const moltExtensionsData = extensionsData.filter((d) => d !== null);
 
       return {
         ...speciesData,
@@ -87,6 +121,7 @@ export const speciesRouter = createTRPCRouter({
         moltStrategies:
           moltStrategiesData as (typeof moltStrategies.$inferSelect)[],
         skull: skullData as (typeof skull.$inferSelect)[],
+        moltLimits: moltLimitsByAge,
         moltExtensions: groupedExtensions as {
           moltType: string;
           extensions: { id: number; extension: string }[];

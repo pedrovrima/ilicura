@@ -140,9 +140,10 @@ export const genus = createTable("genus", {
 
 export const species = createTable("species", {
   id: serial("id").primaryKey(),
-  scientificName: varchar("scientificName", { length: 256 }),
-  ptName: varchar("ptName", { length: 256 }),
-  enName: varchar("enName", { length: 256 }),
+  scientificName: varchar("scientific_name", { length: 256 }),
+  ptName: varchar("pt_name", { length: 256 }),
+  enName: varchar("en_name", { length: 256 }),
+  sciCode: varchar("sci_code", { length: 256 }),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

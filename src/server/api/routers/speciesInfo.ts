@@ -5,17 +5,51 @@ import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import {
   agesEnum,
   moltExtensionEnum,
+  moltLimits,
+  moltLimitsEnum,
   moltStrategies,
   moltStrategiesEnum,
   moltTypesEnum,
   sexualDimorphism,
   skull,
   skullClosesEnum,
-  species,
   speciesMoltExtensions,
 } from "@/server/db/schema";
 
 export const speciesInfoRouter = createTRPCRouter({
+  addMoltLimits: publicProcedure
+    .input(
+      z.object({
+        speciesId: z.number(),
+        age: z.enum(agesEnum.enumValues),
+        limit: z.enum(moltLimitsEnum.enumValues),
+        notes: z.string(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.db.insert(moltLimits).values({
+        speciesId: input.speciesId,
+        age: input.age,
+        limit: input.limit,
+        notes: input.notes,
+      });
+    }),
+
+  deleteMoltLimits: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.db.delete(moltLimits).where(eq(moltLimits.id, input.id));
+    }),
+  getMoltLimits: publicProcedure
+    .input(z.object({ speciesId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .select()
+        .from(moltLimits)
+        .where(eq(moltLimits.speciesId, input.speciesId));
+      return data;
+    }),
+
   addSexualDimorphism: publicProcedure
     .input(
       z.object({

@@ -19,7 +19,7 @@ export default function DeleteSkull({
       {skullData?.map((skullDatum) => (
         <div key={skullDatum.id} className="flex items-center justify-between">
           <p>{`${
-            skullEnumTranslation[skullDatum.closes]
+            skullDatum.closes && skullEnumTranslation[skullDatum.closes]
           }: ${skullDatum.notes}`}</p>
           <DeleteButton
             onClick={() =>
