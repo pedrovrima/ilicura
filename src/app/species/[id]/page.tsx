@@ -1,6 +1,7 @@
 import { api } from "@/trpc/server";
 import { agesEnum, moltExtensionEnum, moltTypesEnum } from "@/server/db/schema";
 import { skullEnumTranslation } from "@/translations/translation";
+import Link from "next/link";
 
 export default async function Home({ params }: { params: { id: string } }) {
   const id = +params.id;
@@ -143,6 +144,12 @@ export default async function Home({ params }: { params: { id: string } }) {
           </div>
         </div>
       </div>
+      <Link
+        href={`/admin/species/${id}`}
+        className=" rounded-lg border-2 border-transparent bg-transparent px-12 py-12  text-white hover:border-slate-400 hover:text-slate-400"
+      >
+        ADMIN
+      </Link>
     </main>
   );
 }

@@ -34,12 +34,11 @@ export default function SpeciesSearch() {
           ) : (
             <ul>
               {search.data?.map((species) => (
-                <Link href={`/species/${species.id}`}>
+                <Link key={species.id} href={`/species/${species.id}`}>
                   <li
                     className=" px-4 py-2
                 
                  hover:bg-slate-400 hover:text-white"
-                    key={species.id}
                   >
                     {`${species.ptName}: `}
                     <span className="italic">{species.scientificName}</span>
