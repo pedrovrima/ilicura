@@ -9,6 +9,7 @@ import {
   skull,
   sexualDimorphism,
   moltLimits,
+  cemaveBandSize,
 } from "@/server/db/schema";
 
 type SpeciesData = typeof species.$inferSelect;
@@ -25,6 +26,7 @@ interface SpeciesByIdReturn extends SpeciesData {
     age: string;
     limits: { id: number; limit: string; notes: string | null }[];
   }[];
+  bandSize: (typeof cemaveBandSize.$inferSelect)[];
 }
 
 export const speciesRouter = createTRPCRouter({
@@ -73,6 +75,11 @@ export const speciesRouter = createTRPCRouter({
         .select()
         .from(moltLimits)
         .where(eq(moltLimits.speciesId, input.id));
+
+      const bandSizeData = await ctx.db
+        .select()
+        .from(cemaveBandSize)
+        .where(eq(cemaveBandSize.speciesId, input.id));
 
       const moltLimitsByAge = moltLimitData.reduce(
         (acc, curr) => {
@@ -139,6 +146,7 @@ export const speciesRouter = createTRPCRouter({
           moltStrategiesData as (typeof moltStrategies.$inferSelect)[],
         skull: skullData as (typeof skull.$inferSelect)[],
         moltLimits: moltLimitsByAge,
+        bandSize: bandSizeData,
         moltExtensions: groupedExtensions as {
           moltType: string;
           extensions: { id: number; extension: string }[];

@@ -13,7 +13,7 @@ export default function AdminSkull({ speciesId }: { speciesId: number }) {
   if (skullQuery.data) {
     return (
       <div>
-        <h2 className="mb-8 text-xl font-bold">Extensões das Mudas</h2>
+        <h2 className="mb-8 text-xl font-bold">Ossificação craniana</h2>
 
         <div className="flex flex-col gap-4">
           <AddSkull speciesId={speciesId} refetch={skullQuery.refetch} />

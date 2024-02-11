@@ -27,6 +27,21 @@ export default async function Home({ params }: { params: { id: string } }) {
           <p className="text-xl ">{speciesData.enName}</p>
         </div>
         <div>
+          <h2 className="text-2xl font-bold">Tamanho da Anilha</h2>
+          <p>
+            <span className="text-gray-600  ">
+              {speciesData.bandSize.length === 0 && "Sem registros"}
+            </span>
+          </p>
+          <p>
+            {speciesData.bandSize?.map((size, i) => (
+              <span
+                key={size?.id}
+              >{`${i > 0 ? ", " : ""}${size?.bandSize}`}</span>
+            ))}
+          </p>
+        </div>
+        <div>
           <h2 className="text-2xl font-bold">Dimorfismo Sexual</h2>
           <p>
             <span className="text-gray-600  ">

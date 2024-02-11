@@ -35,9 +35,9 @@ export const moltLimitsEnum = pgEnum("molt_limits_enum", [
   "primaries",
   "secondaries",
   "tertials",
-  "great coverts",
+  "greater coverts",
   "lesser-median coverts",
-  "vs great-coverts and primaries",
+  "vs greater-coverts and primaries",
   "primary coverts",
   "underwing coverts",
 ]);
@@ -63,6 +63,24 @@ export const moltTypesEnum = pgEnum("molt_types_enum", [
   "3PA",
   "4PB",
   "4PA",
+]);
+
+export const bandSizeEnum = pgEnum("band_size_enum", [
+  "A",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "J",
+  "L",
+  "M",
+  "N",
+  "P",
+  "R",
+  "S",
+  "T",
 ]);
 
 export const agesEnum = pgEnum("ages_enum", [
@@ -167,6 +185,16 @@ export const moltLimits = createTable("molt_limits", {
   age: agesEnum("age"),
   limit: moltLimitsEnum("limit"),
   notes: varchar("notes", { length: 256 }),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
+});
+
+export const cemaveBandSize = createTable("cemave_band_size", {
+  id: serial("id").primaryKey(),
+  speciesId: integer("species_id").references(() => species.id),
+  bandSize: bandSizeEnum("band_size"),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

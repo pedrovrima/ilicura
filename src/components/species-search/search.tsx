@@ -17,7 +17,6 @@ export default function SpeciesSearch() {
     },
   );
 
-  console.log(search);
   return (
     <div>
       <h1>Species Search</h1>

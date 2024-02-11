@@ -4,6 +4,8 @@ import { eq } from "drizzle-orm";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import {
   agesEnum,
+  bandSizeEnum,
+  cemaveBandSize,
   moltExtensionEnum,
   moltLimits,
   moltLimitsEnum,
@@ -17,6 +19,36 @@ import {
 } from "@/server/db/schema";
 
 export const speciesInfoRouter = createTRPCRouter({
+  addBandSize: publicProcedure
+    .input(
+      z.object({
+        speciesId: z.number(),
+        bandSize: z.enum(bandSizeEnum.enumValues),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.db.insert(cemaveBandSize).values({
+        speciesId: input.speciesId,
+        bandSize: input.bandSize,
+      });
+    }),
+  deleteBandSize: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.db
+        .delete(cemaveBandSize)
+        .where(eq(cemaveBandSize.id, input.id));
+    }),
+  getBandSize: publicProcedure
+    .input(z.object({ speciesId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .select()
+        .from(cemaveBandSize)
+        .where(eq(cemaveBandSize.speciesId, input.speciesId));
+      return data;
+    }),
+
   addMoltLimits: publicProcedure
     .input(
       z.object({
