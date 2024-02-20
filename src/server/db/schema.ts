@@ -1,7 +1,7 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   index,
   pgTableCreator,
@@ -13,6 +13,7 @@ import {
   boolean,
   unique,
 } from "drizzle-orm/pg-core";
+import { string } from "zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -28,6 +29,8 @@ export const moltStrategiesEnum = pgEnum("molt_strategies_enum", [
   "CBS",
   "CAS",
 ]);
+
+export const sexEnum = pgEnum("sex_enum", ["M", "F", "U"]);
 
 export const moltLimitsEnum = pgEnum("molt_limits_enum", [
   "alula",
@@ -119,6 +122,8 @@ export const skullClosesEnum = pgEnum("skull_closes_enum", [
   "false",
 ]);
 
+export const tagEnum = pgEnum("tag_enum", ["cover", "molt-limit"]);
+
 export const families = createTable(
   "families",
   {
@@ -169,6 +174,40 @@ export const species = createTable("species", {
   genusId: integer("genus_id").references(() => genus.id),
 });
 
+export const speciesInfo = createTable("species_info", {
+  id: serial("id").primaryKey(),
+  speciesId: integer("species_id").references(() => species.id),
+  description: varchar("description", { length: 512 }),
+  hasMoltLimits: boolean("has_molt_limits"),
+  hasSexualDimorphism: boolean("has_sexual_dimorphism"),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
+});
+
+export const speciesPicture = createTable("species_picture", {
+  id: serial("id").primaryKey(),
+  speciesId: integer("species_id").references(() => species.id),
+  url: varchar("url", { length: 256 }),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
+  age: agesEnum("age"),
+  sex: sexEnum("sex"),
+});
+
+export const picturesTags = createTable("pictures_tags", {
+  id: serial("id").primaryKey(),
+  pictureId: integer("picture_id").references(() => speciesPicture.id),
+
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
+});
+
 export const totalCapturesBySpecies = createTable("total_captures_by_species", {
   id: serial("id").primaryKey(),
   speciesId: integer("species_id").references(() => species.id),
@@ -181,8 +220,9 @@ export const totalCapturesBySpecies = createTable("total_captures_by_species", {
 
 export const moltLimits = createTable("molt_limits", {
   id: serial("id").primaryKey(),
-  speciesId: integer("species_id").references(() => species.id),
-  age: agesEnum("age"),
+  speciesMoltExtensionId: integer("molt_id").references(
+    () => speciesMoltExtensions.id,
+  ),
   limit: moltLimitsEnum("limit"),
   notes: varchar("notes", { length: 256 }),
   createdAt: timestamp("created_at")
@@ -232,11 +272,21 @@ export const speciesMoltExtensions = createTable(
   }),
 );
 
-export const sexualDimorphism = createTable("sexual_dimorphism", {
+export const speciesAgeInfo = createTable("species_age_info", {
   id: serial("id").primaryKey(),
   speciesId: integer("species_id").references(() => species.id),
   age: agesEnum("age"),
   sexualDimorphism: boolean("sexual_dimorphism"),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
+});
+
+export const speciesSexInfo = createTable("specues_sex_info", {
+  id: serial("id").primaryKey(),
+  ageId: integer("age_id").references(() => speciesAgeInfo.id),
+  description: varchar("description", { length: 512 }),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
