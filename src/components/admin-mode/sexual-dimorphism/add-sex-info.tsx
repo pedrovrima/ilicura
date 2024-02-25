@@ -1,28 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpToLine, Loader } from "lucide-react";
 
 import { api } from "@/trpc/react";
-import { agesEnum, sexEnum, speciesSexInfo } from "@/server/db/schema";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { sexEnum, speciesSexInfo } from "@/server/db/schema";
 import SubmitButton from "@/components/ui/submit-buttons";
 import { Textarea } from "@/components/ui/textarea";
 
-type sexType = (typeof sexEnum.enumValues)[number] | null;
-
 export default function AddSexInfo({
   sexInfo,
-  refetch,
 }: {
   sexInfo: (typeof speciesSexInfo.$inferSelect)[];
-  refetch: () => void;
 }) {
   console.log(sexInfo);
   const [sexInfoText, setSexInfoText] = useState<
@@ -47,7 +35,7 @@ export default function AddSexInfo({
   const updateSexInfo = api.speciesInfo.updateSexInfo.useMutation();
 
   return sexInfo.map((sex) => (
-    <div>
+    <div key={sex.id}>
       <h3 className="text-md font-bold">Sexo: {sex.sex}</h3>
       <form
         onSubmit={(e) => {
@@ -65,7 +53,7 @@ export default function AddSexInfo({
         <h3 className="text-md ">Descrição:</h3>
 
         <Textarea
-          value={sexInfoText.find((s) => s.id === sex.id)?.description || ""}
+          value={sexInfoText.find((s) => s.id === sex.id)?.description ?? ""}
           onChange={(e) => {
             updateSexFormInfo(sex.id)(e.target.value);
           }}

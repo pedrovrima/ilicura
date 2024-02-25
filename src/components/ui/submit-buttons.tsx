@@ -20,7 +20,7 @@ export default function SubmitButton({
           <Loader className="animate-spin-slow" />
         </div>
       ) : (
-        children || "Adicionar"
+        children ?? "Adicionar"
       )}
     </Button>
   );

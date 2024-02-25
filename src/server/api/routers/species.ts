@@ -66,7 +66,6 @@ export const speciesRouter = createTRPCRouter({
         .where(eq(speciesAgeInfo.speciesId, input.id))
         .leftJoin(speciesSexInfo, eq(speciesAgeInfo.id, speciesSexInfo.ageId));
 
-      //@ts-ignore
       const groupedAgeInfo = ageInfo.reduce(
         (acc: CompleteAgeInfo[], curr): CompleteAgeInfo[] => {
           const key = curr.species_age_info.age;
@@ -82,7 +81,7 @@ export const speciesRouter = createTRPCRouter({
             ];
           }
 
-          const noThis = acc.filter((d) => d.age !== key) as CompleteAgeInfo[];
+          const noThis = acc.filter((d) => d.age !== key);
 
           return [
             ...noThis,
@@ -162,7 +161,7 @@ export const speciesRouter = createTRPCRouter({
           curr,
         ) => {
           const key = curr.moltType;
-          if (!curr.extension || !key) return acc;
+          if (!curr.extension ?? !key) return acc;
           if (!acc.find((d) => d.moltType === key)) {
             acc.push({
               moltType: key,

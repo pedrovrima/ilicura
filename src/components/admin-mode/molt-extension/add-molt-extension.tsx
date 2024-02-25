@@ -36,7 +36,7 @@ export default function AddMoltExtension({
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        if (!extension || !moltType) return; // If the value is an empty string, return early
+        if (!extension ?? !moltType) return; // If the value is an empty string, return early
         addExtension.mutate(
           { speciesId, extension, moltType },
           {

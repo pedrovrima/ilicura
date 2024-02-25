@@ -41,7 +41,7 @@ export default function AddSexualDimorphism({
       onSubmit={(e) => {
         e.preventDefault();
         if (
-          !sexualDimorphism.age ||
+          !sexualDimorphism.age ??
           sexualDimorphism.sexualDimorphism === undefined
         )
           return; // If the value is an empty string, return early
