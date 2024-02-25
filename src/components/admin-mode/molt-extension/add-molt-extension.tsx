@@ -37,14 +37,16 @@ export default function AddMoltExtension({
       onSubmit={(e) => {
         e.preventDefault();
         if (!extension ?? !moltType) return; // If the value is an empty string, return early
-        addExtension.mutate(
-          { speciesId, extension, moltType },
-          {
-            onSuccess: () => {
-              refetch();
+        if (extension && moltType)
+          addExtension.mutate(
+            { speciesId, extension, moltType },
+
+            {
+              onSuccess: () => {
+                refetch();
+              },
             },
-          },
-        );
+          );
       }}
       className="flex flex-row gap-2"
     >
