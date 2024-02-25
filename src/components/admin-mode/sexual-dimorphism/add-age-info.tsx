@@ -45,18 +45,22 @@ export default function AddSexualDimorphism({
           sexualDimorphism.sexualDimorphism === undefined
         )
           return; // If the value is an empty string, return early
-        createPost.mutate(
-          {
-            speciesId,
-            age: sexualDimorphism.age,
-            sexualDimorphism: sexualDimorphism.sexualDimorphism,
-          },
-          {
-            onSuccess: () => {
-              refetch();
+        if (
+          sexualDimorphism.age &&
+          sexualDimorphism.sexualDimorphism !== undefined
+        )
+          createPost.mutate(
+            {
+              speciesId,
+              age: sexualDimorphism.age,
+              sexualDimorphism: sexualDimorphism.sexualDimorphism,
             },
-          },
-        );
+            {
+              onSuccess: () => {
+                refetch();
+              },
+            },
+          );
       }}
       className="flex flex-row gap-2"
     >
