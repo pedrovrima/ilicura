@@ -1,11 +1,10 @@
 "use client";
 
 import DeleteButton from "@/components/ui/delete-button";
-import {
+import type {
   CompleteAgeInfo,
-  NullableCompleteAgeInfo,
 } from "@/server/api/routers/speciesInfo";
-import { speciesAgeInfo } from "@/server/db/schema";
+
 import { api } from "@/trpc/react";
 import AddSexInfo from "./add-sex-info";
 
@@ -40,7 +39,7 @@ export default function DeleteSexualDimorphism({
               isLoading={deleteSexualDimorphism.isLoading}
             />
           </div>
-          <AddSexInfo sexInfo={sexDim.sex} refetch={refetch} />
+          <AddSexInfo sexInfo={sexDim.sex}  />
         </>
       ))}
     </div>
