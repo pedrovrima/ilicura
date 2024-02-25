@@ -5,7 +5,7 @@ import AdminMoltExtension from "./molt-extension";
 import AdminSkull from "./skull";
 import AdminSexualDimorphism from "./sexual-dimorphism";
 import AdminPictures from "./pictures";
-import AdminMoltLimit from "./molt-limits";
+
 import Link from "next/link";
 import AdminBandSize from "./band-size";
 
