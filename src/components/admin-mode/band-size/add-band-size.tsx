@@ -38,14 +38,14 @@ export default function AddBandSize({
           },
         );
       }}
-      className="flex flex-row gap-2"
+      className="flex flex-row items-center gap-2"
     >
       <Select
         onValueChange={(value) => setBandSize(value as bandSizeEnumType)} // Cast the value to the correct type
         defaultValue={bandSize}
         required
       >
-        <SelectTrigger className="bg-black">
+        <SelectTrigger>
           <SelectValue placeholder="Tamanho da anilha" />
         </SelectTrigger>
         <SelectContent>

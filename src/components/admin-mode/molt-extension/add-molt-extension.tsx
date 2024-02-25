@@ -53,7 +53,7 @@ export default function AddMoltExtension({
         defaultValue={moltType}
         required
       >
-        <SelectTrigger className="bg-black">
+        <SelectTrigger className="">
           <SelectValue placeholder="Muda" />
         </SelectTrigger>
         <SelectContent>
@@ -70,7 +70,7 @@ export default function AddMoltExtension({
         defaultValue={extension}
         required
       >
-        <SelectTrigger className="bg-black">
+        <SelectTrigger>
           <SelectValue placeholder="Extensão" />
         </SelectTrigger>
 

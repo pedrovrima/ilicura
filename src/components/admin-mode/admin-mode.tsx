@@ -11,14 +11,13 @@ import AdminBandSize from "./band-size";
 
 export const AdminMode = ({ id }: { id: number }) => {
   return (
-    <div className="flex w-[400px] flex-col gap-24">
+    <div className="flex w-[600px] flex-col gap-24">
       {/* <AdminPictures speciesId={id} /> */}
       <AdminBandSize speciesId={id} />
       <AdminSkull speciesId={id} />
       <AdminSexualDimorphism speciesId={id} />
       <AdminMoltStrategy speciesId={id} />
       <AdminMoltExtension speciesId={id} />
-      <AdminMoltLimit speciesId={id} />
       <div className="flex ">
         <Link
           href={{

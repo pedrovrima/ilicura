@@ -10,7 +10,7 @@ export default async function Home({ params }: { params: { id: string } }) {
   if (!speciesData) return <p>no data</p>;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#65590c] to-[#272c15] text-white">
+    <main className="flex min-h-screen flex-col items-center justify-center ">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-extrabold italic tracking-tight ">

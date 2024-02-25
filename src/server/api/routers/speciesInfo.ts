@@ -12,11 +12,24 @@ import {
   moltStrategies,
   moltStrategiesEnum,
   moltTypesEnum,
-  sexualDimorphism,
   skull,
   skullClosesEnum,
   speciesMoltExtensions,
+  speciesAgeInfo,
+  speciesSexInfo,
 } from "@/server/db/schema";
+
+type CompleteMoltExtesion = typeof speciesMoltExtensions.$inferSelect & {
+  moltLimits: (typeof moltLimits.$inferSelect)[] | [];
+};
+
+type Nullable<T> = { [K in keyof T]: T[K] | null };
+
+export type CompleteAgeInfo = typeof speciesAgeInfo.$inferSelect & {
+  sex: (typeof speciesSexInfo.$inferSelect)[] | [];
+};
+
+export type NullableCompleteAgeInfo = Nullable<CompleteAgeInfo>;
 
 export const speciesInfoRouter = createTRPCRouter({
   addBandSize: publicProcedure
@@ -52,16 +65,14 @@ export const speciesInfoRouter = createTRPCRouter({
   addMoltLimits: publicProcedure
     .input(
       z.object({
-        speciesId: z.number(),
-        age: z.enum(agesEnum.enumValues),
+        speciesMoltExtensionId: z.number(),
         limit: z.enum(moltLimitsEnum.enumValues),
-        notes: z.string(),
+        notes: z.string().optional(),
       }),
     )
     .mutation(({ ctx, input }) => {
       return ctx.db.insert(moltLimits).values({
-        speciesId: input.speciesId,
-        age: input.age,
+        speciesMoltExtensionId: input.speciesMoltExtensionId,
         limit: input.limit,
         notes: input.notes,
       });
@@ -78,11 +89,12 @@ export const speciesInfoRouter = createTRPCRouter({
       const data = await ctx.db
         .select()
         .from(moltLimits)
-        .where(eq(moltLimits.speciesId, input.speciesId));
+        .where(eq(moltLimits.speciesMoltExtensionId, input.speciesId));
+
       return data;
     }),
 
-  addSexualDimorphism: publicProcedure
+  addAgeInfo: publicProcedure
     .input(
       z.object({
         speciesId: z.number(),
@@ -90,28 +102,106 @@ export const speciesInfoRouter = createTRPCRouter({
         age: z.enum(agesEnum.enumValues),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.db.insert(sexualDimorphism).values({
-        speciesId: input.speciesId,
-        sexualDimorphism: input.sexualDimorphism,
-        age: input.age,
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        const ageInfo = await tx
+          .insert(speciesAgeInfo)
+          .values({
+            speciesId: input.speciesId,
+            sexualDimorphism: input.sexualDimorphism,
+            age: input.age,
+          })
+          .returning();
+
+        const insertedId = ageInfo[0]?.id;
+        console.log(ageInfo);
+        if (input.sexualDimorphism) {
+          await tx.insert(speciesSexInfo).values({
+            ageId: insertedId,
+            sex: "M",
+            description: "",
+          });
+          await tx.insert(speciesSexInfo).values({
+            ageId: insertedId,
+            sex: "F",
+            description: "",
+          });
+          return;
+        }
+        await tx.insert(speciesSexInfo).values({
+          ageId: insertedId,
+          sex: "U",
+          description: "",
+        });
+        return;
       });
     }),
+
   deleteSexualDimorphism: publicProcedure
     .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.transaction(async (tx) => {
+        await tx
+          .delete(speciesSexInfo)
+          .where(eq(speciesSexInfo.ageId, input.id));
+        await tx.delete(speciesAgeInfo).where(eq(speciesAgeInfo.id, input.id));
+      });
+    }),
+  updateSexInfo: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        description: z.string(),
+      }),
+    )
     .mutation(({ ctx, input }) => {
       return ctx.db
-        .delete(sexualDimorphism)
-        .where(eq(sexualDimorphism.id, input.id));
+        .update(speciesSexInfo)
+        .set({ description: input.description })
+        .where(eq(speciesSexInfo.id, input.id));
     }),
+
   getSexualDimorphism: publicProcedure
     .input(z.object({ speciesId: z.number() }))
     .query(async ({ ctx, input }) => {
       const data = await ctx.db
         .select()
-        .from(sexualDimorphism)
-        .where(eq(sexualDimorphism.speciesId, input.speciesId));
-      return data;
+        .from(speciesAgeInfo)
+        .leftJoin(speciesSexInfo, eq(speciesAgeInfo.id, speciesSexInfo.ageId))
+        .where(eq(speciesAgeInfo.speciesId, input.speciesId));
+
+      const sexedAge = data.reduce(
+        (age: CompleteAgeInfo[], ageInfo): CompleteAgeInfo[] => {
+          const thisAge = age.find(
+            (d) => d.age === ageInfo.species_age_info.age,
+          );
+          if (!thisAge) {
+            return [
+              ...age,
+              {
+                ...ageInfo.species_age_info,
+                sex: ageInfo.specues_sex_info ? [ageInfo.specues_sex_info] : [],
+              },
+            ];
+          }
+          if (ageInfo.specues_sex_info) {
+            const otherAges = age.filter(
+              (d) => d.age !== ageInfo.species_age_info.age,
+            );
+
+            const newAge = [
+              ...otherAges,
+              { ...thisAge, sex: [...thisAge.sex, ageInfo.specues_sex_info] },
+            ];
+
+            return newAge;
+          }
+          return age;
+        },
+        [],
+      );
+
+      return sexedAge;
     }),
 
   addSpeciesSkullInfo: publicProcedure
@@ -182,9 +272,14 @@ export const speciesInfoRouter = createTRPCRouter({
   deleteSpeciesMoltExtension: publicProcedure
     .input(z.object({ id: z.number() }))
     .mutation(({ ctx, input }) => {
-      return ctx.db
-        .delete(speciesMoltExtensions)
-        .where(eq(speciesMoltExtensions.id, input.id));
+      return ctx.db.transaction(async (tx) => {
+        await tx
+          .delete(moltLimits)
+          .where(eq(moltLimits.speciesMoltExtensionId, input.id));
+        await tx
+          .delete(speciesMoltExtensions)
+          .where(eq(speciesMoltExtensions.id, input.id));
+      });
     }),
 
   getSpeciesRawMoltExtensions: publicProcedure
@@ -193,9 +288,43 @@ export const speciesInfoRouter = createTRPCRouter({
       const data = await ctx.db
         .select()
         .from(speciesMoltExtensions)
+        .leftJoin(
+          moltLimits,
+          eq(speciesMoltExtensions.id, moltLimits.speciesMoltExtensionId),
+        )
         .where(eq(speciesMoltExtensions.speciesId, input.speciesId));
 
-      return data;
+      const combinedExtensionData = data.reduce(
+        (combinedExtensions: CompleteMoltExtesion[], extension) => {
+          if (!extension) return combinedExtensions;
+          const thisMoltType = combinedExtensions.find(
+            (d) =>
+              d.moltType === extension.species_molt_extensions.moltType &&
+              d.extension === extension.species_molt_extensions.extension,
+          );
+          if (thisMoltType && extension.molt_limits) {
+            return [
+              ...combinedExtensions.filter(
+                (d) =>
+                  d.extension !== extension.species_molt_extensions.extension &&
+                  d.moltType !== extension.species_molt_extensions.moltType,
+              ),
+              {
+                ...thisMoltType,
+                moltLimits: [...thisMoltType.moltLimits, extension.molt_limits],
+              },
+            ];
+          }
+          combinedExtensions.push({
+            ...extension.species_molt_extensions,
+            moltLimits: extension.molt_limits ? [extension.molt_limits] : [],
+          });
+          return combinedExtensions;
+        },
+        [],
+      );
+
+      return combinedExtensionData;
     }),
 
   getSkullInfo: publicProcedure

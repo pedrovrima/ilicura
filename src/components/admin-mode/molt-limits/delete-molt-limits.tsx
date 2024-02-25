@@ -1,10 +1,10 @@
 "use client";
 
-import DeleteButton from "@/components/ui/delete-button";
+import DeletePill from "@/components/ui/delete-pill";
 import { moltLimits as sppMoltLimits } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 
-export default function DeleteMoltExtension({
+export default function DeleteMoltLimits({
   moltLimits,
   refetch,
 }: {
@@ -14,24 +14,25 @@ export default function DeleteMoltExtension({
   const deleteMoltLimits = api.speciesInfo.deleteMoltLimits.useMutation();
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="my-2  flex flex-wrap items-center gap-2">
+      <p>Molt Limits:</p>
       {moltLimits?.map((ml) => (
-        <div key={ml.id} className="flex items-center justify-between">
-          <p>{`${ml.age}: ${ml.limit} - ${ml.notes}`}</p>
-          <DeleteButton
-            onClick={() =>
-              deleteMoltLimits.mutate(
-                { id: ml.id },
-                {
-                  onSuccess: () => {
-                    refetch();
-                  },
+        <DeletePill
+          key={ml.id}
+          isLoading={deleteMoltLimits.isLoading}
+          onClick={() =>
+            deleteMoltLimits.mutate(
+              { id: ml.id },
+              {
+                onSuccess: () => {
+                  refetch();
                 },
-              )
-            }
-            isLoading={deleteMoltLimits.isLoading}
-          />
-        </div>
+              },
+            )
+          }
+        >
+          {ml.limit}
+        </DeletePill>
       ))}
     </div>
   );

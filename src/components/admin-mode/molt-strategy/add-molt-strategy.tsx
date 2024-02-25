@@ -50,7 +50,7 @@ export default function AddMoltStrategy({
         defaultValue={strategy}
         required
       >
-        <SelectTrigger value={strategy} className=" bg-black">
+        <SelectTrigger value={strategy}>
           <SelectValue
             placeholder={"Selecione a estratégia de muda"}
           ></SelectValue>

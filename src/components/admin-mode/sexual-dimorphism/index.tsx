@@ -1,8 +1,8 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import AddSexualDimorphism from "./add-sexual-dimorphism";
-import DeleteSexualDimorphism from "./delete-sexual-dimorphism";
+import AddSexualDimorphism from "./add-age-info";
+import DeleteSexualDimorphism from "./delete-age-info";
 
 export default function AdminSexualDimorphism({
   speciesId,

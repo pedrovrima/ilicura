@@ -1,6 +1,7 @@
 "use client";
 
 import DeleteButton from "@/components/ui/delete-button";
+import DeletePill from "@/components/ui/delete-pill";
 import { moltStrategies as strategiesType } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 
@@ -17,8 +18,7 @@ export default function DeleteMoltStrategy({
     <div className="flex flex-col gap-4">
       {moltStrategies?.map((strategy) => (
         <div key={strategy.id} className="flex items-center justify-between">
-          <p>{strategy?.strategy}</p>
-          <DeleteButton
+          <DeletePill
             onClick={() =>
               deleteStrategy.mutate(
                 { id: strategy.id },
@@ -30,7 +30,9 @@ export default function DeleteMoltStrategy({
               )
             }
             isLoading={deleteStrategy.isLoading}
-          />
+          >
+            {strategy.strategy}
+          </DeletePill>
         </div>
       ))}
     </div>

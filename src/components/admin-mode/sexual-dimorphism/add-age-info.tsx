@@ -34,7 +34,7 @@ export default function AddSexualDimorphism({
       sexualDimorphism: undefined,
     });
 
-  const createPost = api.speciesInfo.addSexualDimorphism.useMutation();
+  const createPost = api.speciesInfo.addAgeInfo.useMutation();
 
   return (
     <form
@@ -70,7 +70,7 @@ export default function AddSexualDimorphism({
         value={sexualDimorphism.age}
         required
       >
-        <SelectTrigger className=" bg-black">
+        <SelectTrigger>
           <SelectValue placeholder={"Selecione a idade"}></SelectValue>
         </SelectTrigger>
         <SelectContent>
@@ -91,7 +91,7 @@ export default function AddSexualDimorphism({
         value={`${sexualDimorphism.sexualDimorphism}`}
         required
       >
-        <SelectTrigger className=" bg-black">
+        <SelectTrigger>
           <SelectValue placeholder={"Tem dimorfismo?"}></SelectValue>
         </SelectTrigger>
         <SelectContent>

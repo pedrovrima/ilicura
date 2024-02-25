@@ -41,24 +41,7 @@ export default async function Home({ params }: { params: { id: string } }) {
             ))}
           </p>
         </div>
-        <div>
-          <h2 className="text-2xl font-bold">Dimorfismo Sexual</h2>
-          <p>
-            <span className="text-gray-600  ">
-              {speciesData.sexualDimorphism.length === 0 && "Sem registros"}
-            </span>
-          </p>
-          {speciesData.sexualDimorphism
-            ?.sort(
-              (a, b) =>
-                agesEnumValues.indexOf(a.age!) - agesEnumValues.indexOf(b.age!),
-            )
-            .map((sexDim) => (
-              <p key={sexDim?.id}>
-                {sexDim?.age}: {sexDim?.sexualDimorphism ? "Sim" : "Não"}
-              </p>
-            ))}
-        </div>
+
         <div>
           <h2 className="text-2xl font-bold">Crânio</h2>
           <p>
@@ -89,31 +72,6 @@ export default async function Home({ params }: { params: { id: string } }) {
             ))}
           </p>
         </div>
-        <div>
-          <h2 className="text-2xl font-bold">Limites de Muda</h2>
-          <div>
-            {speciesData.moltLimits.length === 0 && (
-              <p className="text-gray-600  ">Sem registros</p>
-            )}
-          </div>
-          <ul>
-            {speciesData.moltLimits
-              ?.sort(
-                (a, b) =>
-                  agesEnumValues.indexOf(a.age as agesType) -
-                  agesEnumValues.indexOf(b.age as agesType),
-              )
-              .map((limit) => (
-                <li key={limit.age}>
-                  {limit?.age}:{" "}
-                  {limit.limits.map(
-                    (l, i) =>
-                      `${l.limit} ${l.notes && `(${l.notes})`}${i < limit.limits.length - 1 ? ", " : ""}`,
-                  )}
-                </li>
-              ))}
-          </ul>
-        </div>
 
         <div>
           <h2 className="text-2xl font-bold">Extensões de Muda</h2>
@@ -135,24 +93,42 @@ export default async function Home({ params }: { params: { id: string } }) {
                 )
                 .map((extension) => (
                   <li key={extension?.moltType}>
-                    {extension?.moltType}:{" "}
-                    {extension?.extensions
-                      .sort(
-                        (a, b) =>
-                          moltExtensionEnum.enumValues.indexOf(
-                            a.extension as moltExtesionsType,
-                          ) -
-                          moltExtensionEnum.enumValues.indexOf(
-                            b.extension as moltExtesionsType,
-                          ),
-                      )
-
-                      .map((ext, i) => (
-                        <span key={ext.id}>
-                          {i > 0 && ", "}
-                          {ext.extension}
+                    <div className="mb-4">
+                      <p className="mb-0">
+                        <span className="text-lg font-extrabold">
+                          {" "}
+                          {extension?.moltType}:{" "}
                         </span>
-                      ))}
+
+                        {extension?.extensions
+                          .sort(
+                            (a, b) =>
+                              moltExtensionEnum.enumValues.indexOf(
+                                a.extension as moltExtesionsType,
+                              ) -
+                              moltExtensionEnum.enumValues.indexOf(
+                                b.extension as moltExtesionsType,
+                              ),
+                          )
+
+                          .map((ext, i) => (
+                            <span key={ext.id}>
+                              {i > 0 && ", "}
+                              {ext.extension}
+                            </span>
+                          ))}
+                      </p>
+                      <p>
+                        {extension.molLimits.length > 0 && (
+                          <span className="italic">Molt Limits: </span>
+                        )}
+                        {extension.molLimits.map((limit, i) => (
+                          <span key={limit.id}>
+                            {i > 0 && ", "} {limit.limit}
+                          </span>
+                        ))}
+                      </p>
+                    </div>
                   </li>
                 ))}
             </ul>

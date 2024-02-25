@@ -1,6 +1,7 @@
 import DeleteButton from "@/components/ui/delete-button";
 import { api } from "@/trpc/react";
 import { cemaveBandSize } from "@/server/db/schema";
+import DeletePill from "@/components/ui/delete-pill";
 
 export default function DeleteBandSize({
   bandSizeData,
@@ -14,9 +15,7 @@ export default function DeleteBandSize({
     <div>
       {bandSizeData?.map((size) => (
         <div key={size.id} className="flex items-center justify-between">
-          <p>{size.bandSize}</p>
-
-          <DeleteButton
+          <DeletePill
             onClick={() => {
               deleteBandSize.mutate(
                 { id: size.id },
@@ -28,7 +27,9 @@ export default function DeleteBandSize({
               );
             }}
             isLoading={deleteBandSize.isLoading}
-          />
+          >
+            {size.bandSize}
+          </DeletePill>
         </div>
       ))}
     </div>

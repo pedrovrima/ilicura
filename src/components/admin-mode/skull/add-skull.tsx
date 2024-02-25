@@ -66,7 +66,7 @@ export default function AddSkull({
         value={skullData.closes}
         required
       >
-        <SelectTrigger className="bg-black">
+        <SelectTrigger>
           <SelectValue placeholder="Crânio fecha?" />
         </SelectTrigger>
         <SelectContent>

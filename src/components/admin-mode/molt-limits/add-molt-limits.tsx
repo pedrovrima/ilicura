@@ -21,24 +21,21 @@ import { Textarea } from "@/components/ui/textarea";
 const agesEnum = _agesEnum.enumValues;
 const moltLimitsEnum = _moltLimitsEnum.enumValues;
 
-type agesType = (typeof agesEnum)[number];
 type moltLimitsType = (typeof moltLimitsEnum)[number];
 
 type moltLimitObject = {
-  age: agesType | "";
   limit: moltLimitsType | "";
   notes: string | undefined;
 };
 
 export default function AddMoltLimit({
-  speciesId,
+  speciesMoltExtensionId,
   refetch,
 }: {
-  speciesId: number;
+  speciesMoltExtensionId: number;
   refetch: () => void;
 }) {
   const [moltLimitData, setMoltLimitData] = useState<moltLimitObject>({
-    age: "",
     limit: "",
     notes: undefined,
   }); // Set initial value to an empty string
@@ -49,11 +46,10 @@ export default function AddMoltLimit({
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        if (!moltLimitData?.age || !moltLimitData?.limit) return; // If the value is an empty string, return early
+        if (!moltLimitData?.limit) return; // If the value is an empty string, return early
         addMoltLimit.mutate(
           {
-            speciesId,
-            age: moltLimitData.age,
+            speciesMoltExtensionId,
             limit: moltLimitData.limit,
             notes: moltLimitData.notes ?? "",
           },
@@ -64,65 +60,30 @@ export default function AddMoltLimit({
           },
         );
       }}
-      className="flex flex-col gap-2"
+      className="flex flex-row gap-2"
     >
-      <div className="flex flex-row gap-2">
-        <Select
-          onValueChange={(value) =>
-            setMoltLimitData((moltLimitData) => ({
-              ...moltLimitData,
-              age: value as agesType,
-            }))
-          } // Cast the value to the correct type
-          value={moltLimitData.age}
-          required
-        >
-          <SelectTrigger className="bg-black">
-            <SelectValue placeholder="Idade" />
-          </SelectTrigger>
-          <SelectContent>
-            {agesEnum.map((age) => (
-              <SelectItem key={age} value={age}>
-                {age}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <Select
-          onValueChange={(value) => {
-            setMoltLimitData((moltLimitData) => ({
-              ...moltLimitData,
-              limit: value as moltLimitsType,
-            }));
-          }}
-          defaultValue={moltLimitData.limit}
-          required
-        >
-          <SelectTrigger className="bg-black">
-            <SelectValue placeholder="Tipo de Limite" />
-          </SelectTrigger>
-
-          <SelectContent>
-            {moltLimitsEnum.map((limit) => (
-              <SelectItem key={limit} value={limit}>
-                {limit}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <Textarea
-        className="bg-black"
-        value={moltLimitData.notes}
-        onChange={(e) =>
+      <Select
+        onValueChange={(value) => {
           setMoltLimitData((moltLimitData) => ({
             ...moltLimitData,
-            notes: e.target.value,
-          }))
-        }
-        placeholder="Notas"
-      />
+            limit: value as moltLimitsType,
+          }));
+        }}
+        defaultValue={moltLimitData.limit}
+        required
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Tipo de Limite" />
+        </SelectTrigger>
+
+        <SelectContent>
+          {moltLimitsEnum.map((limit) => (
+            <SelectItem key={limit} value={limit}>
+              {limit}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
       <SubmitButton isLoading={addMoltLimit.isLoading} />
     </form>

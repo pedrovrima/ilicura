@@ -287,6 +287,7 @@ export const speciesSexInfo = createTable("specues_sex_info", {
   id: serial("id").primaryKey(),
   ageId: integer("age_id").references(() => speciesAgeInfo.id),
   description: varchar("description", { length: 512 }),
+  sex: sexEnum("sex"),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
