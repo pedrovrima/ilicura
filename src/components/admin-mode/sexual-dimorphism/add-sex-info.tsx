@@ -88,9 +88,9 @@ const DisplayImages = ({ sexId }: { sexId: number }) => {
           <CarouselContent>
             {images.data?.map((image) => (
               <CarouselItem className="basis-32" key={image.id}>
-                {image.thumbnail && (
+                {image.url && (
                   <Image
-                    src={image.thumbnail}
+                    src={`${image.url}?tr=w-200,h-200,fo-auto`}
                     alt={"abc"}
                     width={200}
                     height={200}
