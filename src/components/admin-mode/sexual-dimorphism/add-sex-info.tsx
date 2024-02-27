@@ -6,13 +6,21 @@ import { api } from "@/trpc/react";
 import { sexEnum, speciesSexInfo } from "@/server/db/schema";
 import SubmitButton from "@/components/ui/submit-buttons";
 import { Textarea } from "@/components/ui/textarea";
+import AddPicture from "../pictures";
+import Image from "next/image";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 export default function AddSexInfo({
   sexInfo,
 }: {
   sexInfo: (typeof speciesSexInfo.$inferSelect)[];
 }) {
-  console.log(sexInfo);
   const [sexInfoText, setSexInfoText] = useState<
     {
       id: number | null;
@@ -37,6 +45,7 @@ export default function AddSexInfo({
   return sexInfo.map((sex) => (
     <div key={sex.id}>
       <h3 className="text-md font-bold">Sexo: {sex.sex}</h3>
+      <DisplayImages sexId={sex.id} />
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -58,8 +67,42 @@ export default function AddSexInfo({
             updateSexFormInfo(sex.id)(e.target.value);
           }}
         />
+
         <SubmitButton isLoading={updateSexInfo.isLoading}>Salvar</SubmitButton>
+        <AddPicture sexId={sex.id} />
       </form>
     </div>
   ));
 }
+
+const DisplayImages = ({ sexId }: { sexId: number }) => {
+  const images = api.speciesInfo.getSexImages.useQuery({ sexId });
+
+  if (images.isLoading) return "Loading...";
+  if (images.error) return "Error";
+
+  return (
+    <div>
+      {images.data.length > 0 && (
+        <Carousel>
+          <CarouselContent>
+            {images.data?.map((image) => (
+              <CarouselItem className="basis-32" key={image.id}>
+                {image.thumbnail && (
+                  <Image
+                    src={image.thumbnail}
+                    alt={"abc"}
+                    width={200}
+                    height={200}
+                  />
+                )}
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      )}
+    </div>
+  );
+};

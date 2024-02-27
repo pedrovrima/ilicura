@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { ZodType, z } from "zod";
 import { eq } from "drizzle-orm";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
@@ -17,7 +17,9 @@ import {
   speciesMoltExtensions,
   speciesAgeInfo,
   speciesSexInfo,
+  speciesPicture,
 } from "@/server/db/schema";
+import ImageKit from "imagekit";
 
 type CompleteMoltExtesion = typeof speciesMoltExtensions.$inferSelect & {
   moltLimits: (typeof moltLimits.$inferSelect)[] | [];
@@ -30,6 +32,12 @@ export type CompleteAgeInfo = typeof speciesAgeInfo.$inferSelect & {
 };
 
 export type NullableCompleteAgeInfo = Nullable<CompleteAgeInfo>;
+
+const imagek = new ImageKit({
+  publicKey: "public_ZvRRs5i3HNl4cbUMcFSXmTrfx+g=",
+  privateKey: "private_ugvd8IFzhh/HkVN3502cOVOLoDs=",
+  urlEndpoint: "https://ik.imagekit.io/ilicura/",
+});
 
 export const speciesInfoRouter = createTRPCRouter({
   addBandSize: publicProcedure
@@ -159,6 +167,34 @@ export const speciesInfoRouter = createTRPCRouter({
         .update(speciesSexInfo)
         .set({ description: input.description })
         .where(eq(speciesSexInfo.id, input.id));
+    }),
+
+  addSexImage: publicProcedure
+    .input(
+      z.object({
+        sexId: z.number(),
+        url: z.string(),
+        thumbnailUrl: z.string(),
+        fileId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.insert(speciesPicture).values({
+        sexInfoId: input.sexId,
+        url: input.url,
+        thumbnail: input.thumbnailUrl,
+        fileId: input.fileId,
+      });
+    }),
+
+  getSexImages: publicProcedure
+    .input(z.object({ sexId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .select()
+        .from(speciesPicture)
+        .where(eq(speciesPicture.sexInfoId, input.sexId));
+      return data;
     }),
 
   getSexualDimorphism: publicProcedure

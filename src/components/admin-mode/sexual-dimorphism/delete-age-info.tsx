@@ -1,9 +1,7 @@
 "use client";
 
 import DeleteButton from "@/components/ui/delete-button";
-import type {
-  CompleteAgeInfo,
-} from "@/server/api/routers/speciesInfo";
+import type { CompleteAgeInfo } from "@/server/api/routers/speciesInfo";
 
 import { api } from "@/trpc/react";
 import AddSexInfo from "./add-sex-info";
@@ -18,7 +16,6 @@ export default function DeleteSexualDimorphism({
   const deleteSexualDimorphism =
     api.speciesInfo.deleteSexualDimorphism.useMutation();
 
-  console.log(sexualDimorphismData);
   return (
     <div className="flex flex-col gap-4">
       {sexualDimorphismData?.map((sexDim) => (
@@ -39,7 +36,7 @@ export default function DeleteSexualDimorphism({
               isLoading={deleteSexualDimorphism.isLoading}
             />
           </div>
-          <AddSexInfo sexInfo={sexDim.sex}  />
+          <AddSexInfo sexInfo={sexDim.sex} />
         </>
       ))}
     </div>

@@ -1,5 +1,5 @@
 import Dropzone from "./dropzone";
 
-export default function AdminPictures({ speciesId }: { speciesId: number }) {
-  return <Dropzone />;
+export default function AddPicture({ sexId }: { sexId: number }) {
+  return <Dropzone sexId={sexId} />;
 }
