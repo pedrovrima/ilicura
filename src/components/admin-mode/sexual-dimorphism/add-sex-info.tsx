@@ -113,7 +113,7 @@ const DisplayImages = ({ sexId }: { sexId: number }) => {
                             .then(async (res) => {
                               console.log(res);
 
-                              await deleteImage.mutate({
+                              deleteImage.mutate({
                                 id: image.id,
                               });
                             })

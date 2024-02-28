@@ -200,7 +200,7 @@ export const speciesInfoRouter = createTRPCRouter({
   deleteSexImage: publicProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db
+      return await ctx.db
         .delete(speciesPicture)
         .where(eq(speciesPicture.id, input.id));
     }),
