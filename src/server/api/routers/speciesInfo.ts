@@ -197,6 +197,14 @@ export const speciesInfoRouter = createTRPCRouter({
       return data;
     }),
 
+  deleteSexImage: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db
+        .delete(speciesPicture)
+        .where(eq(speciesPicture.id, input.id));
+    }),
+
   getSexualDimorphism: publicProcedure
     .input(z.object({ speciesId: z.number() }))
     .query(async ({ ctx, input }) => {

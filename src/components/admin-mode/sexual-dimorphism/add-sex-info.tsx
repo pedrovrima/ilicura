@@ -15,6 +15,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import ImageKit from "imagekit";
 
 export default function AddSexInfo({
   sexInfo,
@@ -77,6 +78,12 @@ export default function AddSexInfo({
 
 const DisplayImages = ({ sexId }: { sexId: number }) => {
   const images = api.speciesInfo.getSexImages.useQuery({ sexId });
+  const deleteImage = api.speciesInfo.deleteSexImage.useMutation();
+  const imagek = new ImageKit({
+    publicKey: "public_ZvRRs5i3HNl4cbUMcFSXmTrfx+g=",
+    privateKey: "private_ugvd8IFzhh/HkVN3502cOVOLoDs=",
+    urlEndpoint: "https://ik.imagekit.io/ilicura/",
+  });
 
   if (images.isLoading) return "Loading...";
   if (images.error) return "Error";
@@ -89,12 +96,38 @@ const DisplayImages = ({ sexId }: { sexId: number }) => {
             {images.data?.map((image) => (
               <CarouselItem className="basis-32" key={image.id}>
                 {image.url && (
-                  <Image
-                    src={`${image.url}?tr=w-200,h-200,fo-auto`}
-                    alt={"abc"}
-                    width={200}
-                    height={200}
-                  />
+                  <div className="group relative">
+                    <Image
+                      src={`${image.url}?tr=w-200,h-200,fo-auto`}
+                      alt={"abc"}
+                      width={200}
+                      height={200}
+                    />
+                    <div className="absolute top-0 z-50 hidden h-full w-full bg-primary-foreground opacity-90		  group-hover:block" />
+                    <button
+                      onClick={async () => {
+                        if (image.fileId) {
+                          console.log("clicked");
+                          const del = imagek
+                            .deleteFile(image.fileId)
+                            .then(async (res) => {
+                              console.log(res);
+
+                              await deleteImage.mutate({
+                                id: image.id,
+                              });
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                          console.log(del);
+                        }
+                      }}
+                      className="absolute top-0 z-50 hidden h-full w-full  text-lg font-bold 	text-destructive		  group-hover:block"
+                    >
+                      Deletar
+                    </button>
+                  </div>
                 )}
               </CarouselItem>
             ))}
