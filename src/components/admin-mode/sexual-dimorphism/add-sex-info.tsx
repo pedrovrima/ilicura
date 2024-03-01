@@ -58,11 +58,13 @@ const DisplayImages = ({
   images: {
     isLoading: boolean;
     error: any;
-    data: {
-      id: number;
-      fileId: string | null;
-      url: string;
-    }[];
+    data:
+      | {
+          id: number;
+          fileId: string | null;
+          url: string;
+        }[]
+      | [];
     refetch: () => void;
   };
 }) => {
@@ -71,7 +73,7 @@ const DisplayImages = ({
 
   return (
     <div>
-      {images.data.length > 0 && (
+      {images?.data?.length > 0 && (
         <Carousel>
           <CarouselContent>
             {images.data?.map((image) => (
@@ -172,7 +174,8 @@ const SexInfo = ({
         images={{
           isLoading: images.isLoading,
           error: images.error,
-          data: images.data ?? ([] as any),
+          // @ts-expect-error
+          data: images.data || [],
           refetch: images.refetch,
         }}
       />
