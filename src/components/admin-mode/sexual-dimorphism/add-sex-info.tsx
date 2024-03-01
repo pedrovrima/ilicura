@@ -56,8 +56,6 @@ const DisplayImages = ({
   images,
 }: {
   images: {
-    isLoading: boolean;
-    error: any;
     data:
       | {
           id: number;
@@ -68,9 +66,6 @@ const DisplayImages = ({
     refetch: () => void;
   };
 }) => {
-  if (images.isLoading) return "Loading...";
-  if (images.error) return "Error";
-
   return (
     <div>
       {images?.data?.length > 0 && (
@@ -170,15 +165,17 @@ const SexInfo = ({
   return (
     <div key={sex.id}>
       <h3 className="text-md font-bold">Sexo: {sex.sex}</h3>
-      <DisplayImages
-        images={{
-          isLoading: images.isLoading,
-          error: images.error,
-          // @ts-expect-error
-          data: images.data || [],
-          refetch: images.refetch,
-        }}
-      />
+      {images.isLoading && <p>Loading...</p>}
+      {images.error && <p>Error</p>}
+      {!images.isLoading && !images.error && (
+        <DisplayImages
+          images={{
+            // @ts-expect-error
+            data: images.data ?? [],
+            refetch: images.refetch,
+          }}
+        />
+      )}
       <form
         onSubmit={(e) => {
           e.preventDefault();
