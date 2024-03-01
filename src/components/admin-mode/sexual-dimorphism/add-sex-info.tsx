@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/carousel";
 import ImageKit from "imagekit";
 import { Loader } from "lucide-react";
+import { promises } from "dns";
 
 export default function AddSexInfo({
   sexInfo,
@@ -63,7 +64,7 @@ const DisplayImages = ({
           url: string;
         }[]
       | [];
-    refetch: () => void;
+    refetch: () => Promise<void>;
   };
 }) => {
   return (
@@ -170,8 +171,9 @@ const SexInfo = ({
       {!images.isLoading && !images.error && (
         <DisplayImages
           images={{
-            // @ts-expect-error
+            // @ts-expect-error next line
             data: images.data ?? [],
+            // @ts-expect-error next line
             refetch: images.refetch,
           }}
         />
