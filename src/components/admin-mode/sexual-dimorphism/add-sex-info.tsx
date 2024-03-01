@@ -16,6 +16,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import ImageKit from "imagekit";
+import { Loader } from "lucide-react";
 
 export default function AddSexInfo({
   sexInfo,
@@ -41,12 +42,140 @@ export default function AddSexInfo({
     });
   };
 
-  const updateSexInfo = api.speciesInfo.updateSexInfo.useMutation();
-
   return sexInfo.map((sex) => (
+    <SexInfo
+      key={sex.id}
+      sex={sex}
+      updateFormInfo={updateSexFormInfo}
+      sexInfoText={sexInfoText}
+    />
+  ));
+}
+
+const DisplayImages = ({
+  images,
+}: {
+  images: {
+    isLoading: boolean;
+    error: any;
+    data: {
+      id: number;
+      fileId: string | null;
+      url: string;
+    }[];
+    refetch: () => void;
+  };
+}) => {
+  if (images.isLoading) return "Loading...";
+  if (images.error) return "Error";
+
+  return (
+    <div>
+      {images.data.length > 0 && (
+        <Carousel>
+          <CarouselContent>
+            {images.data?.map((image) => (
+              <CarouselItem className="basis-32" key={image.id}>
+                {image.url && (
+                  <ImageDelete
+                    refetch={images.refetch}
+                    image={{
+                      id: image.id,
+                      fileId: image.fileId ?? "",
+                      url: image.url,
+                    }}
+                  />
+                )}
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      )}
+    </div>
+  );
+};
+
+const ImageDelete = ({
+  refetch,
+  image,
+}: {
+  refetch: () => void;
+  image: {
+    id: number;
+    fileId: string;
+    url: string;
+  };
+}) => {
+  const deleteImage = api.speciesInfo.deleteSexImage.useMutation();
+
+  return (
+    <div className="group relative">
+      <Image
+        src={`${image.url}?tr=w-200,h-200,fo-auto`}
+        alt={"abc"}
+        width={200}
+        height={200}
+      />
+      <div
+        className={`absolute top-0 z-50  h-full w-full bg-primary-foreground opacity-90		  group-hover:block  ${deleteImage.isLoading ? "block" : "hidden"}`}
+      />
+      {deleteImage.isLoading && (
+        <div className="absolute top-0 z-50 flex h-full w-full items-center justify-center">
+          <Loader
+            size={32}
+            className="
+          animate-spin-slow
+          "
+          />
+        </div>
+      )}
+
+      {!deleteImage.isLoading && (
+        <button
+          onClick={async () => {
+            await deleteImage.mutateAsync({
+              id: image.id,
+              fileId: image.fileId,
+            });
+            refetch();
+          }}
+          className="absolute top-0 z-50 hidden h-full w-full  text-lg font-bold 	text-destructive		  group-hover:block"
+        >
+          Deletar
+        </button>
+      )}
+    </div>
+  );
+};
+
+const SexInfo = ({
+  sex,
+  updateFormInfo,
+  sexInfoText,
+}: {
+  sex: typeof speciesSexInfo.$inferSelect;
+  updateFormInfo: (id: number) => (description: string) => void;
+  sexInfoText: {
+    id: number | null;
+    description: string | null;
+  }[];
+}) => {
+  const updateSexInfo = api.speciesInfo.updateSexInfo.useMutation();
+  const images = api.speciesInfo.getSexImages.useQuery({ sexId: sex.id });
+
+  return (
     <div key={sex.id}>
       <h3 className="text-md font-bold">Sexo: {sex.sex}</h3>
-      <DisplayImages sexId={sex.id} />
+      <DisplayImages
+        images={{
+          isLoading: images.isLoading,
+          error: images.error,
+          data: images.data ?? ([] as any),
+          refetch: images.refetch,
+        }}
+      />
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -65,77 +194,13 @@ export default function AddSexInfo({
         <Textarea
           value={sexInfoText.find((s) => s.id === sex.id)?.description ?? ""}
           onChange={(e) => {
-            updateSexFormInfo(sex.id)(e.target.value);
+            updateFormInfo(sex.id)(e.target.value);
           }}
         />
 
         <SubmitButton isLoading={updateSexInfo.isLoading}>Salvar</SubmitButton>
-        <AddPicture sexId={sex.id} />
+        <AddPicture sexId={sex.id} refetchImages={images.refetch} />
       </form>
-    </div>
-  ));
-}
-
-const DisplayImages = ({ sexId }: { sexId: number }) => {
-  const images = api.speciesInfo.getSexImages.useQuery({ sexId });
-  const deleteImage = api.speciesInfo.deleteSexImage.useMutation();
-  const imagek = new ImageKit({
-    publicKey: "public_ZvRRs5i3HNl4cbUMcFSXmTrfx+g=",
-    privateKey: "private_ugvd8IFzhh/HkVN3502cOVOLoDs=",
-    urlEndpoint: "https://ik.imagekit.io/ilicura/",
-  });
-
-  if (images.isLoading) return "Loading...";
-  if (images.error) return "Error";
-
-  return (
-    <div>
-      {images.data.length > 0 && (
-        <Carousel>
-          <CarouselContent>
-            {images.data?.map((image) => (
-              <CarouselItem className="basis-32" key={image.id}>
-                {image.url && (
-                  <div className="group relative">
-                    <Image
-                      src={`${image.url}?tr=w-200,h-200,fo-auto`}
-                      alt={"abc"}
-                      width={200}
-                      height={200}
-                    />
-                    <div className="absolute top-0 z-50 hidden h-full w-full bg-primary-foreground opacity-90		  group-hover:block" />
-                    <button
-                      onClick={async () => {
-                        if (image.fileId) {
-                          console.log("clicked");
-                          const del = imagek
-                            .deleteFile(image.fileId)
-                            .then(async (res) => {
-                              console.log(res);
-
-                              deleteImage.mutate({
-                                id: image.id,
-                              });
-                            })
-                            .catch((err) => {
-                              console.log(err);
-                            });
-                          console.log(del);
-                        }
-                      }}
-                      className="absolute top-0 z-50 hidden h-full w-full  text-lg font-bold 	text-destructive		  group-hover:block"
-                    >
-                      Deletar
-                    </button>
-                  </div>
-                )}
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-      )}
     </div>
   );
 };

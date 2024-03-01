@@ -198,11 +198,30 @@ export const speciesInfoRouter = createTRPCRouter({
     }),
 
   deleteSexImage: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.number(), fileId: z.string().nullable() }))
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db
-        .delete(speciesPicture)
-        .where(eq(speciesPicture.id, input.id));
+      const imagek = new ImageKit({
+        publicKey: "public_ZvRRs5i3HNl4cbUMcFSXmTrfx+g=",
+        privateKey: "private_ugvd8IFzhh/HkVN3502cOVOLoDs=",
+        urlEndpoint: "https://ik.imagekit.io/ilicura/",
+      });
+      if (!input.fileId) return;
+
+      const del = await imagek
+        .deleteFile(input.fileId)
+        .then(async (res) => {
+          console.log(res);
+
+          await ctx.db
+            .delete(speciesPicture)
+            .where(eq(speciesPicture.id, input.id));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      console.log(del);
+
+      return;
     }),
 
   getSexualDimorphism: publicProcedure

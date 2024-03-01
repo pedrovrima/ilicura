@@ -15,7 +15,13 @@ const imagek = new ImageKit({
   urlEndpoint: "https://ik.imagekit.io/ilicura/",
 });
 
-export default function Dropzone({ sexId }: { sexId: number }) {
+export default function Dropzone({
+  sexId,
+  refetchImages,
+}: {
+  sexId: number;
+  refetchImages: () => void;
+}) {
   const addImageApi = api.speciesInfo.addSexImage.useMutation();
   const [files, setFiles] = useState<FileWithPreview[]>([]);
   const { getRootProps, getInputProps } = useDropzone({
@@ -59,9 +65,9 @@ export default function Dropzone({ sexId }: { sexId: number }) {
                 fileName: file.name,
                 useUniqueFileName: true,
               })
-              .then((res) => {
+              .then(async (res) => {
                 if (res.url) {
-                  addImageApi.mutate({
+                  await addImageApi.mutateAsync({
                     sexId,
                     fileId: res.fileId,
                     url: res.url,
@@ -70,6 +76,7 @@ export default function Dropzone({ sexId }: { sexId: number }) {
                   setFiles((files) =>
                     files.filter((f) => f.name !== file.name),
                   );
+                  refetchImages();
                 }
               });
           }}
