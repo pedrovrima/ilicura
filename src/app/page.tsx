@@ -13,6 +13,8 @@ export default async function Home() {
           Wiki<span className="text-[hsl(50,100%,70%)]">Mudas</span>
         </h1>
         <Link href="/species/1248">ILIMIL</Link>
+
+        <Link href="/species/1248">RHEAME</Link>
         <SpeciesSearch />
       </div>
     </main>
