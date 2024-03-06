@@ -7,6 +7,22 @@ import withPWAInit from "@ducanh2912/next-pwa";
 
 const withPWA = withPWAInit({
   dest: "public",
+  cacheOnFrontEndNav: true,
+  aggressiveFrontEndNavCaching: true,
+  reloadOnOnline: true,
+  workboxOptions: {
+    disableDevLogs: true,
+    additionalManifestEntries: [
+      {
+        url: "/favicon.ico",
+        revision: null,
+      },
+      {
+        url: "/species/1",
+        revision: null,
+      },
+    ],
+  },
 });
 
 /** @type {import("next").NextConfig} */
