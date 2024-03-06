@@ -34,6 +34,11 @@ interface SpeciesByIdReturn extends SpeciesData {
 }
 
 export const speciesRouter = createTRPCRouter({
+  getAllSpecies: publicProcedure.query(async ({ ctx }) => {
+    const data = await ctx.db.select().from(species);
+    return data;
+  }),
+
   search: publicProcedure
     .input(z.object({ query: z.string().optional() }))
     .query(async ({ ctx, input }) => {
