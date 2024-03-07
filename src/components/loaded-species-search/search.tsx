@@ -8,7 +8,7 @@ function LoadedSpeciesSearch({ speciesList }) {
   const [searchValue, setSearchValue] = useState("" as string);
   const [searchResults, setSearchResults] = useState([] as typeof speciesList);
 
-  console.log(speciesList);
+
   useEffect(() => {
     if (searchValue.length > 4) {
       const results = speciesList.filter(
