@@ -14,7 +14,7 @@ export default async function Home() {
         </h1>
         <Link href="/species/1248">ILIMIL</Link>
 
-        <Link href="/species/1248">RHEAME</Link>
+        <Link href="/species/1">RHEAME</Link>
         <SpeciesSearch />
       </div>
     </main>
