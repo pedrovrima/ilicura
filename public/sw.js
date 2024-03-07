@@ -1,30 +1,30 @@
 if (!self.define) {
   let e,
     s = {};
-  const a = (a, n) => (
-    (a = new URL(a + ".js", n).href),
-    s[a] ||
+  const i = (i, a) => (
+    (i = new URL(i + ".js", a).href),
+    s[i] ||
       new Promise((s) => {
         if ("document" in self) {
           const e = document.createElement("script");
-          (e.src = a), (e.onload = s), document.head.appendChild(e);
-        } else (e = a), importScripts(a), s();
+          (e.src = i), (e.onload = s), document.head.appendChild(e);
+        } else (e = i), importScripts(i), s();
       }).then(() => {
-        let e = s[a];
-        if (!e) throw new Error(`Module ${a} didn’t register its module`);
+        let e = s[i];
+        if (!e) throw new Error(`Module ${i} didn’t register its module`);
         return e;
       })
   );
-  self.define = (n, i) => {
+  self.define = (a, n) => {
     const c =
       e ||
       ("document" in self ? document.currentScript.src : "") ||
       location.href;
     if (s[c]) return;
     let t = {};
-    const o = (e) => a(e, c),
-      r = { module: { uri: c }, exports: t, require: o };
-    s[c] = Promise.all(n.map((e) => r[e] || o(e))).then((e) => (i(...e), t));
+    const r = (e) => i(e, c),
+      o = { module: { uri: c }, exports: t, require: r };
+    s[c] = Promise.all(a.map((e) => o[e] || r(e))).then((e) => (n(...e), t));
   };
 }
 define(["./workbox-c06b064f"], function (e) {
@@ -35,88 +35,88 @@ define(["./workbox-c06b064f"], function (e) {
     e.precacheAndRoute(
       [
         {
-          url: "/_next/static/JoNQLGILSoODXQWVNaxK_/_buildManifest.js",
+          url: "/_next/static/GkUWfMbzOWl5eOGtD2YWM/_buildManifest.js",
           revision: "e0a21c7d7f93d89dce16df0231dc76f2",
         },
         {
-          url: "/_next/static/JoNQLGILSoODXQWVNaxK_/_ssgManifest.js",
+          url: "/_next/static/GkUWfMbzOWl5eOGtD2YWM/_ssgManifest.js",
           revision: "b6652df95db52feb4daf4eca35380933",
         },
         {
           url: "/_next/static/chunks/250-59c047dc40637948.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/468-91a5dfd19981aafe.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/579-f5e8aa58382d3fcb.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/67-18c82455d66d4ff3.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/942-2fe645c256957b58.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/aaea2bcf-d781819a29cd2b2a.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/app/_not-found-c01c84f03057bd4c.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/app/admin/species/%5Bid%5D/page-7010d63f0b563402.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/app/layout-8dd2729c4ce3f4aa.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/app/page-07becad5cb2d7f81.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/app/species/%5Bid%5D/page-b9dc243659852391.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/d12af4b9-4991bee645295b7a.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/e37a0b60-76bbad0149c7f5fd.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/fd9d1056-76c48a3f0a23d645.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/framework-aec844d2ccbe7592.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/main-app-c1bf4840e5cebb8c.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/main-fd5fccdce511e379.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/pages/_app-75f6107b0260711c.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/pages/_error-9a890acb1e81c3fc.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js",
@@ -124,7 +124,7 @@ define(["./workbox-c06b064f"], function (e) {
         },
         {
           url: "/_next/static/chunks/webpack-b724063156a8402b.js",
-          revision: "JoNQLGILSoODXQWVNaxK_",
+          revision: "GkUWfMbzOWl5eOGtD2YWM",
         },
         {
           url: "/_next/static/css/1de9ebbcc485a716.css",
@@ -159,16 +159,26 @@ define(["./workbox-c06b064f"], function (e) {
           revision: "71f3fcaf22131c3368d9ec28ef839831",
         },
         { url: "/favicon.ico", revision: null },
-        { url: "/species/1", revision: null },
-        { url: "/species/10", revision: null },
-        { url: "/species/2", revision: null },
-        { url: "/species/3", revision: null },
-        { url: "/species/4", revision: null },
-        { url: "/species/5", revision: null },
-        { url: "/species/6", revision: null },
-        { url: "/species/7", revision: null },
-        { url: "/species/8", revision: null },
-        { url: "/species/9", revision: null },
+        { url: "/species/1", revision: "a0" },
+        { url: "/species/10", revision: "a9" },
+        { url: "/species/11", revision: "a10" },
+        { url: "/species/12", revision: "a11" },
+        { url: "/species/13", revision: "a12" },
+        { url: "/species/14", revision: "a13" },
+        { url: "/species/15", revision: "a14" },
+        { url: "/species/16", revision: "a15" },
+        { url: "/species/17", revision: "a16" },
+        { url: "/species/18", revision: "a17" },
+        { url: "/species/19", revision: "a18" },
+        { url: "/species/2", revision: "a1" },
+        { url: "/species/20", revision: "a19" },
+        { url: "/species/3", revision: "a2" },
+        { url: "/species/4", revision: "a3" },
+        { url: "/species/5", revision: "a4" },
+        { url: "/species/6", revision: "a5" },
+        { url: "/species/7", revision: "a6" },
+        { url: "/species/8", revision: "a7" },
+        { url: "/species/9", revision: "a8" },
         {
           url: "/swe-worker-4da67dda9bc18c53.js",
           revision: "5a47d90db13bb1309b25bdf7b363570e",
@@ -331,10 +341,10 @@ define(["./workbox-c06b064f"], function (e) {
       "GET",
     ),
     e.registerRoute(
-      ({ request: e, url: { pathname: s }, sameOrigin: a }) =>
+      ({ request: e, url: { pathname: s }, sameOrigin: i }) =>
         "1" === e.headers.get("RSC") &&
         "1" === e.headers.get("Next-Router-Prefetch") &&
-        a &&
+        i &&
         !s.startsWith("/api/"),
       new e.NetworkFirst({
         cacheName: "pages-rsc-prefetch",
@@ -345,8 +355,8 @@ define(["./workbox-c06b064f"], function (e) {
       "GET",
     ),
     e.registerRoute(
-      ({ request: e, url: { pathname: s }, sameOrigin: a }) =>
-        "1" === e.headers.get("RSC") && a && !s.startsWith("/api/"),
+      ({ request: e, url: { pathname: s }, sameOrigin: i }) =>
+        "1" === e.headers.get("RSC") && i && !s.startsWith("/api/"),
       new e.NetworkFirst({
         cacheName: "pages-rsc",
         plugins: [
