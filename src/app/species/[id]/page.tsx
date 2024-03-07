@@ -2,6 +2,14 @@ import { api } from "@/trpc/server";
 import { agesEnum, moltExtensionEnum, moltTypesEnum } from "@/server/db/schema";
 import { skullEnumTranslation } from "@/translations/translation";
 import Link from "next/link";
+import Image from "next/image";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 export default async function Home({ params }: { params: { id: string } }) {
   const id = +params.id;
@@ -15,6 +23,7 @@ export default async function Home({ params }: { params: { id: string } }) {
 
   if (!speciesData) return <p>no data</p>;
 
+  console.log(speciesData.ageInfo);
   const agesEnumValues = agesEnum.enumValues;
   return (
     <main className="flex min-h-screen flex-col items-center justify-center text-slate-900">
@@ -128,6 +137,60 @@ export default async function Home({ params }: { params: { id: string } }) {
                           </span>
                         ))}
                       </p>
+                    </div>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </div>
+        <div>
+          <h2 className="text-2xl font-bold">Idade e Sexo</h2>
+          <div>
+            {speciesData.ageInfo.length === 0 && (
+              <p className="text-gray-600  ">Sem registros</p>
+            )}
+            <ul>
+              {speciesData.ageInfo
+                ?.sort(
+                  //sort by enum order
+                  (a, b) =>
+                    agesEnum.enumValues.indexOf(a.age as agesType) -
+                    agesEnum.enumValues.indexOf(b.age as agesType),
+                )
+                .map((age) => (
+                  <li key={age?.id}>
+                    <div className="mb-4">
+                      <p className="mb-0"> {age?.age}: </p>
+
+                      {age?.sex.map((sex, i) => (
+                        <div key={sex.id}>
+                          <p>{sex.sex}</p>
+                          <p>{sex.description}</p>
+                          {sex.pictures?.length > 0 && (
+                            <Carousel>
+                              <CarouselContent>
+                                {sex.pictures?.map((image) => (
+                                  <CarouselItem
+                                    className="basis-32"
+                                    key={image.id}
+                                  >
+                                    {image.url && (
+                                      <Image
+                                        src={`${image.url}?tr=w-200,h-200,fo-auto`}
+                                        alt={"abc"}
+                                        width={200}
+                                        height={200}
+                                      />
+                                    )}
+                                  </CarouselItem>
+                                ))}
+                              </CarouselContent>
+                              <CarouselPrevious />
+                              <CarouselNext />
+                            </Carousel>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   </li>
                 ))}

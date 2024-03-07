@@ -7,7 +7,7 @@ import withPWAInit from "@ducanh2912/next-pwa";
 
 const test = Array.from({ length: 1897 }, (_, i) => ({
   url: "/species/" + (i + 1),
-  revision: "c" + i,
+  revision: "d" + i,
 }));
 
 const withPWA = withPWAInit({

@@ -11,14 +11,28 @@ import {
   moltLimits,
   speciesAgeInfo,
   speciesSexInfo,
+  speciesPicture,
 } from "@/server/db/schema";
+type Partial<T> = {
+  [P in keyof T]?: T[P];
+};
 
 type SpeciesData = typeof species.$inferSelect;
 type CompleteMoltExtesion = typeof speciesMoltExtensions.$inferSelect & {
   moltLimits: (typeof moltLimits.$inferSelect)[] | [];
 };
+type CompleteSexInfo = {
+  sex: typeof speciesSexInfo.$inferSelect & {
+    pictures: (typeof speciesPicture.$inferSelect)[] | [];
+  };
+
+  ageInfo: typeof speciesAgeInfo.$inferSelect;
+};
+
 type CompleteAgeInfo = typeof speciesAgeInfo.$inferSelect & {
-  sex: (typeof speciesSexInfo.$inferSelect)[] | [];
+  sex: (typeof speciesSexInfo.$inferSelect)[] & {
+    pictures: (typeof speciesPicture.$inferSelect)[] | [];
+  };
 };
 
 interface SpeciesByIdReturn extends SpeciesData {
@@ -69,38 +83,100 @@ export const speciesRouter = createTRPCRouter({
         .select()
         .from(speciesAgeInfo)
         .where(eq(speciesAgeInfo.speciesId, input.id))
-        .leftJoin(speciesSexInfo, eq(speciesAgeInfo.id, speciesSexInfo.ageId));
+        .leftJoin(speciesSexInfo, eq(speciesAgeInfo.id, speciesSexInfo.ageId))
+        .leftJoin(
+          speciesPicture,
+          eq(speciesSexInfo.id, speciesPicture.sexInfoId),
+        );
 
-      const groupedAgeInfo = ageInfo.reduce(
-        (acc: CompleteAgeInfo[], curr): CompleteAgeInfo[] => {
-          const key = curr.species_age_info.age;
+      const groupedSexInfo = ageInfo.reduce(
+        (acc: CompleteSexInfo[], curr): CompleteSexInfo[] => {
+          const key = curr.specues_sex_info?.sex;
+          const thisSex = acc.find(
+            (d) =>
+              d.sex?.sex === key && d.ageInfo.age === curr.species_age_info.age,
+          );
+          if (!key) return acc;
+          if (!thisSex && curr.specues_sex_info) {
+            return [
+              ...acc,
+              {
+                sex: {
+                  ...curr.specues_sex_info,
+                  pictures: curr.species_picture ? [curr.species_picture] : [],
+                },
+
+                ageInfo: curr.species_age_info,
+              },
+            ];
+          }
+          const notThis = acc.filter(
+            (d) =>
+              d.sex?.sex !== key || d.ageInfo.age !== curr.species_age_info.age,
+          );
+
+          if (!thisSex?.sex.pictures)
+            return [
+              ...notThis,
+              {
+                ...thisSex,
+                sex: { ...thisSex?.sex, pictures: [curr.species_picture] },
+              } as any,
+            ];
+
+          return [
+            ...notThis,
+            {
+              ...thisSex,
+              sex: {
+                ...thisSex.sex,
+                pictures: [...thisSex.sex.pictures, curr.species_picture],
+              },
+            } as any,
+          ];
+        },
+        [],
+      );
+
+      const groupedAgeInfo = groupedSexInfo.reduce(
+        (acc: CompleteAgeInfo[], curr: CompleteSexInfo): CompleteAgeInfo[] => {
+          const key = curr.ageInfo.age;
           const thisAge = acc.find((d) => d.age === key);
           if (!key) return acc;
           if (!thisAge) {
             return [
               ...acc,
               {
-                ...curr.species_age_info,
-                sex: curr.specues_sex_info ? [curr.specues_sex_info] : [],
+                ...curr.ageInfo,
+                sex: curr.sex ? [curr.sex] : [],
               },
             ];
           }
 
           const noThis = acc.filter((d) => d.age !== key);
 
+          if (!thisAge.sex) {
+            return [
+              ...noThis,
+              {
+                ...thisAge,
+                sex: [curr.sex],
+              },
+            ];
+          }
+
           return [
             ...noThis,
             {
               ...thisAge,
-              sex: [
-                ...thisAge.sex,
-                curr.specues_sex_info,
-              ] as (typeof speciesSexInfo.$inferSelect)[],
+              sex: [...thisAge.sex, curr.sex],
             },
           ];
         },
         [],
       );
+
+      console.log(groupedAgeInfo);
 
       const extensionsData = await ctx.db
         .select()
