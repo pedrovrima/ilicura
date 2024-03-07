@@ -175,11 +175,9 @@ export default async function Home({ params }: { params: { id: string } }) {
                                     key={image.id}
                                   >
                                     {image.url && (
-                                      <Image
+                                      <img
                                         src={`${image.url}?tr=w-200,h-200,fo-auto`}
                                         alt={"abc"}
-                                        width={200}
-                                        height={200}
                                       />
                                     )}
                                   </CarouselItem>

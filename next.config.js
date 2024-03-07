@@ -19,6 +19,10 @@ const withPWA = withPWAInit({
     disableDevLogs: true,
     additionalManifestEntries: [
       {
+        url: "https://ik.imagekit.io/ilicura/MIORUF_D128381_20211023__2___1__aoBaWnXxN.jpg?tr=w-200,h-200,fo-auto",
+        revision: null,
+      },
+      {
         url: "/favicon.ico",
         revision: null,
       },
