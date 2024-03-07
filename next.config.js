@@ -5,6 +5,11 @@
 await import("./src/env.js");
 import withPWAInit from "@ducanh2912/next-pwa";
 
+const test = Array.from({ length: 1000 }, (_, i) => ({
+  url: "/species/" + (i + 1),
+  revision: null,
+}));
+
 const withPWA = withPWAInit({
   dest: "public",
   cacheOnFrontEndNav: true,
@@ -18,7 +23,7 @@ const withPWA = withPWAInit({
         revision: null,
       },
       {
-        url: "/species/1",
+        url: "/species/2",
         revision: null,
       },
     ],

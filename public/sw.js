@@ -1,30 +1,30 @@
 if (!self.define) {
   let e,
     s = {};
-  const c = (c, i) => (
-    (c = new URL(c + ".js", i).href),
-    s[c] ||
+  const a = (a, n) => (
+    (a = new URL(a + ".js", n).href),
+    s[a] ||
       new Promise((s) => {
         if ("document" in self) {
           const e = document.createElement("script");
-          (e.src = c), (e.onload = s), document.head.appendChild(e);
-        } else (e = c), importScripts(c), s();
+          (e.src = a), (e.onload = s), document.head.appendChild(e);
+        } else (e = a), importScripts(a), s();
       }).then(() => {
-        let e = s[c];
-        if (!e) throw new Error(`Module ${c} didn’t register its module`);
+        let e = s[a];
+        if (!e) throw new Error(`Module ${a} didn’t register its module`);
         return e;
       })
   );
-  self.define = (i, a) => {
-    const n =
+  self.define = (n, c) => {
+    const i =
       e ||
       ("document" in self ? document.currentScript.src : "") ||
       location.href;
-    if (s[n]) return;
+    if (s[i]) return;
     let t = {};
-    const r = (e) => c(e, n),
-      u = { module: { uri: n }, exports: t, require: r };
-    s[n] = Promise.all(i.map((e) => u[e] || r(e))).then((e) => (a(...e), t));
+    const r = (e) => a(e, i),
+      f = { module: { uri: i }, exports: t, require: r };
+    s[i] = Promise.all(n.map((e) => f[e] || r(e))).then((e) => (c(...e), t));
   };
 }
 define(["./workbox-c06b064f"], function (e) {
@@ -36,79 +36,79 @@ define(["./workbox-c06b064f"], function (e) {
       [
         {
           url: "/_next/static/chunks/250-59c047dc40637948.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/468-91a5dfd19981aafe.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/579-f5e8aa58382d3fcb.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/67-18c82455d66d4ff3.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/942-2fe645c256957b58.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/aaea2bcf-d781819a29cd2b2a.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/app/_not-found-c01c84f03057bd4c.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/app/admin/species/%5Bid%5D/page-7010d63f0b563402.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/app/layout-8dd2729c4ce3f4aa.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/app/page-07becad5cb2d7f81.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/app/species/%5Bid%5D/page-b9dc243659852391.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/d12af4b9-4991bee645295b7a.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/e37a0b60-76bbad0149c7f5fd.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/fd9d1056-76c48a3f0a23d645.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/framework-aec844d2ccbe7592.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/main-app-c1bf4840e5cebb8c.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/main-fd5fccdce511e379.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/pages/_app-75f6107b0260711c.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/pages/_error-9a890acb1e81c3fc.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js",
@@ -116,11 +116,19 @@ define(["./workbox-c06b064f"], function (e) {
         },
         {
           url: "/_next/static/chunks/webpack-b724063156a8402b.js",
-          revision: "zuUZbAcxiWU1JkqW3Y3QF",
+          revision: "jGQJMf6_6sWyKBy5OLBqU",
         },
         {
           url: "/_next/static/css/1de9ebbcc485a716.css",
           revision: "1de9ebbcc485a716",
+        },
+        {
+          url: "/_next/static/jGQJMf6_6sWyKBy5OLBqU/_buildManifest.js",
+          revision: "e0a21c7d7f93d89dce16df0231dc76f2",
+        },
+        {
+          url: "/_next/static/jGQJMf6_6sWyKBy5OLBqU/_ssgManifest.js",
+          revision: "b6652df95db52feb4daf4eca35380933",
         },
         {
           url: "/_next/static/media/05a31a2ca4975f99-s.woff2",
@@ -150,16 +158,8 @@ define(["./workbox-c06b064f"], function (e) {
           url: "/_next/static/media/fd4db3eb5472fc27-s.woff2",
           revision: "71f3fcaf22131c3368d9ec28ef839831",
         },
-        {
-          url: "/_next/static/zuUZbAcxiWU1JkqW3Y3QF/_buildManifest.js",
-          revision: "e0a21c7d7f93d89dce16df0231dc76f2",
-        },
-        {
-          url: "/_next/static/zuUZbAcxiWU1JkqW3Y3QF/_ssgManifest.js",
-          revision: "b6652df95db52feb4daf4eca35380933",
-        },
         { url: "/favicon.ico", revision: null },
-        { url: "/species/1", revision: null },
+        { url: "/species/2", revision: null },
         {
           url: "/swe-worker-4da67dda9bc18c53.js",
           revision: "5a47d90db13bb1309b25bdf7b363570e",
@@ -322,10 +322,10 @@ define(["./workbox-c06b064f"], function (e) {
       "GET",
     ),
     e.registerRoute(
-      ({ request: e, url: { pathname: s }, sameOrigin: c }) =>
+      ({ request: e, url: { pathname: s }, sameOrigin: a }) =>
         "1" === e.headers.get("RSC") &&
         "1" === e.headers.get("Next-Router-Prefetch") &&
-        c &&
+        a &&
         !s.startsWith("/api/"),
       new e.NetworkFirst({
         cacheName: "pages-rsc-prefetch",
@@ -336,8 +336,8 @@ define(["./workbox-c06b064f"], function (e) {
       "GET",
     ),
     e.registerRoute(
-      ({ request: e, url: { pathname: s }, sameOrigin: c }) =>
-        "1" === e.headers.get("RSC") && c && !s.startsWith("/api/"),
+      ({ request: e, url: { pathname: s }, sameOrigin: a }) =>
+        "1" === e.headers.get("RSC") && a && !s.startsWith("/api/"),
       new e.NetworkFirst({
         cacheName: "pages-rsc",
         plugins: [
