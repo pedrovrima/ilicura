@@ -22,10 +22,7 @@ const withPWA = withPWAInit({
         url: "/favicon.ico",
         revision: null,
       },
-      {
-        url: "/species/2",
-        revision: null,
-      },
+      ...test,
     ],
   },
 });
