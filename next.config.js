@@ -5,9 +5,9 @@
 await import("./src/env.js");
 import withPWAInit from "@ducanh2912/next-pwa";
 
-const test = Array.from({ length: 20 }, (_, i) => ({
+const test = Array.from({ length: 700 }, (_, i) => ({
   url: "/species/" + (i + 1),
-  revision: "a" + i,
+  revision: "b" + i,
 }));
 
 const withPWA = withPWAInit({
