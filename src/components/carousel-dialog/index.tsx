@@ -29,11 +29,14 @@ export default function CarouselDialog({
                 key={image.id}
               >
                 {image.url && (
-                  <DialogTrigger className="h-full w-full">
-                    <button onClick={() => setImage(image.url ?? "")}>
+                  <DialogTrigger className=" h-[100px] w-[100px]">
+                    <button
+                      onClick={() => setImage(image.url ?? "")}
+                      className="h-full w-full"
+                    >
                       <img
                         className="h-full w-full object-cover"
-                        src={`${image.url}?tr=q-90`}
+                        src={`${image.url}?tr=q-75`}
                         alt={"abc"}
                       />
                     </button>
@@ -45,11 +48,11 @@ export default function CarouselDialog({
           <CarouselPrevious />
           <CarouselNext />
         </Carousel>
-        <DialogContent className="max-h-[90vh] max-w-[97vw]   p-0 ">
+        <DialogContent className="h-[700px] max-h-[90vh] w-[700px] max-w-[97vw]   p-0 ">
           <div className="h-full w-full overflow-hidden">
             <img
               className="h-full w-full  object-contain"
-              src={`${image}?tr=q-90`}
+              src={`${image}?tr=q-75`}
               alt={"abc"}
             />
           </div>

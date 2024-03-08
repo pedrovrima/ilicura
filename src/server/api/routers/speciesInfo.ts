@@ -1,5 +1,5 @@
-import { ZodType, z } from "zod";
-import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { eq, and } from "drizzle-orm";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import {
@@ -18,6 +18,7 @@ import {
   speciesAgeInfo,
   speciesSexInfo,
   speciesPicture,
+  speciesFeaturedPicture,
 } from "@/server/db/schema";
 import ImageKit from "imagekit";
 
@@ -32,12 +33,6 @@ export type CompleteAgeInfo = typeof speciesAgeInfo.$inferSelect & {
 };
 
 export type NullableCompleteAgeInfo = Nullable<CompleteAgeInfo>;
-
-const imagek = new ImageKit({
-  publicKey: "public_ZvRRs5i3HNl4cbUMcFSXmTrfx+g=",
-  privateKey: "private_ugvd8IFzhh/HkVN3502cOVOLoDs=",
-  urlEndpoint: "https://ik.imagekit.io/ilicura/",
-});
 
 export const speciesInfoRouter = createTRPCRouter({
   addBandSize: publicProcedure
@@ -388,6 +383,79 @@ export const speciesInfoRouter = createTRPCRouter({
       );
 
       return combinedExtensionData;
+    }),
+
+  getFeaturedPictures: publicProcedure
+    .input(z.object({ speciesId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const featuredPictures = await ctx.db
+        .select({
+          pictureId: speciesFeaturedPicture.pictureId,
+          url: speciesPicture.url,
+          thumbnail: speciesPicture.thumbnail,
+          cover: speciesFeaturedPicture.cover,
+        })
+        .from(speciesFeaturedPicture)
+        .leftJoin(
+          speciesPicture,
+          eq(speciesFeaturedPicture.pictureId, speciesPicture.id),
+        )
+        .where(eq(speciesFeaturedPicture.speciesId, input.speciesId));
+      return featuredPictures;
+    }),
+
+  addFeaturedPicture: publicProcedure
+    .input(
+      z.object({
+        speciesId: z.number(),
+        pictureId: z.number(),
+        cover: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const sppFeaturedPic = await ctx.db
+        .select()
+        .from(speciesFeaturedPicture)
+        .where(
+          and(
+            eq(speciesFeaturedPicture.speciesId, input.speciesId),
+            eq(speciesFeaturedPicture.cover, input.cover),
+          ),
+        );
+
+      if (sppFeaturedPic[0]) {
+        return await ctx.db
+          .update(speciesFeaturedPicture)
+          .set({
+            pictureId: input.pictureId,
+          })
+          .where(eq(speciesFeaturedPicture.id, sppFeaturedPic[0].id));
+      }
+      return ctx.db.insert(speciesFeaturedPicture).values({
+        speciesId: input.speciesId,
+        pictureId: input.pictureId,
+        cover: input.cover,
+      });
+    }),
+
+  getPictures: publicProcedure
+    .input(z.object({ speciesId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const pictures = await ctx.db
+        .select({
+          id: speciesPicture.id,
+          speciesId: speciesAgeInfo.speciesId,
+          url: speciesPicture.url,
+        })
+        .from(speciesPicture)
+        .leftJoin(
+          speciesSexInfo,
+          eq(speciesPicture.sexInfoId, speciesSexInfo.id),
+        )
+        .leftJoin(speciesAgeInfo, eq(speciesAgeInfo.id, speciesSexInfo.ageId))
+        .where(eq(speciesAgeInfo.speciesId, input.speciesId));
+
+      return pictures;
     }),
 
   getSkullInfo: publicProcedure

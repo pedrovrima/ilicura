@@ -9,11 +9,11 @@ export default async function Home() {
   const speciesList = await api.species.getAllSpecies.query();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#65590c] to-[#272c15] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+    <main className="flex min-h-screen flex-col bg-secondary-foreground text-secondary">
+      <div className="container flex flex-col items-center justify-start gap-12 px-4 py-16 ">
         <Image src="/logo.png" alt="oama logo" width={150} height={150} />
-        <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-          Wiki<span className="text-[hsl(50,100%,70%)]">Mudas</span>
+        <h1 className="text-5xl font-extrabold tracking-tight text-secondary sm:text-[5rem]">
+          Wiki<span className="text-primary">Mudas</span>
         </h1>
         <LoadedSpeciesSearch speciesList={speciesList} />
       </div>

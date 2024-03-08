@@ -1,10 +1,5 @@
 import { api } from "@/trpc/server";
-import {
-  agesEnum,
-  moltExtensionEnum,
-  moltTypesEnum,
-  speciesPicture,
-} from "@/server/db/schema";
+import { agesEnum, moltExtensionEnum, moltTypesEnum } from "@/server/db/schema";
 import { skullEnumTranslation } from "@/translations/translation";
 import Link from "next/link";
 import CarouselDialog from "@/components/carousel-dialog";
@@ -22,23 +17,49 @@ export default async function Home({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <main className="min-h-screen max-w-[100vw] overflow-hidden  px-1 text-slate-900 md:px-12">
-        <div className="container w-full  py-16 ">
-          <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-extrabold italic tracking-tight ">
+      <main className="flex min-h-screen flex-col bg-primary-foreground text-slate-900">
+        <div className="container w-full py-12">
+          <div className="flex flex-col gap-0">
+            <h1 className="text-5xl font-extrabold italic tracking-tight ">
               {speciesData.scientificName}
             </h1>
-            <p className="text-xl  ">{speciesData.ptName}</p>
-            <p className="text-xl ">{speciesData.enName}</p>
+            <div className="flex flex-row items-center gap-2">
+              <img
+                className="h-6 w-6"
+                src="http://purecatamphetamine.github.io/country-flag-icons/3x2/BR.svg"
+              />
+              <p className="text-xl  ">{speciesData.ptName}</p>
+            </div>
+
+            <div className="flex w-fit flex-row items-center gap-2">
+              <img
+                className="h-6 w-6"
+                src="http://purecatamphetamine.github.io/country-flag-icons/3x2/US.svg"
+              />
+              <p className="text-xl ">{speciesData.enName}</p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-2xl font-bold">Tamanho da Anilha</h2>
-            <p>
-              <span className="text-gray-600  ">
-                {speciesData.bandSize.length === 0 && "Sem registros"}
-              </span>
-            </p>
-            <p>
+          <div className="mb-8 mt-8 w-fit">
+            {speciesData.featuredPictures.length > 0 &&
+              speciesData.featuredPictures.map((picture) => (
+                <div key={picture.id} className="flex flex-col items-center ">
+                  <div className="h-96 w-96 overflow-hidden rounded-xl">
+                    <img
+                      className="h-full w-full  object-cover"
+                      src={picture.url}
+                    ></img>
+                  </div>
+                  <p className="font-bold">
+                    {picture.age} - {picture.sex}
+                  </p>
+                </div>
+              ))}
+          </div>
+
+          <div className="mb-8">
+            <p className="text-lg">
+              <span className="font-bold">Tamanho da Anilha: </span>
+              {speciesData.bandSize.length === 0 && "Sem registros"}
               {speciesData.bandSize?.map((size, i) => (
                 <span
                   key={size?.id}
@@ -48,20 +69,21 @@ export default async function Home({ params }: { params: { id: string } }) {
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold">Crânio</h2>
-            <p>
+            <p className="text-lg">
+              <span className="font-bold">Crânio: </span>
               <span className="text-gray-600  ">
                 {speciesData.skull.length === 0 && "Sem registros"}
+                {speciesData.skull?.map((strategy) => {
+                  if (strategy.closes)
+                    return (
+                      <span key={strategy?.id}>
+                        {skullEnumTranslation[strategy.closes]} (
+                        {strategy?.notes})
+                      </span>
+                    );
+                })}
               </span>
             </p>
-            {speciesData.skull?.map((strategy) => {
-              if (strategy.closes)
-                return (
-                  <p key={strategy?.id}>
-                    {skullEnumTranslation[strategy.closes]}: {strategy?.notes}
-                  </p>
-                );
-            })}
           </div>
           <div>
             <h2 className="text-2xl font-bold">Estratégias de Muda</h2>
@@ -163,9 +185,7 @@ export default async function Home({ params }: { params: { id: string } }) {
                             <p>{sex.sex}</p>
                             <p>{sex.description}</p>
                             {sex.pictures?.length > 0 && (
-                              <CarouselDialog
-                                pictures={sex.pictures as speciesPicture[]}
-                              />
+                              <CarouselDialog pictures={sex.pictures} />
                             )}
                           </div>
                         ))}

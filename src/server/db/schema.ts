@@ -13,7 +13,6 @@ import {
   boolean,
   unique,
 } from "drizzle-orm/pg-core";
-import { string } from "zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -205,6 +204,17 @@ export const speciesInfo = createTable("species_info", {
   id: serial("id").primaryKey(),
   speciesId: integer("species_id").references(() => species.id),
   description: varchar("description", { length: 512 }),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
+});
+
+export const speciesFeaturedPicture = createTable("species_featured_picture", {
+  id: serial("id").primaryKey(),
+  speciesId: integer("species_id").references(() => species.id),
+  pictureId: integer("picture_id").references(() => speciesPicture.id),
+  cover: boolean("cover"),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

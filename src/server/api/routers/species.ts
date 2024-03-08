@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { eq, ilike, or } from "drizzle-orm";
+import { eq, ilike, inArray, or, and } from "drizzle-orm";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import {
@@ -12,11 +12,13 @@ import {
   speciesAgeInfo,
   speciesSexInfo,
   speciesPicture,
+  speciesFeaturedPicture,
+  agesEnum,
+  sexEnum,
 } from "@/server/db/schema";
-type Partial<T> = {
-  [P in keyof T]?: T[P];
-};
 
+type AgeEnum = (typeof agesEnum.enumValues)[number];
+type SexEnum = (typeof sexEnum.enumValues)[number];
 type SpeciesData = typeof species.$inferSelect;
 type CompleteMoltExtesion = typeof speciesMoltExtensions.$inferSelect & {
   moltLimits: (typeof moltLimits.$inferSelect)[] | [];
@@ -43,14 +45,56 @@ interface SpeciesByIdReturn extends SpeciesData {
     extensions: { id: number; extension: string }[];
     molLimits: { id: number; limit: string; notes: string | null }[];
   }[];
+  featuredPictures: {
+    age: AgeEnum;
+    sex: SexEnum;
+    url: string;
+    id: number;
+  }[];
   bandSize: (typeof cemaveBandSize.$inferSelect)[];
   ageInfo: CompleteAgeInfo[];
 }
 
 export const speciesRouter = createTRPCRouter({
   getAllSpecies: publicProcedure.query(async ({ ctx }) => {
-    const data = await ctx.db.select().from(species);
-    return data;
+    const moltStrategiesData = ctx.db
+      .select({ data: moltStrategies.speciesId })
+      .from(moltStrategies);
+
+    const speciesWithStrategies = await ctx.db
+      .select()
+      .from(species)
+      .where(inArray(species.id, moltStrategiesData));
+
+    const featuredPicture = await ctx.db
+      .select({
+        id: speciesFeaturedPicture.id,
+        speciesId: speciesFeaturedPicture.speciesId,
+        url: speciesPicture.url,
+      })
+      .from(speciesFeaturedPicture)
+      .where(
+        and(
+          inArray(speciesFeaturedPicture.speciesId, moltStrategiesData),
+          eq(speciesFeaturedPicture.cover, true),
+        ),
+      )
+      .leftJoin(
+        speciesPicture,
+        eq(speciesFeaturedPicture.pictureId, speciesPicture.id),
+      );
+
+    const speciesWithFeaturedPicture = speciesWithStrategies.map((species) => {
+      const picture = featuredPicture.find(
+        (picture) => picture.speciesId === species.id,
+      );
+      return {
+        ...species,
+        featuredPicture: picture,
+      };
+    });
+
+    return speciesWithFeaturedPicture;
   }),
 
   search: publicProcedure
@@ -138,6 +182,25 @@ export const speciesRouter = createTRPCRouter({
         [],
       );
 
+      const featuredPictures = await ctx.db
+        .select({
+          id: speciesFeaturedPicture.id,
+          age: speciesAgeInfo.age,
+          sex: speciesSexInfo.sex,
+          url: speciesPicture.url,
+        })
+        .from(speciesFeaturedPicture)
+        .leftJoin(
+          speciesPicture,
+          eq(speciesFeaturedPicture.pictureId, speciesPicture.id),
+        )
+        .leftJoin(
+          speciesSexInfo,
+          eq(speciesPicture.sexInfoId, speciesSexInfo.id),
+        )
+        .leftJoin(speciesAgeInfo, eq(speciesSexInfo.ageId, speciesAgeInfo.id))
+        .where(eq(speciesFeaturedPicture.speciesId, input.id));
+
       const groupedAgeInfo = groupedSexInfo.reduce(
         (acc: CompleteAgeInfo[], curr: CompleteSexInfo): CompleteAgeInfo[] => {
           const key = curr.ageInfo.age;
@@ -175,8 +238,6 @@ export const speciesRouter = createTRPCRouter({
         },
         [],
       );
-
-      console.log(groupedAgeInfo);
 
       const extensionsData = await ctx.db
         .select()
@@ -296,6 +357,7 @@ export const speciesRouter = createTRPCRouter({
         ageInfo: groupedAgeInfo,
         bandSize: bandSizeData,
         moltExtensions: groupedExtensions,
+        featuredPictures,
       } as SpeciesByIdReturn;
     }),
 });
