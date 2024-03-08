@@ -229,8 +229,8 @@ export default async function Home({ params }: { params: { id: string } }) {
                         </h3>
 
                         {age?.sex.map((sex, i) => (
-                          <div className="mb-8">
-                            <p className="mb-4 text-lg" key={sex.id}>
+                          <div className="mb-8" key={sex.id}>
+                            <p className="mb-4 text-lg">
                               <span className=" font-bold">{sex.sex}</span>
                               {sex.description && (
                                 <span>: {sex.description}</span>
