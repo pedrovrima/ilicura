@@ -5,29 +5,14 @@
 await import("./src/env.js");
 import withPWAInit from "@ducanh2912/next-pwa";
 
-const test = Array.from({ length: 1897 }, (_, i) => ({
-  url: "/species/" + (i + 1),
-  revision: "d" + i,
-}));
-
 const withPWA = withPWAInit({
   dest: "public",
   cacheOnFrontEndNav: true,
   aggressiveFrontEndNavCaching: true,
   reloadOnOnline: true,
+  disable: process.env.NODE_ENV === "development",
   workboxOptions: {
     disableDevLogs: true,
-    additionalManifestEntries: [
-      {
-        url: "https://ik.imagekit.io/ilicura/MIORUF_D128381_20211023__2___1__aoBaWnXxN.jpg?tr=w-200,h-200,fo-auto",
-        revision: null,
-      },
-      {
-        url: "/favicon.ico",
-        revision: null,
-      },
-      ...test,
-    ],
   },
 });
 

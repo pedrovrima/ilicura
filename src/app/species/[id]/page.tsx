@@ -7,23 +7,7 @@ import {
 } from "@/server/db/schema";
 import { skullEnumTranslation } from "@/translations/translation";
 import Link from "next/link";
-import Image from "next/image";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import Head from "next/head";
+import CarouselDialog from "@/components/carousel-dialog";
 
 export default async function Home({ params }: { params: { id: string } }) {
   const id = +params.id;
@@ -33,23 +17,12 @@ export default async function Home({ params }: { params: { id: string } }) {
 
   type moltTypesType = (typeof moltTypesEnum.enumValues)[number];
   type moltExtesionsType = (typeof moltExtensionEnum.enumValues)[number];
-  type agesType = (typeof agesEnum.enumValues)[number];
-  type picturesType = typeof speciesPicture.$inferSelect;
 
   if (!speciesData) return <p>no data</p>;
 
-  console.log(speciesData.ageInfo);
-  const agesEnumValues = agesEnum.enumValues;
-  const allImages = speciesData.ageInfo.reduce((acc: picturesType[], age) => {
-    const ageImages = age.sex.reduce((acc: picturesType[], sex) => {
-      return [...acc, ...sex.pictures];
-    }, []);
-    return [...acc, ...ageImages];
-  }, []);
-
   return (
     <>
-      <main className="min-h-screen max-w-[100vw] overflow-hidden  px-4 text-slate-900 md:px-12">
+      <main className="min-h-screen max-w-[100vw] overflow-hidden  px-1 text-slate-900 md:px-12">
         <div className="container w-full  py-16 ">
           <div className="flex flex-col gap-2">
             <h1 className="text-3xl font-extrabold italic tracking-tight ">
@@ -190,41 +163,9 @@ export default async function Home({ params }: { params: { id: string } }) {
                             <p>{sex.sex}</p>
                             <p>{sex.description}</p>
                             {sex.pictures?.length > 0 && (
-                              <div className="flex w-full items-center justify-center">
-                                <Carousel className="min-w-[75%] max-w-[90vw]">
-                                  <CarouselContent>
-                                    {sex.pictures?.map((image) => (
-                                      <CarouselItem
-                                        className="flex h-[100px] w-[100px] basis-32 items-center justify-center overflow-hidden"
-                                        key={image.id}
-                                      >
-                                        {image.url && (
-                                          <Dialog>
-                                            <DialogTrigger className="h-full w-full">
-                                              <img
-                                                className="h-full w-full object-cover"
-                                                src={`${image.url}?tr=q-90`}
-                                                alt={"abc"}
-                                              />
-                                            </DialogTrigger>
-                                            <DialogContent className="max-h-[90vh] max-w-[97vw]   p-0 ">
-                                              <div className="h-full w-full overflow-hidden">
-                                                <img
-                                                  className="h-full w-full  object-contain"
-                                                  src={`${image.url}?tr=q-90`}
-                                                  alt={"abc"}
-                                                />
-                                              </div>
-                                            </DialogContent>
-                                          </Dialog>
-                                        )}
-                                      </CarouselItem>
-                                    ))}
-                                  </CarouselContent>
-                                  <CarouselPrevious />
-                                  <CarouselNext />
-                                </Carousel>
-                              </div>
+                              <CarouselDialog
+                                pictures={sex.pictures as speciesPicture[]}
+                              />
                             )}
                           </div>
                         ))}
