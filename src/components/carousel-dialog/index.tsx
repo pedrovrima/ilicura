@@ -21,7 +21,7 @@ export default function CarouselDialog({
   return (
     <div className="flex w-full items-center justify-center">
       <Dialog>
-        <Carousel className="min-w-[75%] max-w-[90vw]">
+        <Carousel className="w-[60vw] md:min-w-[75%] md:max-w-[90vw] ">
           <CarouselContent>
             {pictures?.map((image) => (
               <CarouselItem
