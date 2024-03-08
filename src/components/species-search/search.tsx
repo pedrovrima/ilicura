@@ -21,7 +21,7 @@ export default function SpeciesSearch() {
     <div>
       <h1>Species Search</h1>
       <Input
-        className="w-[600px]"
+        className="h-12 w-[600px] max-w-[90vw] rounded-md border-2 border-secondary-foreground p-2  text-lg font-bold"
         onChange={(e) => setSearchValue(e.target.value)}
       />
       {(search.data ?? search.isFetching) && (
