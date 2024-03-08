@@ -1,11 +1,10 @@
 import { unstable_noStore as noStore } from "next/cache";
-import { api } from "@/trpc/server";
+
 import Image from "next/image";
 import SpeciesSearch from "@/components/species-search/search";
 
 export default async function Home() {
   noStore();
-  const speciesList = await api.species.getAllSpecies.query();
 
   return (
     <main className="flex min-h-screen flex-col bg-background text-secondary">
