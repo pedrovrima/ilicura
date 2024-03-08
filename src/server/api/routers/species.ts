@@ -30,9 +30,9 @@ type CompleteSexInfo = {
 };
 
 type CompleteAgeInfo = typeof speciesAgeInfo.$inferSelect & {
-  sex: (typeof speciesSexInfo.$inferSelect)[] & {
+  sex: (typeof speciesSexInfo.$inferSelect & {
     pictures: (typeof speciesPicture.$inferSelect)[] | [];
-  };
+  })[];
 };
 
 interface SpeciesByIdReturn extends SpeciesData {
@@ -121,8 +121,8 @@ export const speciesRouter = createTRPCRouter({
               {
                 ...thisSex,
                 sex: { ...thisSex?.sex, pictures: [curr.species_picture] },
-              } as any,
-            ];
+              } as CompleteSexInfo,
+            ] as CompleteSexInfo[];
 
           return [
             ...notThis,
@@ -132,8 +132,8 @@ export const speciesRouter = createTRPCRouter({
                 ...thisSex.sex,
                 pictures: [...thisSex.sex.pictures, curr.species_picture],
               },
-            } as any,
-          ];
+            } as CompleteSexInfo,
+          ] as CompleteSexInfo[];
         },
         [],
       );

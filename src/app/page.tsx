@@ -1,5 +1,6 @@
 import { unstable_noStore as noStore } from "next/cache";
 import { api } from "@/trpc/server";
+import Image from "next/image";
 
 import LoadedSpeciesSearch from "../components/loaded-species-search/search";
 
@@ -10,7 +11,7 @@ export default async function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#65590c] to-[#272c15] text-white">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-        <img src="https://ik.imagekit.io/ilicura/DSC_0206_5S-fgP5iu.JPG" />
+        <Image src="/logo.png" alt="oama logo" width={150} height={150} />
         <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
           Wiki<span className="text-[hsl(50,100%,70%)]">Mudas</span>
         </h1>

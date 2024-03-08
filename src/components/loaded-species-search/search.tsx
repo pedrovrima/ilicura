@@ -3,22 +3,24 @@
 import React, { useState, useEffect } from "react";
 import { Input } from "../ui/input";
 import Link from "next/link";
+import { species } from "@/server/db/schema";
 
-function LoadedSpeciesSearch({ speciesList }) {
+type SpeciesList = typeof species.$inferSelect;
+
+function LoadedSpeciesSearch({ speciesList }: { speciesList: SpeciesList[] }) {
   const [searchValue, setSearchValue] = useState("" as string);
   const [searchResults, setSearchResults] = useState([] as typeof speciesList);
-
 
   useEffect(() => {
     if (searchValue.length > 4) {
       const results = speciesList.filter(
         (species) =>
-          species.ptName.toLowerCase().includes(searchValue.toLowerCase()) ||
-          species.scientificName
-            .toLowerCase()
-            .includes(searchValue.toLowerCase()) ||
-          species.sciCode.toLowerCase().includes(searchValue.toLowerCase()) ||
-          species.enName.toLowerCase().includes(searchValue.toLowerCase()),
+          species?.ptName?.toLowerCase().includes(searchValue.toLowerCase()) ??
+          species?.scientificName
+            ?.toLowerCase()
+            .includes(searchValue.toLowerCase()) ??
+          species?.sciCode?.toLowerCase().includes(searchValue.toLowerCase()) ??
+          species?.enName?.toLowerCase().includes(searchValue.toLowerCase()),
       );
       setSearchResults(results);
     } else {
@@ -28,10 +30,10 @@ function LoadedSpeciesSearch({ speciesList }) {
 
   return (
     <div>
-      <h1>Species Search</h1>
+      <h1>Busca</h1>
       <Input
         value={searchValue}
-        className="w-[600px]"
+        className="w-[600px] max-w-[90vw]"
         onChange={(e) => setSearchValue(e.target.value)}
       />
       {searchResults.length > 0 && (
