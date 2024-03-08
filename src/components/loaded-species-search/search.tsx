@@ -11,15 +11,19 @@ function LoadedSpeciesSearch({ speciesList }: { speciesList: SpeciesList[] }) {
   const [searchValue, setSearchValue] = useState("" as string);
   const [searchResults, setSearchResults] = useState([] as typeof speciesList);
 
+  console.log(searchResults);
   useEffect(() => {
-    if (searchValue.length > 4) {
+    if (searchValue.length > 3) {
       const results = speciesList.filter(
         (species) =>
-          species?.ptName?.toLowerCase().includes(searchValue.toLowerCase()) ??
+          //eslint-disable-next-line
+          species?.ptName?.toLowerCase().includes(searchValue.toLowerCase()) ||
           species?.scientificName
             ?.toLowerCase()
-            .includes(searchValue.toLowerCase()) ??
-          species?.sciCode?.toLowerCase().includes(searchValue.toLowerCase()) ??
+            //eslint-disable-next-line
+            .includes(searchValue.toLowerCase()) ||
+          //eslint-disable-next-line
+          species?.sciCode?.toLowerCase().includes(searchValue.toLowerCase()) ||
           species?.enName?.toLowerCase().includes(searchValue.toLowerCase()),
       );
       setSearchResults(results);
