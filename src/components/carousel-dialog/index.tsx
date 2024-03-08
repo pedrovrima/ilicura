@@ -21,25 +21,26 @@ export default function CarouselDialog({
   return (
     <div className="flex w-full items-center justify-center">
       <Dialog>
-        <Carousel className="w-[60vw] md:min-w-[75%] md:max-w-[90vw] ">
-          <CarouselContent>
+        <Carousel className="w-[60vw] md:w-[80%] ">
+          <CarouselContent className="gap-2">
             {pictures?.map((image) => (
               <CarouselItem
-                className="flex h-[100px] w-[100px] basis-32 items-center justify-center overflow-hidden"
+                className="flex h-[300px] w-[200px] basis-[200px] items-center justify-center overflow-hidden"
                 key={image.id}
               >
                 {image.url && (
-                  <DialogTrigger className=" h-[100px] w-[100px]">
-                    <button
-                      onClick={() => setImage(image.url ?? "")}
-                      className="h-full w-full"
-                    >
-                      <img
-                        className="h-full w-full object-cover"
-                        src={`${image.url}?tr=q-75`}
-                        alt={"abc"}
-                      />
-                    </button>
+                  <DialogTrigger
+                    className=" h-[300px] 
+                  w-[200px] overflow-hidden rounded-lg
+
+                  "
+                    onClick={() => setImage(image.url ?? "")}
+                  >
+                    <img
+                      className="h-full w-full object-cover"
+                      src={`${image.url}?tr=q-15`}
+                      alt={"abc"}
+                    />
                   </DialogTrigger>
                 )}
               </CarouselItem>
@@ -48,11 +49,11 @@ export default function CarouselDialog({
           <CarouselPrevious />
           <CarouselNext />
         </Carousel>
-        <DialogContent className="h-[700px] max-h-[90vh] w-[700px] max-w-[97vw]   p-0 ">
+        <DialogContent className="h-fit max-h-[90vh] w-[700px] max-w-[97vw]   p-0 ">
           <div className="h-full w-full overflow-hidden">
             <img
               className="h-full w-full  object-contain"
-              src={`${image}?tr=q-75`}
+              src={`${image}?tr=q-15`}
               alt={"abc"}
             />
           </div>
