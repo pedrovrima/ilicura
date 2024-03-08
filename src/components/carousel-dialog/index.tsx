@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 
 import {
@@ -28,7 +30,7 @@ export default function CarouselDialog({
               >
                 {image.url && (
                   <DialogTrigger className="h-full w-full">
-                    <button onClick={() => setImage(image.url)}>
+                    <button onClick={() => setImage(image.url ?? "")}>
                       <img
                         className="h-full w-full object-cover"
                         src={`${image.url}?tr=q-90`}
