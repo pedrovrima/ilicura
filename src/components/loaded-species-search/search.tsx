@@ -56,7 +56,7 @@ function LoadedSpeciesSearch({ speciesList }: { speciesList: SpeciesList[] }) {
                   <div className="h-24 w-24 overflow-hidden rounded-full">
                     <img
                       className="h-full w-full origin-center object-cover"
-                      src={species.featuredPicture?.url! || "/logo.png"}
+                      src={species.featuredPicture?.url ?? "/logo.png"}
                     ></img>
                   </div>
                   <div>

@@ -23,8 +23,10 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
   });
   const addFeature = api.speciesInfo.addFeaturedPicture.useMutation();
 
+  //ts-ignore
   if (isLoading || featureLoading) return <p>loading...</p>;
-  if (error || featureError) return <p>error</p>;
+  //ts-ignore
+  if (error ?? featureError) return <p>error</p>;
   if (!data) return <p>no pictures</p>;
 
   return (
@@ -34,10 +36,10 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
         <div className="flex flex-col items-center">
           <h3>Destaque</h3>
           <div className="h-[150px] w-[150px] overflow-hidden rounded-full">
-            {featureData?.length > 0 && (
+            {featureData && (
               <img
                 className="h-full w-full object-cover"
-                src={`${featureData.find((f) => f.cover)?.url!}?tr=q-25`}
+                src={`${featureData.find((f) => f.cover)?.url}?tr=q-25`}
               ></img>
             )}
           </div>
@@ -45,10 +47,10 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
         <div className="flex flex-col items-center">
           <h3>SubDestaque</h3>
           <div className="relative h-[150px] w-[150px] overflow-hidden rounded-full">
-            {featureData?.length > 0 && (
+            {featureData && (
               <img
                 className="h-full w-full object-cover"
-                src={`${featureData.find((f) => !f.cover)?.url!}?tr=q-25`}
+                src={`${featureData.find((f) => !f.cover)?.url}?tr=q-25`}
               ></img>
             )}
           </div>
@@ -72,7 +74,7 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
                           pictureId: image.id,
                           cover: true,
                         });
-                        refetchFeature();
+                        await refetchFeature();
                       }}
                     >
                       Destaque
@@ -84,7 +86,7 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
                           pictureId: image.id,
                           cover: false,
                         });
-                        refetchFeature();
+                        await refetchFeature();
                       }}
                     >
                       Sub-Destaque
