@@ -15,6 +15,8 @@ import {
   speciesFeaturedPicture,
   agesEnum,
   sexEnum,
+  families,
+  genus,
 } from "@/server/db/schema";
 
 type AgeEnum = (typeof agesEnum.enumValues)[number];
@@ -40,6 +42,8 @@ type CompleteAgeInfo = typeof speciesAgeInfo.$inferSelect & {
 interface SpeciesByIdReturn extends SpeciesData {
   moltStrategies: (typeof moltStrategies.$inferSelect)[] | [];
   skull: (typeof skull.$inferSelect)[] | [];
+  genus: string;
+  family: string;
   moltExtensions: {
     moltType: string;
     extensions: { id: number; extension: string }[];
@@ -121,7 +125,9 @@ export const speciesRouter = createTRPCRouter({
         .select()
         .from(species)
         .where(eq(species.id, input.id))
-        .leftJoin(moltStrategies, eq(species.id, moltStrategies.speciesId));
+        .leftJoin(moltStrategies, eq(species.id, moltStrategies.speciesId))
+        .leftJoin(genus, eq(genus.id, species.genusId))
+        .leftJoin(families, eq(genus.familyId, families.id));
 
       const ageInfo = await ctx.db
         .select()
@@ -351,6 +357,8 @@ export const speciesRouter = createTRPCRouter({
 
       return {
         ...speciesData,
+        genus: filteredData[0]?.genus?.genusName,
+        family: filteredData[0]?.families?.name,
         moltStrategies:
           moltStrategiesData as (typeof moltStrategies.$inferSelect)[],
         skull: skullData as (typeof skull.$inferSelect)[],

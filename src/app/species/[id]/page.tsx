@@ -38,7 +38,7 @@ export default async function Home({ params }: { params: { id: string } }) {
             </h1>
             <div className="flex flex-row items-center gap-2">
               <Dna />
-              <p className="text-xl  ">{speciesData.sciCode}</p>
+              <p className="text-xl  ">{speciesData.family}</p>
             </div>
             <div className="flex flex-row items-center gap-2">
               <Bird />
