@@ -49,7 +49,7 @@ export default async function Home({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center justify-center text-slate-900">
+      <main className="flex min-h-screen max-w-[100vw] flex-col items-center justify-center text-slate-900">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <div className="flex flex-col gap-2">
             <h1 className="text-3xl font-extrabold italic tracking-tight ">
