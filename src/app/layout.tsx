@@ -7,8 +7,8 @@ import type { Metadata, Viewport } from "next";
 
 const APP_NAME = "WikiMudas";
 const APP_DEFAULT_TITLE = "WikiMudas";
-const APP_TITLE_TEMPLATE = "%s - App";
-const APP_DESCRIPTION = "Guia de mudas de aves";
+const APP_TITLE_TEMPLATE = "WikiMudas";
+const APP_DESCRIPTION = "Feito por OAMa";
 
 export const metadata: Metadata = {
   applicationName: APP_NAME,

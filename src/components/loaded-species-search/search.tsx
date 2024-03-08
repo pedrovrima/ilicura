@@ -40,20 +40,20 @@ function LoadedSpeciesSearch({ speciesList }: { speciesList: SpeciesList[] }) {
   }, [searchValue, speciesList]);
 
   return (
-    <div>
-      <h1>Busca</h1>
+    <div className="mb-20">
       <Input
         value={searchValue}
-        className="w-[600px] max-w-[90vw]"
+        className="h-12 w-[600px] max-w-[90vw] rounded-md border-2 border-secondary-foreground p-2  text-lg font-bold"
         onChange={(e) => setSearchValue(e.target.value)}
+        placeholder="Busque por código, nome científico, etc."
       />
       {searchResults.length > 0 && (
-        <div className="mt-12">
-          <ul className="flex flex-col gap-8">
+        <div className="mt-28 flex justify-center">
+          <ul className="flex w-fit flex-col gap-8">
             {searchResults?.map((species) => (
               <Link key={species.id} href={`/species/${species.id}`}>
-                <li className="flex flex-row items-center  gap-4 rounded-md border-[1px] border-primary bg-secondary-foreground px-4 py-2 text-primary hover:bg-primary hover:text-primary-foreground">
-                  <div className="h-24 w-24 overflow-hidden rounded-full">
+                <li className="flex flex-row items-center  gap-4 rounded-md  px-4 py-2 text-primary hover:bg-primary hover:text-primary-foreground">
+                  <div className=" h-32 w-32 overflow-hidden rounded-full">
                     <img
                       className="h-full w-full origin-center object-cover"
                       src={
