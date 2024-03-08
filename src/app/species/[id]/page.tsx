@@ -49,8 +49,8 @@ export default async function Home({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <main className="flex min-h-screen max-w-[100vw] flex-col items-center justify-center text-slate-900">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+      <main className="min-h-screen max-w-[100vw] overflow-hidden  px-4 text-slate-900 md:px-12">
+        <div className="container w-full  py-16 ">
           <div className="flex flex-col gap-2">
             <h1 className="text-3xl font-extrabold italic tracking-tight ">
               {speciesData.scientificName}
@@ -190,39 +190,41 @@ export default async function Home({ params }: { params: { id: string } }) {
                             <p>{sex.sex}</p>
                             <p>{sex.description}</p>
                             {sex.pictures?.length > 0 && (
-                              <Carousel>
-                                <CarouselContent>
-                                  {sex.pictures?.map((image) => (
-                                    <CarouselItem
-                                      className="flex h-[100px] w-[100px] basis-32 items-center justify-center overflow-hidden"
-                                      key={image.id}
-                                    >
-                                      {image.url && (
-                                        <Dialog>
-                                          <DialogTrigger className="h-full w-full">
-                                            <img
-                                              className="h-full w-full object-cover"
-                                              src={`${image.url}?tr=q-90`}
-                                              alt={"abc"}
-                                            />
-                                          </DialogTrigger>
-                                          <DialogContent className="max-h-[90vh] max-w-[97vw]   p-0 ">
-                                            <div className="h-full w-full overflow-hidden">
+                              <div className="flex w-full items-center justify-center">
+                                <Carousel className="min-w-[75%] max-w-[90vw]">
+                                  <CarouselContent>
+                                    {sex.pictures?.map((image) => (
+                                      <CarouselItem
+                                        className="flex h-[100px] w-[100px] basis-32 items-center justify-center overflow-hidden"
+                                        key={image.id}
+                                      >
+                                        {image.url && (
+                                          <Dialog>
+                                            <DialogTrigger className="h-full w-full">
                                               <img
-                                                className="h-full w-full  object-contain"
+                                                className="h-full w-full object-cover"
                                                 src={`${image.url}?tr=q-90`}
                                                 alt={"abc"}
                                               />
-                                            </div>
-                                          </DialogContent>
-                                        </Dialog>
-                                      )}
-                                    </CarouselItem>
-                                  ))}
-                                </CarouselContent>
-                                <CarouselPrevious />
-                                <CarouselNext />
-                              </Carousel>
+                                            </DialogTrigger>
+                                            <DialogContent className="max-h-[90vh] max-w-[97vw]   p-0 ">
+                                              <div className="h-full w-full overflow-hidden">
+                                                <img
+                                                  className="h-full w-full  object-contain"
+                                                  src={`${image.url}?tr=q-90`}
+                                                  alt={"abc"}
+                                                />
+                                              </div>
+                                            </DialogContent>
+                                          </Dialog>
+                                        )}
+                                      </CarouselItem>
+                                    ))}
+                                  </CarouselContent>
+                                  <CarouselPrevious />
+                                  <CarouselNext />
+                                </Carousel>
+                              </div>
                             )}
                           </div>
                         ))}
