@@ -1,6 +1,6 @@
 {
-  "name": "My awesome PWA app",
-  "short_name": "PWA App",
+  "name": "WikiMudas",
+  "short_name": "WikiMudas",
   "icons": [
     {
       "src": "/icons/96-96.png",
@@ -20,8 +20,8 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#FFFFFF",
-  "background_color": "#FFFFFF",
+  "theme_color": "#f1e4ca",
+  "background_color": "#f1e4ca",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait"
