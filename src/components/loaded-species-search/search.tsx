@@ -43,29 +43,34 @@ function LoadedSpeciesSearch({ speciesList }: { speciesList: SpeciesList[] }) {
     <div className="mb-20">
       <Input
         value={searchValue}
-        className="h-12 w-[600px] max-w-[90vw] rounded-md border-2 border-secondary-foreground p-2  text-lg font-bold"
+        className="h-12 w-[600px] max-w-[90vw] rounded-md border-2 border-secondary-foreground p-2 text-lg  font-bold shadow-lg "
         onChange={(e) => setSearchValue(e.target.value)}
         placeholder="Busque por código, nome científico, etc."
       />
       {searchResults.length > 0 && (
         <div className="mt-28 flex justify-center">
-          <ul className="flex w-fit flex-col gap-8">
+          <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {searchResults?.map((species) => (
               <Link key={species.id} href={`/species/${species.id}`}>
-                <li className="flex flex-row items-center  gap-4 rounded-md  px-4 py-2 text-primary hover:bg-primary hover:text-primary-foreground">
-                  <div className=" h-32 w-32 overflow-hidden rounded-full">
+                <li className=" group relative flex h-64 flex-col items-center justify-end gap-4 overflow-hidden   rounded-lg border-2 border-secondary-foreground text-primary shadow-lg   hover:bg-primary hover:text-primary-foreground sm:w-48">
+                  <div className="absolute h-full w-full overflow-hidden">
                     <img
-                      className="h-full w-full origin-center object-cover"
+                      className="h-64 w-48 origin-center object-cover transition-all duration-300 ease-in-out group-hover:h-72 "
                       src={
                         species.featuredPicture?.url
-                          ? `${species.featuredPicture?.url}?tr=w-150,h-150`
+                          ? `${species.featuredPicture?.url}?tr=q-15`
                           : "/logo.png"
                       }
                     ></img>
                   </div>
-                  <div>
-                    <p className="font-bold capitalize">{species.ptName}</p>
-                    <span className="italic">{species.scientificName}</span>
+                  <div className=" absolute h-full w-full bg-gradient-to-b from-transparent via-transparent to-black to-70% opacity-50 transition-all duration-300 ease-in-out group-hover:opacity-80" />
+                  <div className="z-50 pb-4 text-center text-white sm:px-2">
+                    <p className="mb-1  font-extrabold capitalize sm:text-lg ">
+                      {species.ptName}
+                    </p>
+                    <p className="sm:text-md text-wrap text-sm italic">
+                      {species.scientificName}
+                    </p>
                   </div>
                 </li>
               </Link>
