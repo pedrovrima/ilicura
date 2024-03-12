@@ -59,7 +59,7 @@ function LoadedSpeciesSearch({ speciesList }: { speciesList: SpeciesList[] }) {
                       src={
                         species.featuredPicture?.url
                           ? `${species.featuredPicture?.url}?tr=q-15`
-                          : "/logo.png"
+                          : "/no-photo.webp"
                       }
                     ></img>
                   </div>
