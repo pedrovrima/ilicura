@@ -4,6 +4,7 @@
  */
 await import("./src/env.js");
 import withPWAInit from "@ducanh2912/next-pwa";
+import { ilicuraManifest } from "ilicura_data.js";
 
 const withPWA = withPWAInit({
   dest: "public",
@@ -13,12 +14,7 @@ const withPWA = withPWAInit({
   disable: process.env.NODE_ENV === "development",
   workboxOptions: {
     disableDevLogs: true,
-    additionalManifestEntries: [
-      {
-        url: "/species/952",
-        revision: "213",
-      },
-    ],
+    additionalManifestEntries: [...ilicuraManifest],
   },
 });
 
