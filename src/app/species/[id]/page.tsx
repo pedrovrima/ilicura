@@ -75,7 +75,7 @@ export default async function Home({ params }: { params: { id: string } }) {
                     <div className="h-[350px]  overflow-hidden rounded-xl">
                       <img
                         className="h-full w-full  object-cover"
-                        src={picture.url}
+                        src={picture.url + "?tr=q-5"}
                       ></img>
                     </div>
                     <p className="font-bold">

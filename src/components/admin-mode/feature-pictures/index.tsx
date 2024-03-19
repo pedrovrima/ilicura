@@ -39,7 +39,7 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
             {featureData && (
               <img
                 className="h-full w-full object-cover"
-                src={`${featureData.find((f) => f.cover)?.url}?tr=q-25`}
+                src={`${featureData.find((f) => f.cover)?.url}?tr=q-5`}
               ></img>
             )}
           </div>
@@ -50,7 +50,7 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
             {featureData && (
               <img
                 className="h-full w-full object-cover"
-                src={`${featureData.find((f) => !f.cover)?.url}?tr=q-25`}
+                src={`${featureData.find((f) => !f.cover)?.url}?tr=q-5`}
               ></img>
             )}
           </div>
@@ -94,7 +94,7 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
                   </div>
                   <img
                     className="h-full w-full object-cover"
-                    src={`${image.url}?tr=q-25`}
+                    src={`${image.url}?tr=q-5`}
                     alt={"abc"}
                   />
                 </div>
