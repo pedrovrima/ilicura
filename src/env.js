@@ -12,11 +12,14 @@ export const env = createEnv({
       .url()
       .refine(
         (str) => !str.includes("YOUR_MYSQL_URL_HERE"),
-        "You forgot to change the default URL"
+        "You forgot to change the default URL",
       ),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+    IMAGEK_PUBLIC_KEY: z.string(),
+    IMAGEK_PRIVATE_KEY: z.string(),
+    IMAGEK_URL_ENDPOINT: z.string().url(),
   },
 
   /**
@@ -35,6 +38,9 @@ export const env = createEnv({
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
+    IMAGEK_PUBLIC_KEY: process.env.IMAGEK_PUBLIC_KEY,
+    IMAGEK_PRIVATE_KEY: process.env.IMAGEK_PRIVATE_KEY,
+    IMAGEK_URL_ENDPOINT: process.env.IMAGEK_URL_ENDPOINT,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

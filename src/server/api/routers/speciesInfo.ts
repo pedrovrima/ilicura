@@ -21,6 +21,7 @@ import {
   speciesFeaturedPicture,
 } from "@/server/db/schema";
 import ImageKit from "imagekit";
+import { env } from "@/env";
 
 type CompleteMoltExtesion = typeof speciesMoltExtensions.$inferSelect & {
   moltLimits: (typeof moltLimits.$inferSelect)[] | [];
@@ -196,9 +197,9 @@ export const speciesInfoRouter = createTRPCRouter({
     .input(z.object({ id: z.number(), fileId: z.string().nullable() }))
     .mutation(async ({ ctx, input }) => {
       const imagek = new ImageKit({
-        publicKey: "public_ZvRRs5i3HNl4cbUMcFSXmTrfx+g=",
-        privateKey: "private_ugvd8IFzhh/HkVN3502cOVOLoDs=",
-        urlEndpoint: "https://ik.imagekit.io/ilicura/",
+        publicKey: env.IMAGEK_PUBLIC_KEY,
+        privateKey: env.IMAGEK_PRIVATE_KEY,
+        urlEndpoint: env.IMAGEK_URL_ENDPOINT,
       });
       if (!input.fileId) return;
 

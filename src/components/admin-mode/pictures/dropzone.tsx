@@ -4,15 +4,14 @@ import { useDropzone } from "react-dropzone";
 import { api } from "@/trpc/react";
 
 import ImageKit from "imagekit";
-import { Delete } from "lucide-react";
-import DeleteButton from "@/components/ui/delete-button";
+import { env } from "@/env";
 
 type FileWithPreview = File & { preview: string };
 
 const imagek = new ImageKit({
-  publicKey: "public_ZvRRs5i3HNl4cbUMcFSXmTrfx+g=",
-  privateKey: "private_ugvd8IFzhh/HkVN3502cOVOLoDs=",
-  urlEndpoint: "https://ik.imagekit.io/ilicura/",
+  publicKey: env.IMAGEK_PUBLIC_KEY,
+  privateKey: env.IMAGEK_PRIVATE_KEY,
+  urlEndpoint: env.IMAGEK_URL_ENDPOINT,
 });
 
 export default function Dropzone({
@@ -58,7 +57,7 @@ export default function Dropzone({
         <Button
           variant={"outline"}
           onClick={async () => {
-            const upload = await imagek
+            await imagek
               .upload({
                 //@ts-expect-error next line
                 file: file,
