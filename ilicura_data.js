@@ -476,7 +476,7 @@ const ilicuraSPP = [
 
 export const ilicuraPageManifest = ilicuraSPP.map((spp) => ({
   url: "/species/" + spp,
-  revision: "abc",
+  revision: "2abc",
 }));
 
 export const ilicuraPhotoManifest = ilicuraPhotos.map((photos) => ({
