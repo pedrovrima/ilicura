@@ -28,7 +28,9 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_IMAGEK_PUBLIC_KEY: z.string(),
+    NEXT_PUBLIC_IMAGEK_PRIVATE_KEY: z.string(),
+    NEXT_PUBLIC_IMAGEK_URL_ENDPOINT: z.string().url(),
   },
 
   /**
@@ -41,6 +43,10 @@ export const env = createEnv({
     IMAGEK_PUBLIC_KEY: process.env.IMAGEK_PUBLIC_KEY,
     IMAGEK_PRIVATE_KEY: process.env.IMAGEK_PRIVATE_KEY,
     IMAGEK_URL_ENDPOINT: process.env.IMAGEK_URL_ENDPOINT,
+    NEXT_PUBLIC_IMAGEK_PUBLIC_KEY: process.env.IMAGEK_PUBLIC_KEY,
+
+    NEXT_PUBLIC_IMAGEK_PRIVATE_KEY: process.env.IMAGEK_PRIVATE_KEY,
+    NEXT_PUBLIC_IMAGEK_URL_ENDPOINT: process.env.IMAGEK_URL_ENDPOINT,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

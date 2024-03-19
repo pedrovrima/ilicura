@@ -9,9 +9,9 @@ import { env } from "@/env";
 type FileWithPreview = File & { preview: string };
 
 const imagek = new ImageKit({
-  publicKey: env.IMAGEK_PUBLIC_KEY,
-  privateKey: env.IMAGEK_PRIVATE_KEY,
-  urlEndpoint: env.IMAGEK_URL_ENDPOINT,
+  publicKey: env.NEXT_PUBLIC_IMAGEK_PUBLIC_KEY,
+  privateKey: env.NEXT_PUBLIC_IMAGEK_PRIVATE_KEY,
+  urlEndpoint: env.NEXT_PUBLIC_IMAGEK_URL_ENDPOINT,
 });
 
 export default function Dropzone({
