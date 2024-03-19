@@ -487,6 +487,6 @@ export const ilicuraPageManifest = ilicuraSPP.map((spp) => ({
 }));
 
 export const ilicuraPhotoManifest = ilicuraPhotos.map((photos) => ({
-  url: photos + "?tr=q-15",
+  url: photos + "?tr=q-5",
   revision: "abc",
 }));

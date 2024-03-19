@@ -13,6 +13,7 @@ const withPWA = withPWAInit({
   reloadOnOnline: true,
   disable: process.env.NODE_ENV === "development",
   workboxOptions: {
+    maximumFileSizeToCacheInBytes: 20000000,
     disableDevLogs: true,
     additionalManifestEntries: [
       ...ilicuraPageManifest,
