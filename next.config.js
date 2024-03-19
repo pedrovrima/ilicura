@@ -4,7 +4,7 @@
  */
 await import("./src/env.js");
 import withPWAInit from "@ducanh2912/next-pwa";
-import { ilicuraManifest } from "./ilicura_data.js";
+import { ilicuraPageManifest, ilicuraPhotoManifest } from "./ilicura_data.js";
 
 const withPWA = withPWAInit({
   dest: "public",
@@ -14,7 +14,10 @@ const withPWA = withPWAInit({
   disable: process.env.NODE_ENV === "development",
   workboxOptions: {
     disableDevLogs: true,
-    additionalManifestEntries: [...ilicuraManifest],
+    additionalManifestEntries: [
+      ...ilicuraPageManifest,
+      ...ilicuraPhotoManifest,
+    ],
   },
 });
 
