@@ -15,6 +15,7 @@ export default function PWAImage({
   const cacheSRC = fallbackURLExtractor(src);
   const setImageSrc = (src: string) => {
     const newSrc = src !== imgSrc ? src : "/no-photo.webp";
+    console.log(`setting as ${newSrc}`);
     setImgSrc(newSrc);
   };
   return (
@@ -24,6 +25,7 @@ export default function PWAImage({
       src={imgSrc}
       onError={() => {
         setImageSrc(cacheSRC);
+        console.log("error");
         return;
       }}
     />
