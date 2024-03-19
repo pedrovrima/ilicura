@@ -4,7 +4,7 @@
  */
 await import("./src/env.js");
 import withPWAInit from "@ducanh2912/next-pwa";
-import { ilicuraManifest } from "ilicura_data.js";
+import { ilicuraManifest } from "./ilicura_data.js";
 
 const withPWA = withPWAInit({
   dest: "public",

@@ -8,5 +8,5 @@ const ilicuraSPP = [
 
 export const ilicuraManifest = ilicuraSPP.map((spp) => ({
   url: "/species/" + spp,
-  revision: 1,
+  revision: "abc",
 }));
