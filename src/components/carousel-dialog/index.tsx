@@ -38,7 +38,7 @@ export default function CarouselDialog({
                   >
                     <img
                       className="h-full w-full object-cover"
-                      src={`${image.url}?tr=q-15`}
+                      src={`${image.url}?tr=q-5`}
                       alt={"abc"}
                     />
                   </DialogTrigger>
@@ -53,7 +53,7 @@ export default function CarouselDialog({
           <div className="h-full w-full overflow-hidden">
             <img
               className="h-full w-full  object-contain"
-              src={`${image}?tr=q-15`}
+              src={`${image}?tr=q-5`}
               alt={"abc"}
             />
           </div>

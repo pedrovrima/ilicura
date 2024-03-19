@@ -58,7 +58,7 @@ function LoadedSpeciesSearch({ speciesList }: { speciesList: SpeciesList[] }) {
                       className="h-64 w-48 origin-center object-cover transition-all duration-300 ease-in-out group-hover:h-72 "
                       src={
                         species.featuredPicture?.url
-                          ? `${species.featuredPicture?.url}?tr=q-15`
+                          ? `${species.featuredPicture?.url}?tr=q-5`
                           : "/no-photo.webp"
                       }
                     ></img>
