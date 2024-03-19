@@ -8,6 +8,7 @@ import {
 import Link from "next/link";
 import CarouselDialog from "@/components/carousel-dialog";
 import { ArrowLeftIcon, Bird, Dna } from "lucide-react";
+import PWAImage from "@/components/pwa-image";
 
 export default async function Home({ params }: { params: { id: string } }) {
   const id = +params.id;
@@ -45,17 +46,19 @@ export default async function Home({ params }: { params: { id: string } }) {
               <p className="text-xl  ">{speciesData.sciCode}</p>
             </div>
             <div className="flex flex-row items-center gap-2">
-              <img
+              <PWAImage
                 className="h-6 w-6"
                 src="http://purecatamphetamine.github.io/country-flag-icons/3x2/BR.svg"
+                alt="brazil flag icon"
               />
               <p className="text-xl  ">{speciesData.ptName}</p>
             </div>
 
             <div className="flex w-fit flex-row items-center gap-2">
-              <img
+              <PWAImage
                 className="h-6 w-6"
                 src="http://purecatamphetamine.github.io/country-flag-icons/3x2/US.svg"
+                alt="us flag icon"
               />
               <p className="text-xl ">{speciesData.enName}</p>
             </div>
@@ -73,10 +76,11 @@ export default async function Home({ params }: { params: { id: string } }) {
                     className="flex w-[350px] flex-col items-center md:max-w-[55%]"
                   >
                     <div className="h-[350px]  overflow-hidden rounded-xl">
-                      <img
+                      <PWAImage
                         className="h-full w-full  object-cover"
                         src={picture.url + "?tr=q-5"}
-                      ></img>
+                        alt="image"
+                      ></PWAImage>
                     </div>
                     <p className="font-bold">
                       {picture.age} - {picture.sex}
