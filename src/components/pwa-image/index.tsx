@@ -23,6 +23,7 @@ export default function PWAImage({
       alt={alt}
       className={className}
       src={imgSrc}
+      onLoad={() => console.log("load")}
       onError={() => {
         setImageSrc(cacheSRC);
         console.log("error");
