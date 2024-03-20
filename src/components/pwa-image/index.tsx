@@ -10,7 +10,7 @@ export default function PWAImage({
   className: string;
   alt: string;
 }) {
-  const [imgSrc, setImgSrc] = useState(src);
+  const [imgSrc, setImgSrc] = useState(fallbackURLExtractor(src));
 
   const cacheSRC = fallbackURLExtractor(src);
   const setImageSrc = (src: string) => {

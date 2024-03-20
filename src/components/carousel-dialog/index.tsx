@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/carousel";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { speciesPicture } from "@/server/db/schema";
+import PWAImage from "../pwa-image";
 
 export default function CarouselDialog({
   pictures,
@@ -36,7 +37,7 @@ export default function CarouselDialog({
                   "
                     onClick={() => setImage(image.url ?? "")}
                   >
-                    <img
+                    <PWAImage
                       className="h-full w-full object-cover"
                       src={`${image.url}?tr=q-5`}
                       alt={"abc"}
