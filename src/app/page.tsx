@@ -3,6 +3,7 @@ import { api } from "@/trpc/server";
 import Link from "next/link";
 
 import LoadedSpeciesSearch from "../components/loaded-species-search/search";
+import Maintanance from "./maintanance";
 import Image from "next/image";
 
 export default async function Home() {
@@ -28,7 +29,11 @@ export default async function Home() {
             <h2 className="bold text-md font-extrabold text-black">por OAMa</h2>
           </Link>
         </div>
-        <LoadedSpeciesSearch speciesList={speciesList} />
+        {process.env.NEXT_PUBLIC_MAINTENANCE === "true" ? (
+          <Maintanance />
+        ) : (
+          <LoadedSpeciesSearch speciesList={speciesList} />
+        )}
       </div>
     </main>
   );

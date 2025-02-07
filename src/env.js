@@ -31,6 +31,7 @@ export const env = createEnv({
     NEXT_PUBLIC_IMAGEK_PUBLIC_KEY: z.string(),
     NEXT_PUBLIC_IMAGEK_PRIVATE_KEY: z.string(),
     NEXT_PUBLIC_IMAGEK_URL_ENDPOINT: z.string().url(),
+    NEXT_PUBLIC_MAINTENANCE: z.string().default("false"),
   },
 
   /**
@@ -48,6 +49,7 @@ export const env = createEnv({
     NEXT_PUBLIC_IMAGEK_PRIVATE_KEY: process.env.NEXT_PUBLIC_IMAGEK_PRIVATE_KEY,
     NEXT_PUBLIC_IMAGEK_URL_ENDPOINT:
       process.env.NEXT_PUBLIC_IMAGEK_URL_ENDPOINT,
+    NEXT_PUBLIC_MAINTENANCE: process.env.NEXT_PUBLIC_MAINTENANCE,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
