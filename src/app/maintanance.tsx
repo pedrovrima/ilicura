@@ -8,7 +8,7 @@ export default function Maintanance() {
         <span className="text-black">Wiki</span>Mudas está em manutenção
       </p>
       <p className="text-lg text-black">
-        Qualquer dúvida favor contatar o:{" "}
+        Qualquer dúvida favor contatar:{" "}
         <a href="mailto:contato@oama.eco.br">contato@oama.eco.br</a>
       </p>
     </div>
