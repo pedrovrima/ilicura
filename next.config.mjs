@@ -2,14 +2,11 @@
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
  */
-const withPWAInit = require("@ducanh2912/next-pwa").default;
-const {
-  ilicuraPageManifest,
-  ilicuraPhotoManifest,
-} = require("./ilicura_data.js");
+import withPWAInit from "@ducanh2912/next-pwa";
+import { ilicuraPageManifest, ilicuraPhotoManifest } from "./ilicura_data.js";
 
 // Import env validation
-require("./src/env.js");
+import "./src/env.js";
 
 const withPWA = withPWAInit({
   dest: "public",
@@ -47,4 +44,4 @@ const config = {
   },
 };
 
-module.exports = withPWA(config);
+export default withPWA(config);

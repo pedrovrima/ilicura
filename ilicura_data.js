@@ -474,17 +474,12 @@ const ilicuraSPP = [
   1362, 1607, 1100, 1886, 532, 1847, 1104, 1887, 1211, 1276, 1633, 1745,
 ];
 
-const ilicuraPageManifest = ilicuraSPP.map((spp) => ({
+export const ilicuraPageManifest = ilicuraSPP.map((spp) => ({
   url: "/species/" + spp,
   revision: "2abc",
 }));
 
-const ilicuraPhotoManifest = ilicuraPhotos.map((photos) => ({
+export const ilicuraPhotoManifest = ilicuraPhotos.map((photos) => ({
   url: photos + "?tr=q-5",
   revision: "abc",
 }));
-
-module.exports = {
-  ilicuraPageManifest,
-  ilicuraPhotoManifest,
-};
