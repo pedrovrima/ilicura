@@ -8,11 +8,14 @@ import {
   speciesMoltExtensions,
   skull,
   cemaveBandSize,
+  hummingBirdBandCircumference,
+  hummingBirdBillCorrugation,
   moltLimits,
   speciesAgeInfo,
   speciesSexInfo,
   speciesPicture,
   speciesFeaturedPicture,
+  speciesInitialDescription,
   agesEnum,
   sexEnum,
   families,
@@ -56,19 +59,25 @@ interface SpeciesByIdReturn extends SpeciesData {
     id: number;
   }[];
   bandSize: (typeof cemaveBandSize.$inferSelect)[];
+  hummingbirdBandCircumference: (typeof hummingBirdBandCircumference.$inferSelect)[];
+  hummingbirdBillCorrugation: (typeof hummingBirdBillCorrugation.$inferSelect)[];
+  initialDescription: typeof speciesInitialDescription.$inferSelect | null;
   ageInfo: CompleteAgeInfo[];
 }
 
 export const speciesRouter = createTRPCRouter({
   getAllSpecies: publicProcedure.query(async ({ ctx }) => {
-    const moltStrategiesData = ctx.db
-      .select({ data: moltStrategies.speciesId })
+    // Fix: Execute the query to get actual species IDs
+    const moltStrategiesData = await ctx.db
+      .select({ speciesId: moltStrategies.speciesId })
       .from(moltStrategies);
+
+    const speciesIds = moltStrategiesData.map((item) => item.speciesId);
 
     const speciesWithStrategies = await ctx.db
       .select()
       .from(species)
-      .where(inArray(species.id, moltStrategiesData));
+      .where(inArray(species.id, speciesIds));
 
     const featuredPicture = await ctx.db
       .select({
@@ -79,7 +88,7 @@ export const speciesRouter = createTRPCRouter({
       .from(speciesFeaturedPicture)
       .where(
         and(
-          inArray(speciesFeaturedPicture.speciesId, moltStrategiesData),
+          inArray(speciesFeaturedPicture.speciesId, speciesIds),
           eq(speciesFeaturedPicture.cover, true),
         ),
       )
@@ -294,6 +303,22 @@ export const speciesRouter = createTRPCRouter({
         .from(cemaveBandSize)
         .where(eq(cemaveBandSize.speciesId, input.id));
 
+      const hummingbirdBandCircumferenceData = await ctx.db
+        .select()
+        .from(hummingBirdBandCircumference)
+        .where(eq(hummingBirdBandCircumference.speciesId, input.id));
+
+      const hummingbirdBillCorrugationData = await ctx.db
+        .select()
+        .from(hummingBirdBillCorrugation)
+        .where(eq(hummingBirdBillCorrugation.speciesId, input.id));
+
+      const initialDescriptionData = await ctx.db
+        .select()
+        .from(speciesInitialDescription)
+        .where(eq(speciesInitialDescription.speciesId, input.id))
+        .limit(1);
+
       //group extensionData by moltType, using it as moltType key
       const groupedExtensions = combinedExtensionData.reduce(
         (
@@ -364,6 +389,9 @@ export const speciesRouter = createTRPCRouter({
         skull: skullData as (typeof skull.$inferSelect)[],
         ageInfo: groupedAgeInfo,
         bandSize: bandSizeData,
+        hummingbirdBandCircumference: hummingbirdBandCircumferenceData,
+        hummingbirdBillCorrugation: hummingbirdBillCorrugationData,
+        initialDescription: initialDescriptionData[0] || null,
         moltExtensions: groupedExtensions,
         featuredPictures,
       } as SpeciesByIdReturn;

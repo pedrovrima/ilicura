@@ -1,0 +1,1303 @@
+{
+  "id": "f52b3f4c-aec5-48c8-9b45-c665646292f1",
+  "prevId": "e051facf-c44c-414d-a078-19e0fadbffe3",
+  "version": "5",
+  "dialect": "pg",
+  "tables": {
+    "ilicura_cemave_band_size": {
+      "name": "ilicura_cemave_band_size",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "species_id": {
+          "name": "species_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "band_size": {
+          "name": "band_size",
+          "type": "band_size_enum",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_cemave_band_size_species_id_ilicura_species_id_fk": {
+          "name": "ilicura_cemave_band_size_species_id_ilicura_species_id_fk",
+          "tableFrom": "ilicura_cemave_band_size",
+          "tableTo": "ilicura_species",
+          "columnsFrom": [
+            "species_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_families": {
+      "name": "ilicura_families",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "name_idx": {
+          "name": "name_idx",
+          "columns": [
+            "name"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_families_info": {
+      "name": "ilicura_families_info",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "family_id": {
+          "name": "family_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(512)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "n_primary_feathers": {
+          "name": "n_primary_feathers",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "n_secondary_feathers": {
+          "name": "n_secondary_feathers",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_families_info_family_id_ilicura_families_id_fk": {
+          "name": "ilicura_families_info_family_id_ilicura_families_id_fk",
+          "tableFrom": "ilicura_families_info",
+          "tableTo": "ilicura_families",
+          "columnsFrom": [
+            "family_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_genus": {
+      "name": "ilicura_genus",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "family_id": {
+          "name": "family_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_genus_family_id_ilicura_families_id_fk": {
+          "name": "ilicura_genus_family_id_ilicura_families_id_fk",
+          "tableFrom": "ilicura_genus",
+          "tableTo": "ilicura_families",
+          "columnsFrom": [
+            "family_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_humming_bird_band_circumference": {
+      "name": "ilicura_humming_bird_band_circumference",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "species_id": {
+          "name": "species_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "band_circumference": {
+          "name": "band_circumference",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_humming_bird_band_circumference_species_id_ilicura_species_id_fk": {
+          "name": "ilicura_humming_bird_band_circumference_species_id_ilicura_species_id_fk",
+          "tableFrom": "ilicura_humming_bird_band_circumference",
+          "tableTo": "ilicura_species",
+          "columnsFrom": [
+            "species_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_humming_bird_bill_corrugation": {
+      "name": "ilicura_humming_bird_bill_corrugation",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "species_id": {
+          "name": "species_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "age": {
+          "name": "age",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bill_corrugation": {
+          "name": "bill_corrugation",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_humming_bird_bill_corrugation_species_id_ilicura_species_id_fk": {
+          "name": "ilicura_humming_bird_bill_corrugation_species_id_ilicura_species_id_fk",
+          "tableFrom": "ilicura_humming_bird_bill_corrugation",
+          "tableTo": "ilicura_species",
+          "columnsFrom": [
+            "species_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_molt_limits": {
+      "name": "ilicura_molt_limits",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "molt_id": {
+          "name": "molt_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "limit": {
+          "name": "limit",
+          "type": "molt_limits_enum",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_molt_limits_molt_id_ilicura_species_molt_extensions_id_fk": {
+          "name": "ilicura_molt_limits_molt_id_ilicura_species_molt_extensions_id_fk",
+          "tableFrom": "ilicura_molt_limits",
+          "tableTo": "ilicura_species_molt_extensions",
+          "columnsFrom": [
+            "molt_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_molt_strategy": {
+      "name": "ilicura_molt_strategy",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "strategy": {
+          "name": "strategy",
+          "type": "molt_strategies_enum",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "species_id": {
+          "name": "species_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_molt_strategy_species_id_ilicura_species_id_fk": {
+          "name": "ilicura_molt_strategy_species_id_ilicura_species_id_fk",
+          "tableFrom": "ilicura_molt_strategy",
+          "tableTo": "ilicura_species",
+          "columnsFrom": [
+            "species_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_pictures_tags": {
+      "name": "ilicura_pictures_tags",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "picture_id": {
+          "name": "picture_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_pictures_tags_picture_id_ilicura_species_picture_id_fk": {
+          "name": "ilicura_pictures_tags_picture_id_ilicura_species_picture_id_fk",
+          "tableFrom": "ilicura_pictures_tags",
+          "tableTo": "ilicura_species_picture",
+          "columnsFrom": [
+            "picture_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_skull": {
+      "name": "ilicura_skull",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "species_id": {
+          "name": "species_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "closes": {
+          "name": "closes",
+          "type": "skull_closes_enum",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_skull_species_id_ilicura_species_id_fk": {
+          "name": "ilicura_skull_species_id_ilicura_species_id_fk",
+          "tableFrom": "ilicura_skull",
+          "tableTo": "ilicura_species",
+          "columnsFrom": [
+            "species_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_species": {
+      "name": "ilicura_species",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "scientific_name": {
+          "name": "scientific_name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pt_name": {
+          "name": "pt_name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "en_name": {
+          "name": "en_name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sci_code": {
+          "name": "sci_code",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "genus_id": {
+          "name": "genus_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_species_genus_id_ilicura_genus_id_fk": {
+          "name": "ilicura_species_genus_id_ilicura_genus_id_fk",
+          "tableFrom": "ilicura_species",
+          "tableTo": "ilicura_genus",
+          "columnsFrom": [
+            "genus_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_species_age_info": {
+      "name": "ilicura_species_age_info",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "species_id": {
+          "name": "species_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "age": {
+          "name": "age",
+          "type": "ages_enum",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sexual_dimorphism": {
+          "name": "sexual_dimorphism",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_species_age_info_species_id_ilicura_species_id_fk": {
+          "name": "ilicura_species_age_info_species_id_ilicura_species_id_fk",
+          "tableFrom": "ilicura_species_age_info",
+          "tableTo": "ilicura_species",
+          "columnsFrom": [
+            "species_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_species_featured_picture": {
+      "name": "ilicura_species_featured_picture",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "species_id": {
+          "name": "species_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "picture_id": {
+          "name": "picture_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cover": {
+          "name": "cover",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_species_featured_picture_species_id_ilicura_species_id_fk": {
+          "name": "ilicura_species_featured_picture_species_id_ilicura_species_id_fk",
+          "tableFrom": "ilicura_species_featured_picture",
+          "tableTo": "ilicura_species",
+          "columnsFrom": [
+            "species_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ilicura_species_featured_picture_picture_id_ilicura_species_picture_id_fk": {
+          "name": "ilicura_species_featured_picture_picture_id_ilicura_species_picture_id_fk",
+          "tableFrom": "ilicura_species_featured_picture",
+          "tableTo": "ilicura_species_picture",
+          "columnsFrom": [
+            "picture_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_species_info": {
+      "name": "ilicura_species_info",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "species_id": {
+          "name": "species_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(512)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_species_info_species_id_ilicura_species_id_fk": {
+          "name": "ilicura_species_info_species_id_ilicura_species_id_fk",
+          "tableFrom": "ilicura_species_info",
+          "tableTo": "ilicura_species",
+          "columnsFrom": [
+            "species_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_species_initial_description": {
+      "name": "ilicura_species_initial_description",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "species_id": {
+          "name": "species_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(1000)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_species_initial_description_species_id_ilicura_species_id_fk": {
+          "name": "ilicura_species_initial_description_species_id_ilicura_species_id_fk",
+          "tableFrom": "ilicura_species_initial_description",
+          "tableTo": "ilicura_species",
+          "columnsFrom": [
+            "species_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_species_molt_extensions": {
+      "name": "ilicura_species_molt_extensions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "species_id": {
+          "name": "species_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "molt_type": {
+          "name": "molt_type",
+          "type": "molt_types_enum",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "extension": {
+          "name": "extension",
+          "type": "molt_extension_enum",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_species_molt_extensions_species_id_ilicura_species_id_fk": {
+          "name": "ilicura_species_molt_extensions_species_id_ilicura_species_id_fk",
+          "tableFrom": "ilicura_species_molt_extensions",
+          "tableTo": "ilicura_species",
+          "columnsFrom": [
+            "species_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "extension": {
+          "name": "extension",
+          "nullsNotDistinct": false,
+          "columns": [
+            "species_id",
+            "molt_type",
+            "extension"
+          ]
+        }
+      }
+    },
+    "ilicura_species_picture": {
+      "name": "ilicura_species_picture",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "sexInfoId": {
+          "name": "sexInfoId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "file_id": {
+          "name": "file_id",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "url": {
+          "name": "url",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "thumbnail": {
+          "name": "thumbnail",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_species_picture_sexInfoId_ilicura_specues_sex_info_id_fk": {
+          "name": "ilicura_species_picture_sexInfoId_ilicura_specues_sex_info_id_fk",
+          "tableFrom": "ilicura_species_picture",
+          "tableTo": "ilicura_specues_sex_info",
+          "columnsFrom": [
+            "sexInfoId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_specues_sex_info": {
+      "name": "ilicura_specues_sex_info",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "age_id": {
+          "name": "age_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(512)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sex": {
+          "name": "sex",
+          "type": "sex_enum",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_specues_sex_info_age_id_ilicura_species_age_info_id_fk": {
+          "name": "ilicura_specues_sex_info_age_id_ilicura_species_age_info_id_fk",
+          "tableFrom": "ilicura_specues_sex_info",
+          "tableTo": "ilicura_species_age_info",
+          "columnsFrom": [
+            "age_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_total_captures_by_species": {
+      "name": "ilicura_total_captures_by_species",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "species_id": {
+          "name": "species_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "total": {
+          "name": "total",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_total_captures_by_species_species_id_ilicura_species_id_fk": {
+          "name": "ilicura_total_captures_by_species_species_id_ilicura_species_id_fk",
+          "tableFrom": "ilicura_total_captures_by_species",
+          "tableTo": "ilicura_species",
+          "columnsFrom": [
+            "species_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {
+    "ages_enum": {
+      "name": "ages_enum",
+      "values": {
+        "FPJ": "FPJ",
+        "FCJ": "FCJ",
+        "FPF": "FPF",
+        "FCF": "FCF",
+        "FPA": "FPA",
+        "FCA": "FCA",
+        "M-FPF": "M-FPF",
+        "M-FCF": "M-FCF",
+        "M-FPA": "M-FPA",
+        "M-FCA": "M-FCA",
+        "DPB": "DPB",
+        "DCB": "DCB",
+        "DPA": "DPA",
+        "DCA": "DCA",
+        "SPB": "SPB",
+        "SCB": "SCB",
+        "M-SPB": "M-SPB",
+        "M-SCB": "M-SCB",
+        "SPA": "SPA",
+        "SCA": "SCA",
+        "M-SPA": "M-SPA",
+        "M-SCA": "M-SCA",
+        "TPB": "TPB",
+        "TCB": "TCB",
+        "M-TPB": "M-TPB",
+        "M-TCB": "M-TCB",
+        "TPA": "TPA",
+        "TCA": "TCA",
+        "M-TPA": "M-TPA",
+        "M-TCA": "M-TCA",
+        "4PB": "4PB",
+        "4CB": "4CB",
+        "M-4PB": "M-4PB",
+        "M-4CB": "M-4CB",
+        "4PA": "4PA",
+        "4CA": "4CA",
+        "M-4PA": "M-4PA",
+        "M-4CA": "M-4CA",
+        "5PB": "5PB",
+        "5CB": "5CB",
+        "M-5PB": "M-5PB",
+        "M-5CB": "M-5CB",
+        "5PA": "5PA",
+        "5CA": "5CA",
+        "M-5PA": "M-5PA",
+        "M-5CA": "M-5CA",
+        "6PB": "6PB",
+        "6CB": "6CB",
+        "M-6PB": "M-6PB",
+        "M-6CB": "M-6CB",
+        "6PA": "6PA",
+        "6CA": "6CA",
+        "M-6PA": "M-6PA",
+        "M-6CA": "M-6CA"
+      }
+    },
+    "band_size_enum": {
+      "name": "band_size_enum",
+      "values": {
+        "A": "A",
+        "C": "C",
+        "D": "D",
+        "E": "E",
+        "F": "F",
+        "G": "G",
+        "H": "H",
+        "J": "J",
+        "L": "L",
+        "M": "M",
+        "N": "N",
+        "P": "P",
+        "R": "R",
+        "S": "S",
+        "T": "T"
+      }
+    },
+    "molt_extension_enum": {
+      "name": "molt_extension_enum",
+      "values": {
+        "complete": "complete",
+        "incomplete": "incomplete",
+        "incomplete-excentric": "incomplete-excentric",
+        "partial": "partial",
+        "limited": "limited",
+        "absent": "absent"
+      }
+    },
+    "molt_limits_enum": {
+      "name": "molt_limits_enum",
+      "values": {
+        "alula": "alula",
+        "body": "body",
+        "primaries": "primaries",
+        "secondaries": "secondaries",
+        "tertials": "tertials",
+        "greater coverts": "greater coverts",
+        "lesser-median coverts": "lesser-median coverts",
+        "vs greater-coverts and primaries": "vs greater-coverts and primaries",
+        "primary coverts": "primary coverts",
+        "underwing coverts": "underwing coverts"
+      }
+    },
+    "molt_strategies_enum": {
+      "name": "molt_strategies_enum",
+      "values": {
+        "SBS": "SBS",
+        "SAS": "SAS",
+        "CBS": "CBS",
+        "CAS": "CAS"
+      }
+    },
+    "molt_types_enum": {
+      "name": "molt_types_enum",
+      "values": {
+        "1PJ": "1PJ",
+        "1PF": "1PF",
+        "1PA": "1PA",
+        "DPB": "DPB",
+        "DPA": "DPA",
+        "2PB": "2PB",
+        "2PA": "2PA",
+        "3PB": "3PB",
+        "3PA": "3PA",
+        "4PB": "4PB",
+        "4PA": "4PA"
+      }
+    },
+    "sex_enum": {
+      "name": "sex_enum",
+      "values": {
+        "M": "M",
+        "F": "F",
+        "U": "U"
+      }
+    },
+    "skull_closes_enum": {
+      "name": "skull_closes_enum",
+      "values": {
+        "true": "true",
+        "maybe": "maybe",
+        "false": "false"
+      }
+    },
+    "tag_enum": {
+      "name": "tag_enum",
+      "values": {
+        "cover": "cover",
+        "molt-limit": "molt-limit"
+      }
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

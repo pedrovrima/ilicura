@@ -210,6 +210,19 @@ export const speciesInfo = createTable("species_info", {
   updatedAt: timestamp("updatedAt"),
 });
 
+export const speciesInitialDescription = createTable(
+  "species_initial_description",
+  {
+    id: serial("id").primaryKey(),
+    speciesId: integer("species_id").references(() => species.id),
+    description: varchar("description", { length: 1000 }),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+);
+
 export const speciesFeaturedPicture = createTable("species_featured_picture", {
   id: serial("id").primaryKey(),
   speciesId: integer("species_id").references(() => species.id),
@@ -275,6 +288,33 @@ export const cemaveBandSize = createTable("cemave_band_size", {
     .notNull(),
   updatedAt: timestamp("updatedAt"),
 });
+
+export const hummingBirdBandCircumference = createTable(
+  "humming_bird_band_circumference",
+  {
+    id: serial("id").primaryKey(),
+    speciesId: integer("species_id").references(() => species.id),
+    bandCircumference: integer("band_circumference"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+);
+
+export const hummingBirdBillCorrugation = createTable(
+  "humming_bird_bill_corrugation",
+  {
+    id: serial("id").primaryKey(),
+    speciesId: integer("species_id").references(() => species.id),
+    age: varchar("age", { length: 10 }),
+    billCorrugation: varchar("bill_corrugation", { length: 256 }),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+);
 
 export const moltStrategies = createTable("molt_strategy", {
   id: serial("id").primaryKey(),

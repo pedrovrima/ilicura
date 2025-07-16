@@ -1,0 +1,1 @@
+ALTER TABLE "ilicura_humming_bird_bill_corrugation" ALTER COLUMN "age" SET DATA TYPE varchar(10);

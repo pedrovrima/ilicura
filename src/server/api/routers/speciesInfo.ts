@@ -6,6 +6,8 @@ import {
   agesEnum,
   bandSizeEnum,
   cemaveBandSize,
+  hummingBirdBandCircumference,
+  hummingBirdBillCorrugation,
   moltExtensionEnum,
   moltLimits,
   moltLimitsEnum,
@@ -19,6 +21,7 @@ import {
   speciesSexInfo,
   speciesPicture,
   speciesFeaturedPicture,
+  speciesInitialDescription,
 } from "@/server/db/schema";
 import ImageKit from "imagekit";
 import { env } from "@/env";
@@ -64,6 +67,111 @@ export const speciesInfoRouter = createTRPCRouter({
         .from(cemaveBandSize)
         .where(eq(cemaveBandSize.speciesId, input.speciesId));
       return data;
+    }),
+
+  addHummingbirdBandCircumference: publicProcedure
+    .input(
+      z.object({
+        speciesId: z.number(),
+        bandCircumference: z.number(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.db.insert(hummingBirdBandCircumference).values({
+        speciesId: input.speciesId,
+        bandCircumference: input.bandCircumference,
+      });
+    }),
+  deleteHummingbirdBandCircumference: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.db
+        .delete(hummingBirdBandCircumference)
+        .where(eq(hummingBirdBandCircumference.id, input.id));
+    }),
+  getHummingbirdBandCircumference: publicProcedure
+    .input(z.object({ speciesId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .select()
+        .from(hummingBirdBandCircumference)
+        .where(eq(hummingBirdBandCircumference.speciesId, input.speciesId));
+      return data;
+    }),
+
+  addHummingbirdBillCorrugation: publicProcedure
+    .input(
+      z.object({
+        speciesId: z.number(),
+        age: z.string(),
+        billCorrugation: z.string(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.db.insert(hummingBirdBillCorrugation).values({
+        speciesId: input.speciesId,
+        age: input.age,
+        billCorrugation: input.billCorrugation,
+      });
+    }),
+  deleteHummingbirdBillCorrugation: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.db
+        .delete(hummingBirdBillCorrugation)
+        .where(eq(hummingBirdBillCorrugation.id, input.id));
+    }),
+  getHummingbirdBillCorrugation: publicProcedure
+    .input(z.object({ speciesId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .select()
+        .from(hummingBirdBillCorrugation)
+        .where(eq(hummingBirdBillCorrugation.speciesId, input.speciesId));
+      return data;
+    }),
+
+  addSpeciesInitialDescription: publicProcedure
+    .input(
+      z.object({
+        speciesId: z.number(),
+        description: z.string(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.db.insert(speciesInitialDescription).values({
+        speciesId: input.speciesId,
+        description: input.description,
+      });
+    }),
+  updateSpeciesInitialDescription: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        description: z.string(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.db
+        .update(speciesInitialDescription)
+        .set({ description: input.description })
+        .where(eq(speciesInitialDescription.id, input.id));
+    }),
+  deleteSpeciesInitialDescription: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.db
+        .delete(speciesInitialDescription)
+        .where(eq(speciesInitialDescription.id, input.id));
+    }),
+  getSpeciesInitialDescription: publicProcedure
+    .input(z.object({ speciesId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .select()
+        .from(speciesInitialDescription)
+        .where(eq(speciesInitialDescription.speciesId, input.speciesId));
+      return data[0] || null; // Return first description or null if none exists
     }),
 
   addMoltLimits: publicProcedure

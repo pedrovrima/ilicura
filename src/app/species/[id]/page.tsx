@@ -102,6 +102,44 @@ export default async function Home({ params }: { params: { id: string } }) {
                 </p>
               </div>
 
+              {speciesData.family === "Trochilidae" && (
+                <div>
+                  <p className="text-lg">
+                    <span className="font-bold">
+                      Circunferência da Anilha (beija-flores):{" "}
+                    </span>
+                    {speciesData.hummingbirdBandCircumference.length === 0 &&
+                      "Sem registros"}
+                    {speciesData.hummingbirdBandCircumference?.map(
+                      (circumference, i) => (
+                        <span
+                          key={circumference?.id}
+                        >{`${i > 0 ? ", " : ""}${circumference?.bandCircumference} mm`}</span>
+                      ),
+                    )}
+                  </p>
+                </div>
+              )}
+
+              {speciesData.family === "Trochilidae" && (
+                <div>
+                  <p className="text-lg">
+                    <span className="font-bold">
+                      Corrugação do Bico (beija-flores):{" "}
+                    </span>
+                    {speciesData.hummingbirdBillCorrugation.length === 0 &&
+                      "Sem registros"}
+                    {speciesData.hummingbirdBillCorrugation?.map(
+                      (corrugation, i) => (
+                        <span
+                          key={corrugation?.id}
+                        >{`${i > 0 ? ", " : ""}${corrugation?.age}: ${corrugation?.billCorrugation}`}</span>
+                      ),
+                    )}
+                  </p>
+                </div>
+              )}
+
               <div>
                 <p className="text-lg">
                   <span className="font-bold">Crânio: </span>
@@ -136,6 +174,19 @@ export default async function Home({ params }: { params: { id: string } }) {
             </div>
           </div>
 
+          {speciesData.initialDescription && (
+            <div className="mb-8 px-4">
+              <h2 className="mb-6 mt-2 w-full text-center text-3xl font-bold">
+                Descrição Inicial
+              </h2>
+              <div className="rounded-lg border p-6">
+                <p className="whitespace-pre-wrap text-lg leading-relaxed">
+                  {speciesData.initialDescription.description}
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="mb-8  px-4">
             <h2 className="mb-6 mt-2 w-full text-center text-3xl font-bold ">
               Extensões de Muda
@@ -162,7 +213,7 @@ export default async function Home({ params }: { params: { id: string } }) {
                         <p className="mb-0">
                           <span className="text-lg font-extrabold">
                             {" "}
-                            {extension?.moltType.replace("1", "")}:{" "}
+                            {extension?.moltType.replace("1", "F")}:{" "}
                           </span>
 
                           {extension?.extensions
