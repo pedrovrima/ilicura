@@ -3,7 +3,7 @@
  * for Docker builds.
  */
 import withPWAInit from "@ducanh2912/next-pwa";
-import { ilicuraPageManifest, ilicuraPhotoManifest } from "./ilicura_data.mjs";
+import { ilicuraPageManifest, ilicuraPhotoManifest } from "./ilicura_data.js";
 
 // Import env validation
 import "./src/env.js";
