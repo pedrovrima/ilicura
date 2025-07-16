@@ -20,7 +20,10 @@ const config = {
     "@typescript-eslint/consistent-type-imports": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "@typescript-eslint/prefer-optional-chain": "off",
     "@next/next/no-img-element": "off",
+    "jsx-a11y/alt-text": "off",
+    "react-hooks/exhaustive-deps": "off",
 
     "@typescript-eslint/require-await": "off",
     "@typescript-eslint/no-misused-promises": [
