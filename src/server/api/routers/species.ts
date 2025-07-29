@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { eq, ilike, inArray, or, and } from "drizzle-orm";
+import { eq, ilike, inArray, or, and, isNotNull } from "drizzle-orm";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import {
@@ -77,7 +77,12 @@ export const speciesRouter = createTRPCRouter({
     const speciesWithStrategies = await ctx.db
       .select()
       .from(species)
-      .where(inArray(species.id, speciesIds));
+      .where(
+        and(
+          inArray(species.id, speciesIds),
+          isNotNull(species.infoLastUpdatedAt),
+        ),
+      );
 
     const featuredPicture = await ctx.db
       .select({

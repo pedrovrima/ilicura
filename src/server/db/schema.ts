@@ -198,6 +198,7 @@ export const species = createTable("species", {
     .notNull(),
   updatedAt: timestamp("updatedAt"),
   genusId: integer("genus_id").references(() => genus.id),
+  infoLastUpdatedAt: timestamp("info_last_updated_at"),
 });
 
 export const speciesInfo = createTable("species_info", {

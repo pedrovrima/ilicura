@@ -1,0 +1,1 @@
+ALTER TABLE "ilicura_species" ADD COLUMN "info_last_updated_at" timestamp;

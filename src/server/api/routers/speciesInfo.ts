@@ -16,6 +16,7 @@ import {
   moltTypesEnum,
   skull,
   skullClosesEnum,
+  species,
   speciesMoltExtensions,
   speciesAgeInfo,
   speciesSexInfo,
@@ -46,18 +47,36 @@ export const speciesInfoRouter = createTRPCRouter({
         bandSize: z.enum(bandSizeEnum.enumValues),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.db.insert(cemaveBandSize).values({
-        speciesId: input.speciesId,
-        bandSize: input.bandSize,
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        await tx.insert(cemaveBandSize).values({
+          speciesId: input.speciesId,
+          bandSize: input.bandSize,
+        });
+        await tx
+          .update(species)
+          .set({ infoLastUpdatedAt: new Date() })
+          .where(eq(species.id, input.speciesId));
       });
     }),
   deleteBandSize: publicProcedure
     .input(z.object({ id: z.number() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.db
-        .delete(cemaveBandSize)
-        .where(eq(cemaveBandSize.id, input.id));
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        const bandSizeRecord = await tx
+          .select({ speciesId: cemaveBandSize.speciesId })
+          .from(cemaveBandSize)
+          .where(eq(cemaveBandSize.id, input.id));
+
+        await tx.delete(cemaveBandSize).where(eq(cemaveBandSize.id, input.id));
+
+        if (bandSizeRecord[0]?.speciesId) {
+          await tx
+            .update(species)
+            .set({ infoLastUpdatedAt: new Date() })
+            .where(eq(species.id, bandSizeRecord[0].speciesId));
+        }
+      });
     }),
   getBandSize: publicProcedure
     .input(z.object({ speciesId: z.number() }))
@@ -76,18 +95,38 @@ export const speciesInfoRouter = createTRPCRouter({
         bandCircumference: z.number(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.db.insert(hummingBirdBandCircumference).values({
-        speciesId: input.speciesId,
-        bandCircumference: input.bandCircumference,
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        await tx.insert(hummingBirdBandCircumference).values({
+          speciesId: input.speciesId,
+          bandCircumference: input.bandCircumference,
+        });
+        await tx
+          .update(species)
+          .set({ infoLastUpdatedAt: new Date() })
+          .where(eq(species.id, input.speciesId));
       });
     }),
   deleteHummingbirdBandCircumference: publicProcedure
     .input(z.object({ id: z.number() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.db
-        .delete(hummingBirdBandCircumference)
-        .where(eq(hummingBirdBandCircumference.id, input.id));
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        const bandCircumferenceRecord = await tx
+          .select({ speciesId: hummingBirdBandCircumference.speciesId })
+          .from(hummingBirdBandCircumference)
+          .where(eq(hummingBirdBandCircumference.id, input.id));
+
+        await tx
+          .delete(hummingBirdBandCircumference)
+          .where(eq(hummingBirdBandCircumference.id, input.id));
+
+        if (bandCircumferenceRecord[0]?.speciesId) {
+          await tx
+            .update(species)
+            .set({ infoLastUpdatedAt: new Date() })
+            .where(eq(species.id, bandCircumferenceRecord[0].speciesId));
+        }
+      });
     }),
   getHummingbirdBandCircumference: publicProcedure
     .input(z.object({ speciesId: z.number() }))
@@ -107,19 +146,39 @@ export const speciesInfoRouter = createTRPCRouter({
         billCorrugation: z.string(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.db.insert(hummingBirdBillCorrugation).values({
-        speciesId: input.speciesId,
-        age: input.age,
-        billCorrugation: input.billCorrugation,
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        await tx.insert(hummingBirdBillCorrugation).values({
+          speciesId: input.speciesId,
+          age: input.age,
+          billCorrugation: input.billCorrugation,
+        });
+        await tx
+          .update(species)
+          .set({ infoLastUpdatedAt: new Date() })
+          .where(eq(species.id, input.speciesId));
       });
     }),
   deleteHummingbirdBillCorrugation: publicProcedure
     .input(z.object({ id: z.number() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.db
-        .delete(hummingBirdBillCorrugation)
-        .where(eq(hummingBirdBillCorrugation.id, input.id));
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        const billCorrugationRecord = await tx
+          .select({ speciesId: hummingBirdBillCorrugation.speciesId })
+          .from(hummingBirdBillCorrugation)
+          .where(eq(hummingBirdBillCorrugation.id, input.id));
+
+        await tx
+          .delete(hummingBirdBillCorrugation)
+          .where(eq(hummingBirdBillCorrugation.id, input.id));
+
+        if (billCorrugationRecord[0]?.speciesId) {
+          await tx
+            .update(species)
+            .set({ infoLastUpdatedAt: new Date() })
+            .where(eq(species.id, billCorrugationRecord[0].speciesId));
+        }
+      });
     }),
   getHummingbirdBillCorrugation: publicProcedure
     .input(z.object({ speciesId: z.number() }))
@@ -138,10 +197,16 @@ export const speciesInfoRouter = createTRPCRouter({
         description: z.string(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.db.insert(speciesInitialDescription).values({
-        speciesId: input.speciesId,
-        description: input.description,
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        await tx.insert(speciesInitialDescription).values({
+          speciesId: input.speciesId,
+          description: input.description,
+        });
+        await tx
+          .update(species)
+          .set({ infoLastUpdatedAt: new Date() })
+          .where(eq(species.id, input.speciesId));
       });
     }),
   updateSpeciesInitialDescription: publicProcedure
@@ -152,17 +217,38 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(({ ctx, input }) => {
-      return ctx.db
-        .update(speciesInitialDescription)
-        .set({ description: input.description })
-        .where(eq(speciesInitialDescription.id, input.id));
+      return ctx.db.transaction(async (tx) => {
+        await tx
+          .update(speciesInitialDescription)
+          .set({ description: input.description })
+          .where(eq(speciesInitialDescription.id, input.id));
+
+        await tx
+          .update(species)
+          .set({ infoLastUpdatedAt: new Date() })
+          .where(eq(species.id, input.id));
+      });
     }),
   deleteSpeciesInitialDescription: publicProcedure
     .input(z.object({ id: z.number() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.db
-        .delete(speciesInitialDescription)
-        .where(eq(speciesInitialDescription.id, input.id));
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        const descriptionRecord = await tx
+          .select({ speciesId: speciesInitialDescription.speciesId })
+          .from(speciesInitialDescription)
+          .where(eq(speciesInitialDescription.id, input.id));
+
+        await tx
+          .delete(speciesInitialDescription)
+          .where(eq(speciesInitialDescription.id, input.id));
+
+        if (descriptionRecord[0]?.speciesId) {
+          await tx
+            .update(species)
+            .set({ infoLastUpdatedAt: new Date() })
+            .where(eq(species.id, descriptionRecord[0].speciesId));
+        }
+      });
     }),
   getSpeciesInitialDescription: publicProcedure
     .input(z.object({ speciesId: z.number() }))
@@ -182,18 +268,60 @@ export const speciesInfoRouter = createTRPCRouter({
         notes: z.string().optional(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.db.insert(moltLimits).values({
-        speciesMoltExtensionId: input.speciesMoltExtensionId,
-        limit: input.limit,
-        notes: input.notes,
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        const moltExtensionRecord = await tx
+          .select({ speciesId: speciesMoltExtensions.speciesId })
+          .from(speciesMoltExtensions)
+          .where(eq(speciesMoltExtensions.id, input.speciesMoltExtensionId));
+
+        await tx.insert(moltLimits).values({
+          speciesMoltExtensionId: input.speciesMoltExtensionId,
+          limit: input.limit,
+          notes: input.notes,
+        });
+
+        if (moltExtensionRecord[0]?.speciesId) {
+          await tx
+            .update(species)
+            .set({ infoLastUpdatedAt: new Date() })
+            .where(eq(species.id, moltExtensionRecord[0].speciesId));
+        }
       });
     }),
 
   deleteMoltLimits: publicProcedure
     .input(z.object({ id: z.number() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.db.delete(moltLimits).where(eq(moltLimits.id, input.id));
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        const moltLimitRecord = await tx
+          .select({
+            speciesMoltExtensionId: moltLimits.speciesMoltExtensionId,
+          })
+          .from(moltLimits)
+          .where(eq(moltLimits.id, input.id));
+
+        await tx.delete(moltLimits).where(eq(moltLimits.id, input.id));
+
+        if (moltLimitRecord[0]?.speciesMoltExtensionId) {
+          const moltExtensionRecord = await tx
+            .select({ speciesId: speciesMoltExtensions.speciesId })
+            .from(speciesMoltExtensions)
+            .where(
+              eq(
+                speciesMoltExtensions.id,
+                moltLimitRecord[0].speciesMoltExtensionId,
+              ),
+            );
+
+          if (moltExtensionRecord[0]?.speciesId) {
+            await tx
+              .update(species)
+              .set({ infoLastUpdatedAt: new Date() })
+              .where(eq(species.id, moltExtensionRecord[0].speciesId));
+          }
+        }
+      });
     }),
   getMoltLimits: publicProcedure
     .input(z.object({ speciesId: z.number() }))
@@ -238,25 +366,41 @@ export const speciesInfoRouter = createTRPCRouter({
             sex: "F",
             description: "",
           });
-          return;
+        } else {
+          await tx.insert(speciesSexInfo).values({
+            ageId: insertedId,
+            sex: "U",
+            description: "",
+          });
         }
-        await tx.insert(speciesSexInfo).values({
-          ageId: insertedId,
-          sex: "U",
-          description: "",
-        });
-        return;
+
+        await tx
+          .update(species)
+          .set({ infoLastUpdatedAt: new Date() })
+          .where(eq(species.id, input.speciesId));
       });
     }),
 
   deleteSexualDimorphism: publicProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx) => {
+        const ageInfoRecord = await tx
+          .select({ speciesId: speciesAgeInfo.speciesId })
+          .from(speciesAgeInfo)
+          .where(eq(speciesAgeInfo.id, input.id));
+
         await tx
           .delete(speciesSexInfo)
           .where(eq(speciesSexInfo.ageId, input.id));
         await tx.delete(speciesAgeInfo).where(eq(speciesAgeInfo.id, input.id));
+
+        if (ageInfoRecord[0]?.speciesId) {
+          await tx
+            .update(species)
+            .set({ infoLastUpdatedAt: new Date() })
+            .where(eq(species.id, ageInfoRecord[0].speciesId));
+        }
       });
     }),
   updateSexInfo: publicProcedure
@@ -283,11 +427,32 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.insert(speciesPicture).values({
-        sexInfoId: input.sexId,
-        url: input.url,
-        thumbnail: input.thumbnailUrl,
-        fileId: input.fileId,
+      await ctx.db.transaction(async (tx) => {
+        const sexInfoRecord = await tx
+          .select({ ageId: speciesSexInfo.ageId })
+          .from(speciesSexInfo)
+          .where(eq(speciesSexInfo.id, input.sexId));
+
+        if (sexInfoRecord[0]?.ageId) {
+          const ageInfoRecord = await tx
+            .select({ speciesId: speciesAgeInfo.speciesId })
+            .from(speciesAgeInfo)
+            .where(eq(speciesAgeInfo.id, sexInfoRecord[0].ageId));
+
+          await tx.insert(speciesPicture).values({
+            sexInfoId: input.sexId,
+            url: input.url,
+            thumbnail: input.thumbnailUrl,
+            fileId: input.fileId,
+          });
+
+          if (ageInfoRecord[0]?.speciesId) {
+            await tx
+              .update(species)
+              .set({ infoLastUpdatedAt: new Date() })
+              .where(eq(species.id, ageInfoRecord[0].speciesId));
+          }
+        }
       });
     }),
 
@@ -311,21 +476,46 @@ export const speciesInfoRouter = createTRPCRouter({
       });
       if (!input.fileId) return;
 
-      const del = await imagek
-        .deleteFile(input.fileId)
-        .then(async (res) => {
-          console.log(res);
+      await ctx.db.transaction(async (tx) => {
+        const pictureRecord = await tx
+          .select({ sexInfoId: speciesPicture.sexInfoId })
+          .from(speciesPicture)
+          .where(eq(speciesPicture.id, input.id));
 
-          await ctx.db
-            .delete(speciesPicture)
-            .where(eq(speciesPicture.id, input.id));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      console.log(del);
+        if (pictureRecord[0]?.sexInfoId) {
+          const sexInfoRecord = await tx
+            .select({ ageId: speciesSexInfo.ageId })
+            .from(speciesSexInfo)
+            .where(eq(speciesSexInfo.id, pictureRecord[0].sexInfoId));
 
-      return;
+          if (sexInfoRecord[0]?.ageId) {
+            const ageInfoRecord = await tx
+              .select({ speciesId: speciesAgeInfo.speciesId })
+              .from(speciesAgeInfo)
+              .where(eq(speciesAgeInfo.id, sexInfoRecord[0].ageId));
+
+            const del = await imagek
+              .deleteFile(input.fileId!)
+              .then(async (res) => {
+                console.log(res);
+                await tx
+                  .delete(speciesPicture)
+                  .where(eq(speciesPicture.id, input.id));
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            console.log(del);
+
+            if (ageInfoRecord[0]?.speciesId) {
+              await tx
+                .update(species)
+                .set({ infoLastUpdatedAt: new Date() })
+                .where(eq(species.id, ageInfoRecord[0].speciesId));
+            }
+          }
+        }
+      });
     }),
 
   getSexualDimorphism: publicProcedure
@@ -379,17 +569,37 @@ export const speciesInfoRouter = createTRPCRouter({
         notes: z.string(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.db.insert(skull).values({
-        speciesId: input.speciesId,
-        closes: input.closes,
-        notes: input.notes,
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        await tx.insert(skull).values({
+          speciesId: input.speciesId,
+          closes: input.closes,
+          notes: input.notes,
+        });
+        await tx
+          .update(species)
+          .set({ infoLastUpdatedAt: new Date() })
+          .where(eq(species.id, input.speciesId));
       });
     }),
   deleteSpeciesSkullInfo: publicProcedure
     .input(z.object({ id: z.number() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.db.delete(skull).where(eq(skull.id, input.id));
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        const skullRecord = await tx
+          .select({ speciesId: skull.speciesId })
+          .from(skull)
+          .where(eq(skull.id, input.id));
+
+        await tx.delete(skull).where(eq(skull.id, input.id));
+
+        if (skullRecord[0]?.speciesId) {
+          await tx
+            .update(species)
+            .set({ infoLastUpdatedAt: new Date() })
+            .where(eq(species.id, skullRecord[0].speciesId));
+        }
+      });
     }),
 
   addSpeciesStrategy: publicProcedure
@@ -399,18 +609,36 @@ export const speciesInfoRouter = createTRPCRouter({
         strategy: z.enum(moltStrategiesEnum.enumValues),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.db.insert(moltStrategies).values({
-        speciesId: input.speciesId,
-        strategy: input.strategy,
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        await tx.insert(moltStrategies).values({
+          speciesId: input.speciesId,
+          strategy: input.strategy,
+        });
+        await tx
+          .update(species)
+          .set({ infoLastUpdatedAt: new Date() })
+          .where(eq(species.id, input.speciesId));
       });
     }),
   deleteSpeciesStrategy: publicProcedure
     .input(z.object({ id: z.number() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.db
-        .delete(moltStrategies)
-        .where(eq(moltStrategies.id, input.id));
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        const strategyRecord = await tx
+          .select({ speciesId: moltStrategies.speciesId })
+          .from(moltStrategies)
+          .where(eq(moltStrategies.id, input.id));
+
+        await tx.delete(moltStrategies).where(eq(moltStrategies.id, input.id));
+
+        if (strategyRecord[0]?.speciesId) {
+          await tx
+            .update(species)
+            .set({ infoLastUpdatedAt: new Date() })
+            .where(eq(species.id, strategyRecord[0].speciesId));
+        }
+      });
     }),
   getSpeciesStrategies: publicProcedure
     .input(z.object({ speciesId: z.number() }))
@@ -429,23 +657,41 @@ export const speciesInfoRouter = createTRPCRouter({
         extension: z.enum(moltExtensionEnum.enumValues),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.db.insert(speciesMoltExtensions).values({
-        speciesId: input.speciesId,
-        moltType: input.moltType,
-        extension: input.extension,
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        await tx.insert(speciesMoltExtensions).values({
+          speciesId: input.speciesId,
+          moltType: input.moltType,
+          extension: input.extension,
+        });
+        await tx
+          .update(species)
+          .set({ infoLastUpdatedAt: new Date() })
+          .where(eq(species.id, input.speciesId));
       });
     }),
   deleteSpeciesMoltExtension: publicProcedure
     .input(z.object({ id: z.number() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.db.transaction(async (tx) => {
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.transaction(async (tx) => {
+        const moltExtensionRecord = await tx
+          .select({ speciesId: speciesMoltExtensions.speciesId })
+          .from(speciesMoltExtensions)
+          .where(eq(speciesMoltExtensions.id, input.id));
+
         await tx
           .delete(moltLimits)
           .where(eq(moltLimits.speciesMoltExtensionId, input.id));
         await tx
           .delete(speciesMoltExtensions)
           .where(eq(speciesMoltExtensions.id, input.id));
+
+        if (moltExtensionRecord[0]?.speciesId) {
+          await tx
+            .update(species)
+            .set({ infoLastUpdatedAt: new Date() })
+            .where(eq(species.id, moltExtensionRecord[0].speciesId));
+        }
       });
     }),
 
@@ -533,17 +779,31 @@ export const speciesInfoRouter = createTRPCRouter({
         );
 
       if (sppFeaturedPic[0]) {
-        return await ctx.db
-          .update(speciesFeaturedPicture)
-          .set({
-            pictureId: input.pictureId,
-          })
-          .where(eq(speciesFeaturedPicture.id, sppFeaturedPic[0].id));
+        await ctx.db.transaction(async (tx) => {
+          await tx
+            .update(speciesFeaturedPicture)
+            .set({
+              pictureId: input.pictureId,
+            })
+            .where(eq(speciesFeaturedPicture.id, sppFeaturedPic[0]?.id));
+          await tx
+            .update(species)
+            .set({ infoLastUpdatedAt: new Date() })
+            .where(eq(species.id, input.speciesId));
+        });
+        return;
       }
-      return ctx.db.insert(speciesFeaturedPicture).values({
-        speciesId: input.speciesId,
-        pictureId: input.pictureId,
-        cover: input.cover,
+
+      return await ctx.db.transaction(async (tx) => {
+        await tx.insert(speciesFeaturedPicture).values({
+          speciesId: input.speciesId,
+          pictureId: input.pictureId,
+          cover: input.cover,
+        });
+        await tx
+          .update(species)
+          .set({ infoLastUpdatedAt: new Date() })
+          .where(eq(species.id, input.speciesId));
       });
     }),
 
