@@ -1,7 +1,16 @@
 import { api } from "@/trpc/server";
 import { AdminMode } from "@/components/admin-mode/admin-mode";
 
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
+
 export default async function Home({ params }: { params: { id: string } }) {
+  const supabase = await createClient();
+
+  const data = await supabase.auth.getSession();
+  if (!data.data.session) redirect("/login");
+
   const id = +params.id;
   if (!id) return <p>no id</p>;
 

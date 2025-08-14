@@ -20,6 +20,8 @@ export const env = createEnv({
     IMAGEK_PUBLIC_KEY: z.string(),
     IMAGEK_PRIVATE_KEY: z.string(),
     IMAGEK_URL_ENDPOINT: z.string().url(),
+    SUPABASE_URL: z.string().url(),
+    SUPABASE_ANON_KEY: z.string(),
   },
 
   /**
@@ -32,6 +34,8 @@ export const env = createEnv({
     NEXT_PUBLIC_IMAGEK_PRIVATE_KEY: z.string(),
     NEXT_PUBLIC_IMAGEK_URL_ENDPOINT: z.string().url(),
     NEXT_PUBLIC_MAINTENANCE: z.string().default("false"),
+    NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string(),
   },
 
   /**
@@ -51,6 +55,10 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_IMAGEK_URL_ENDPOINT,
     NEXT_PUBLIC_MAINTENANCE: process.env.NEXT_PUBLIC_MAINTENANCE,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

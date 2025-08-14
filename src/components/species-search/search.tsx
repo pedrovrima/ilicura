@@ -19,7 +19,7 @@ export default function SpeciesSearch() {
 
   return (
     <div>
-      <h1>Species Search</h1>
+      <h1 className="text-2xl font-bold text-black">Species Search</h1>
       <Input
         className="h-12 w-[600px] max-w-[90vw] rounded-md border-2 border-secondary-foreground p-2  text-lg font-bold"
         onChange={(e) => setSearchValue(e.target.value)}
