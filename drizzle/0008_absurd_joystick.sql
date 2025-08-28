@@ -1,0 +1,1 @@
+ALTER TABLE "ilicura_authors" DROP COLUMN IF EXISTS "user_id";

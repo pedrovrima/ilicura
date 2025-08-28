@@ -1,0 +1,1 @@
+ALTER TABLE "ilicura_authors" ADD COLUMN "user_id" varchar(256);

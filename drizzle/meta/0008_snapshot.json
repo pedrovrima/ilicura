@@ -1,9 +1,310 @@
 {
-  "id": "569c7a34-211d-42ed-af9b-5d3285480285",
-  "prevId": "5870c409-e74d-46c6-b180-777a36c98055",
+  "id": "8869c710-071f-44e9-b478-a9c935536d25",
+  "prevId": "77f10d63-8863-4e20-b652-052bae78f4a1",
   "version": "5",
   "dialect": "pg",
   "tables": {
+    "ilicura_audit_log": {
+      "name": "ilicura_audit_log",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "occurred_at": {
+          "name": "occurred_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "txid": {
+          "name": "txid",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "txid_current()"
+        },
+        "table_schema": {
+          "name": "table_schema",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "table_name": {
+          "name": "table_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pk": {
+          "name": "pk",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "op": {
+          "name": "op",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "old_data": {
+          "name": "old_data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "new_data": {
+          "name": "new_data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "changed_cols": {
+          "name": "changed_cols",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "author_id": {
+          "name": "author_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data_source_id": {
+          "name": "data_source_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "approval_status": {
+          "name": "approval_status",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'applied'"
+        },
+        "approved_by": {
+          "name": "approved_by",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "approved_at": {
+          "name": "approved_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_event_id": {
+          "name": "parent_event_id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comment": {
+          "name": "comment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "subject_table": {
+          "name": "subject_table",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subject_row_uid": {
+          "name": "subject_row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "audit_by_table_row": {
+          "name": "audit_by_table_row",
+          "columns": [
+            "table_name",
+            "row_uid"
+          ],
+          "isUnique": false
+        },
+        "audit_by_subject": {
+          "name": "audit_by_subject",
+          "columns": [
+            "subject_table",
+            "subject_row_uid"
+          ],
+          "isUnique": false
+        },
+        "audit_by_tx": {
+          "name": "audit_by_tx",
+          "columns": [
+            "txid"
+          ],
+          "isUnique": false
+        },
+        "audit_by_author": {
+          "name": "audit_by_author",
+          "columns": [
+            "author_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "ilicura_audit_log_author_id_ilicura_authors_id_fk": {
+          "name": "ilicura_audit_log_author_id_ilicura_authors_id_fk",
+          "tableFrom": "ilicura_audit_log",
+          "tableTo": "ilicura_authors",
+          "columnsFrom": [
+            "author_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ilicura_audit_log_data_source_id_ilicura_data_source_id_fk": {
+          "name": "ilicura_audit_log_data_source_id_ilicura_data_source_id_fk",
+          "tableFrom": "ilicura_audit_log",
+          "tableTo": "ilicura_data_source",
+          "columnsFrom": [
+            "data_source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ilicura_audit_log_approved_by_ilicura_authors_id_fk": {
+          "name": "ilicura_audit_log_approved_by_ilicura_authors_id_fk",
+          "tableFrom": "ilicura_audit_log",
+          "tableTo": "ilicura_authors",
+          "columnsFrom": [
+            "approved_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_authors": {
+      "name": "ilicura_authors",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_authors_data_sources": {
+      "name": "ilicura_authors_data_sources",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "author_id": {
+          "name": "author_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "data_source_id": {
+          "name": "data_source_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_authors_data_sources_author_id_ilicura_authors_id_fk": {
+          "name": "ilicura_authors_data_sources_author_id_ilicura_authors_id_fk",
+          "tableFrom": "ilicura_authors_data_sources",
+          "tableTo": "ilicura_authors",
+          "columnsFrom": [
+            "author_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ilicura_authors_data_sources_data_source_id_ilicura_data_source_id_fk": {
+          "name": "ilicura_authors_data_sources_data_source_id_ilicura_data_source_id_fk",
+          "tableFrom": "ilicura_authors_data_sources",
+          "tableTo": "ilicura_data_source",
+          "columnsFrom": [
+            "data_source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "ilicura_cemave_band_size": {
       "name": "ilicura_cemave_band_size",
       "schema": "",
@@ -38,6 +339,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},
@@ -48,6 +356,55 @@
           "tableTo": "ilicura_species",
           "columnsFrom": [
             "species_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_data_source": {
+      "name": "ilicura_data_source",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_data_source_organization_id_ilicura_organizations_id_fk": {
+          "name": "ilicura_data_source_organization_id_ilicura_organizations_id_fk",
+          "tableFrom": "ilicura_data_source",
+          "tableTo": "ilicura_organizations",
+          "columnsFrom": [
+            "organization_id"
           ],
           "columnsTo": [
             "id"
@@ -258,6 +615,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},
@@ -297,7 +661,7 @@
         },
         "age": {
           "name": "age",
-          "type": "ages_enum",
+          "type": "varchar(10)",
           "primaryKey": false,
           "notNull": false
         },
@@ -319,6 +683,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},
@@ -380,6 +751,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},
@@ -435,6 +813,13 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},
@@ -453,6 +838,35 @@
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_organizations": {
+      "name": "ilicura_organizations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -484,6 +898,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},
@@ -545,6 +966,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},
@@ -618,6 +1046,19 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "info_last_updated_at": {
+          "name": "info_last_updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},
@@ -679,6 +1120,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},
@@ -740,6 +1188,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},
@@ -808,6 +1263,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},
@@ -815,6 +1277,68 @@
         "ilicura_species_info_species_id_ilicura_species_id_fk": {
           "name": "ilicura_species_info_species_id_ilicura_species_id_fk",
           "tableFrom": "ilicura_species_info",
+          "tableTo": "ilicura_species",
+          "columnsFrom": [
+            "species_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ilicura_species_initial_description": {
+      "name": "ilicura_species_initial_description",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "species_id": {
+          "name": "species_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(1000)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ilicura_species_initial_description_species_id_ilicura_species_id_fk": {
+          "name": "ilicura_species_initial_description_species_id_ilicura_species_id_fk",
+          "tableFrom": "ilicura_species_initial_description",
           "tableTo": "ilicura_species",
           "columnsFrom": [
             "species_id"
@@ -869,6 +1393,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},
@@ -946,6 +1477,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},
@@ -1007,6 +1545,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},
@@ -1062,6 +1607,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "row_uid": {
+          "name": "row_uid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         }
       },
       "indexes": {},

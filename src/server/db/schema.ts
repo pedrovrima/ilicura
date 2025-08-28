@@ -12,6 +12,11 @@ import {
   pgEnum,
   boolean,
   unique,
+  uuid,
+  jsonb,
+  bigserial,
+  bigint,
+  text,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -199,6 +204,7 @@ export const species = createTable("species", {
   updatedAt: timestamp("updatedAt"),
   genusId: integer("genus_id").references(() => genus.id),
   infoLastUpdatedAt: timestamp("info_last_updated_at"),
+  rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
 
 export const speciesInfo = createTable("species_info", {
@@ -209,6 +215,7 @@ export const speciesInfo = createTable("species_info", {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt"),
+  rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
 
 export const speciesInitialDescription = createTable(
@@ -221,6 +228,7 @@ export const speciesInitialDescription = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt"),
+    rowUid: uuid("row_uid").defaultRandom().notNull(),
   },
 );
 
@@ -233,6 +241,7 @@ export const speciesFeaturedPicture = createTable("species_featured_picture", {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt"),
+  rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
 
 export const speciesPicture = createTable("species_picture", {
@@ -245,16 +254,17 @@ export const speciesPicture = createTable("species_picture", {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt"),
+  rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
 
 export const picturesTags = createTable("pictures_tags", {
   id: serial("id").primaryKey(),
   pictureId: integer("picture_id").references(() => speciesPicture.id),
-
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt"),
+  rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
 
 export const totalCapturesBySpecies = createTable("total_captures_by_species", {
@@ -265,6 +275,7 @@ export const totalCapturesBySpecies = createTable("total_captures_by_species", {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt"),
+  rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
 
 export const moltLimits = createTable("molt_limits", {
@@ -278,6 +289,7 @@ export const moltLimits = createTable("molt_limits", {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt"),
+  rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
 
 export const cemaveBandSize = createTable("cemave_band_size", {
@@ -288,6 +300,7 @@ export const cemaveBandSize = createTable("cemave_band_size", {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt"),
+  rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
 
 export const hummingBirdBandCircumference = createTable(
@@ -300,6 +313,7 @@ export const hummingBirdBandCircumference = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt"),
+    rowUid: uuid("row_uid").defaultRandom().notNull(),
   },
 );
 
@@ -308,12 +322,13 @@ export const hummingBirdBillCorrugation = createTable(
   {
     id: serial("id").primaryKey(),
     speciesId: integer("species_id").references(() => species.id),
-    age: varchar("age", { length: 10 }),
+    age: varchar("age", { length: 10 }), // ← keep this
     billCorrugation: varchar("bill_corrugation", { length: 256 }),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt"),
+    rowUid: uuid("row_uid").defaultRandom().notNull(),
   },
 );
 
@@ -325,6 +340,7 @@ export const moltStrategies = createTable("molt_strategy", {
     .notNull(),
   updatedAt: timestamp("updatedAt"),
   speciesId: integer("species_id").references(() => species.id),
+  rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
 
 export const speciesMoltExtensions = createTable(
@@ -338,6 +354,7 @@ export const speciesMoltExtensions = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt"),
+    rowUid: uuid("row_uid").defaultRandom().notNull(),
   },
   (table) => ({
     uniqueTest: unique("extension").on(
@@ -357,6 +374,7 @@ export const speciesAgeInfo = createTable("species_age_info", {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt"),
+  rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
 
 export const speciesSexInfo = createTable("specues_sex_info", {
@@ -368,6 +386,7 @@ export const speciesSexInfo = createTable("specues_sex_info", {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt"),
+  rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
 
 export const skull = createTable("skull", {
@@ -379,4 +398,92 @@ export const skull = createTable("skull", {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt"),
+  rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
+
+export const authors = createTable("authors", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 256 }),
+  email: varchar("email", { length: 256 }),
+  userId: varchar("user_id", { length: 256 }),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
+
+export const organizations = createTable("organizations", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 256 }),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
+
+export const authorsDataSources = createTable("authors_data_sources", {
+  id: serial("id").primaryKey(),
+  authorId: integer("author_id").references(() => authors.id),
+  dataSourceId: integer("data_source_id").references(() => dataSource.id),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
+
+export const dataSource = createTable("data_source", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 256 }),
+  organizationId: integer("organization_id").references(() => organizations.id),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
+
+export const auditLog = createTable(
+  "audit_log",
+  {
+    id: bigserial("id", { mode: "number" }).primaryKey(),
+    occurredAt: timestamp("occurred_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    txid: bigint("txid", { mode: "number" })
+      .notNull()
+      .default(sql`txid_current()`),
+
+    tableSchema: text("table_schema").notNull(),
+    tableName: text("table_name").notNull(),
+
+    // Row pointer
+    rowUid: uuid("row_uid").notNull(),
+    pk: jsonb("pk").notNull(), // e.g. {"id": 123}
+
+    op: varchar("op", { length: 10 }).notNull(), // 'insert' | 'update' | 'delete'
+    oldData: jsonb("old_data"),
+    newData: jsonb("new_data"),
+    changedCols: text("changed_cols").array(),
+
+    // Provenance
+    authorId: integer("author_id")
+      .references(() => authors.id)
+      .notNull(),
+    dataSourceId: integer("data_source_id").references(() => dataSource.id),
+
+    // Approval-ready
+    approvalStatus: varchar("approval_status", { length: 16 })
+      .notNull()
+      .default("applied"),
+    approvedBy: integer("approved_by").references(() => authors.id),
+    approvedAt: timestamp("approved_at", { withTimezone: true }),
+
+    parentEventId: bigint("parent_event_id", { mode: "number" }),
+    comment: text("comment"),
+
+    // 🔑 Subject (root of the change for history grouping)
+    subjectTable: text("subject_table").notNull(), // e.g. 'ilicura_species'
+    subjectRowUid: uuid("subject_row_uid").notNull(), // species.row_uid
+  },
+  (t) => ({
+    byTableRow: index("audit_by_table_row").on(t.tableName, t.rowUid),
+    bySubject: index("audit_by_subject").on(t.subjectTable, t.subjectRowUid),
+    byTx: index("audit_by_tx").on(t.txid),
+    byAuthor: index("audit_by_author").on(t.authorId),
+  }),
+);
