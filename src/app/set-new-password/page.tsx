@@ -1,6 +1,5 @@
 export const dynamic = "force-dynamic";
 
-i;
 import { ResetPasswordForm } from "./ResetPasswordForm";
 
 export default function Page({
