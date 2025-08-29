@@ -1,5 +1,5 @@
 import { unstable_noStore as noStore } from "next/cache";
-
+export const dynamic = "force-dynamic";
 import Image from "next/image";
 import SpeciesSearch from "@/components/species-search/search";
 
