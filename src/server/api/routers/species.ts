@@ -73,6 +73,7 @@ export const speciesRouter = createTRPCRouter({
       .from(moltStrategies);
 
     const speciesIds = moltStrategiesData.map((item) => item.speciesId);
+    if (speciesIds.length === 0) return [];
 
     const speciesWithStrategies = await ctx.db
       .select()

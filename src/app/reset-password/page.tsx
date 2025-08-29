@@ -1,15 +1,44 @@
 import { resetPassword } from "./actions";
+import Link from "next/link";
+import { WhoIAmButton } from "@/components/whoAmI";
 
 export default function ResetPasswordPage() {
   return (
-    <div className="flex h-screen w-screen items-center justify-center">
-      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-        <h1 className="mb-4 text-2xl font-bold">Reset Password</h1>
-        <form action={resetPassword}>
-          <input type="email" name="email" placeholder="Email" />
-          <button type="submit">Reset Password</button>
+    <main className="flex min-h-screen flex-col bg-[#f1e4ca] text-secondary">
+      <div className="container flex flex-col items-center justify-start gap-12 px-4 py-16">
+        <img
+          src="/admin.jpeg"
+          alt="oama logo"
+          width={150}
+          height={150}
+          className="mb-2"
+        />
+        <h1 className="text-5xl font-extrabold tracking-tight text-secondary-foreground sm:text-[3rem]">
+          Reset <span className="text-primary">Password</span>
+        </h1>
+        <form
+          action={resetPassword}
+          className="flex w-full max-w-sm flex-col gap-6 rounded-xl bg-white p-8 shadow-lg"
+        >
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            required
+            className="rounded border border-gray-300 px-4 py-2 text-black focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          />
+          <button
+            type="submit"
+            className="rounded bg-primary py-2 font-semibold text-white transition hover:bg-primary/80"
+          >
+            Reset Password
+          </button>
+          <Link href="/login" className="text-sm text-gray-500">
+            Back to Login
+          </Link>
         </form>
       </div>
-    </div>
+      <WhoIAmButton />
+    </main>
   );
 }
