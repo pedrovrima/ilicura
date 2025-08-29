@@ -3,7 +3,6 @@ import { unstable_noStore as noStore } from "next/cache";
 import Image from "next/image";
 import SpeciesSearch from "@/components/species-search/search";
 
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { WhoIAmButton } from "@/components/whoAmI";
@@ -13,8 +12,6 @@ export default async function Home() {
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
-  console.log("data", data, "error", error);
-  console.log("data?.user", data?.user);
   if (error || !data?.user) {
     console.log("redirecting to login");
     redirect("/login");
