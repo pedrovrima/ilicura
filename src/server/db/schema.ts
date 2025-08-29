@@ -401,15 +401,21 @@ export const skull = createTable("skull", {
   rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
 
-export const authors = createTable("authors", {
-  id: serial("id").primaryKey(),
-  name: varchar("name", { length: 256 }),
-  email: varchar("email", { length: 256 }),
-  userId: varchar("user_id", { length: 256 }),
-  createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-});
+export const authors = createTable(
+  "authors",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }),
+    email: varchar("email", { length: 256 }),
+    userId: varchar("user_id", { length: 256 }),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },
+  (t) => ({
+    userIdUq: unique("authors_user_id_uq").on(t.userId),
+  }),
+);
 
 export const organizations = createTable("organizations", {
   id: serial("id").primaryKey(),
@@ -422,6 +428,7 @@ export const organizations = createTable("organizations", {
 export const authorsDataSources = createTable("authors_data_sources", {
   id: serial("id").primaryKey(),
   authorId: integer("author_id").references(() => authors.id),
+
   dataSourceId: integer("data_source_id").references(() => dataSource.id),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)

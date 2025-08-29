@@ -2,13 +2,15 @@ import { login } from "./actions";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
+import { api } from "@/trpc/react";
+import { api as apiServer } from "@/trpc/server";
+import { WhoIAmButton } from "@/components/whoAmI";
 
 export default async function LoginPage() {
   const supabase = await createClient();
 
   const data = await supabase.auth.getSession();
   console.log("data", data);
-  if (data.data.session) redirect("/admin/species");
 
   return (
     <main className="flex min-h-screen flex-col bg-[#f1e4ca]  text-secondary">
@@ -52,6 +54,7 @@ export default async function LoginPage() {
           </Link>
         </form>
       </div>
+      <WhoIAmButton />
     </main>
   );
 }

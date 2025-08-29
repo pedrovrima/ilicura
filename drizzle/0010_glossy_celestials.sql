@@ -1,0 +1,1 @@
+ALTER TABLE "ilicura_authors" ADD CONSTRAINT "authors_user_id_uq" UNIQUE("user_id");

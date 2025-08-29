@@ -64,6 +64,13 @@
       "when": 1756330962441,
       "tag": "0009_bent_saracen",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1756427953276,
+      "tag": "0010_glossy_celestials",
+      "breakpoints": true
     }
   ]
 }

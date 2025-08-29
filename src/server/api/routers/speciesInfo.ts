@@ -1,7 +1,11 @@
 import { z } from "zod";
 import { eq, and } from "drizzle-orm";
 
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  writeProcedure,
+} from "@/server/api/trpc";
 import {
   agesEnum,
   bandSizeEnum,
@@ -190,7 +194,7 @@ export const speciesInfoRouter = createTRPCRouter({
       return data;
     }),
 
-  addSpeciesInitialDescription: publicProcedure
+  addSpeciesInitialDescription: writeProcedure
     .input(
       z.object({
         speciesId: z.number(),
@@ -209,7 +213,7 @@ export const speciesInfoRouter = createTRPCRouter({
           .where(eq(species.id, input.speciesId));
       });
     }),
-  updateSpeciesInitialDescription: publicProcedure
+  updateSpeciesInitialDescription: writeProcedure
     .input(
       z.object({
         id: z.number(),

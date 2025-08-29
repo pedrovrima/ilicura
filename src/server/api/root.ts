@@ -1,6 +1,7 @@
 import { speciesRouter } from "@/server/api/routers/species";
 import { speciesInfoRouter } from "./routers/speciesInfo";
 import { createTRPCRouter } from "@/server/api/trpc";
+import { whoAmI } from "@/server/api/routers/tests";
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import { createTRPCRouter } from "@/server/api/trpc";
 export const appRouter = createTRPCRouter({
   species: speciesRouter,
   speciesInfo: speciesInfoRouter,
+  whoAmI,
 });
 
 // export type definition of API
