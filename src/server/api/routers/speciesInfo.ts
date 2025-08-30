@@ -1,7 +1,15 @@
+import { Pool } from "pg";
 import { z } from "zod";
+import { drizzle as drizzleNodePg } from "drizzle-orm/node-postgres";
 import { eq, and } from "drizzle-orm";
+import { sql } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
 
-import { createTRPCRouter, writeProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  writeProcedure,
+} from "@/server/api/trpc";
 import {
   agesEnum,
   bandSizeEnum,
@@ -48,37 +56,51 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
-        await tx.insert(cemaveBandSize).values({
-          speciesId: input.speciesId,
-          bandSize: input.bandSize,
-        });
-        await tx
-          .update(species)
-          .set({ infoLastUpdatedAt: new Date() })
-          .where(eq(species.id, input.speciesId));
-      });
+      console.log("addBandSize input", input);
+      try {
+        const inserted = await ctx.db
+          .insert(cemaveBandSize)
+          .values({
+            speciesId: input.speciesId,
+            bandSize: input.bandSize,
+          })
+          .returning();
+
+        console.log("Transaction completed, inserted:", inserted);
+
+        return inserted;
+      } catch (error) {
+        console.error("addBandSize error", error);
+        throw new Error(
+          typeof error === "string"
+            ? error
+            : error instanceof Error
+              ? error.message
+              : "Unknown error",
+        );
+      }
     }),
+
   deleteBandSize: writeProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
-        const bandSizeRecord = await tx
-          .select({ speciesId: cemaveBandSize.speciesId })
-          .from(cemaveBandSize)
-          .where(eq(cemaveBandSize.id, input.id));
+      const [deleted] = await ctx.db
+        .delete(cemaveBandSize)
+        .where(eq(cemaveBandSize.id, input.id))
+        .returning({
+          id: cemaveBandSize.id,
+          speciesId: cemaveBandSize.speciesId,
+        });
 
-        await tx.delete(cemaveBandSize).where(eq(cemaveBandSize.id, input.id));
+      if (!deleted)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Band size not found",
+        });
 
-        if (bandSizeRecord[0]?.speciesId) {
-          await tx
-            .update(species)
-            .set({ infoLastUpdatedAt: new Date() })
-            .where(eq(species.id, bandSizeRecord[0].speciesId));
-        }
-      });
+      return { ok: true, deletedId: deleted.id };
     }),
-  getBandSize: writeProcedure
+  getBandSize: publicProcedure
     .input(z.object({ speciesId: z.number() }))
     .query(async ({ ctx, input }) => {
       const data = await ctx.db
@@ -96,16 +118,20 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
-        await tx.insert(hummingBirdBandCircumference).values({
-          speciesId: input.speciesId,
-          bandCircumference: input.bandCircumference,
+      try {
+        await ctx.db.transaction(async (tx) => {
+          await tx.insert(hummingBirdBandCircumference).values({
+            speciesId: input.speciesId,
+            bandCircumference: input.bandCircumference,
+          });
+          await tx
+            .update(species)
+            .set({ infoLastUpdatedAt: new Date() })
+            .where(eq(species.id, input.speciesId));
         });
-        await tx
-          .update(species)
-          .set({ infoLastUpdatedAt: new Date() })
-          .where(eq(species.id, input.speciesId));
-      });
+      } catch (error) {
+        console.log("error", error);
+      }
     }),
   deleteHummingbirdBandCircumference: writeProcedure
     .input(z.object({ id: z.number() }))
@@ -128,7 +154,7 @@ export const speciesInfoRouter = createTRPCRouter({
         }
       });
     }),
-  getHummingbirdBandCircumference: writeProcedure
+  getHummingbirdBandCircumference: publicProcedure
     .input(z.object({ speciesId: z.number() }))
     .query(async ({ ctx, input }) => {
       const data = await ctx.db
@@ -180,7 +206,7 @@ export const speciesInfoRouter = createTRPCRouter({
         }
       });
     }),
-  getHummingbirdBillCorrugation: writeProcedure
+  getHummingbirdBillCorrugation: publicProcedure
     .input(z.object({ speciesId: z.number() }))
     .query(async ({ ctx, input }) => {
       const data = await ctx.db
@@ -250,7 +276,7 @@ export const speciesInfoRouter = createTRPCRouter({
         }
       });
     }),
-  getSpeciesInitialDescription: writeProcedure
+  getSpeciesInitialDescription: publicProcedure
     .input(z.object({ speciesId: z.number() }))
     .query(async ({ ctx, input }) => {
       const data = await ctx.db
@@ -323,7 +349,7 @@ export const speciesInfoRouter = createTRPCRouter({
         }
       });
     }),
-  getMoltLimits: writeProcedure
+  getMoltLimits: publicProcedure
     .input(z.object({ speciesId: z.number() }))
     .query(async ({ ctx, input }) => {
       const data = await ctx.db
@@ -343,42 +369,46 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
-        const ageInfo = await tx
-          .insert(speciesAgeInfo)
-          .values({
-            speciesId: input.speciesId,
-            sexualDimorphism: input.sexualDimorphism,
-            age: input.age,
-          })
-          .returning();
+      try {
+        await ctx.db.transaction(async (tx) => {
+          const ageInfo = await tx
+            .insert(speciesAgeInfo)
+            .values({
+              speciesId: input.speciesId,
+              sexualDimorphism: input.sexualDimorphism,
+              age: input.age,
+            })
+            .returning();
 
-        const insertedId = ageInfo[0]?.id;
-        console.log(ageInfo);
-        if (input.sexualDimorphism) {
-          await tx.insert(speciesSexInfo).values({
-            ageId: insertedId,
-            sex: "M",
-            description: "",
-          });
-          await tx.insert(speciesSexInfo).values({
-            ageId: insertedId,
-            sex: "F",
-            description: "",
-          });
-        } else {
-          await tx.insert(speciesSexInfo).values({
-            ageId: insertedId,
-            sex: "U",
-            description: "",
-          });
-        }
+          const insertedId = ageInfo[0]?.id;
+          console.log(ageInfo);
+          if (input.sexualDimorphism) {
+            await tx.insert(speciesSexInfo).values({
+              ageId: insertedId,
+              sex: "M",
+              description: "",
+            });
+            await tx.insert(speciesSexInfo).values({
+              ageId: insertedId,
+              sex: "F",
+              description: "",
+            });
+          } else {
+            await tx.insert(speciesSexInfo).values({
+              ageId: insertedId,
+              sex: "U",
+              description: "",
+            });
+          }
 
-        await tx
-          .update(species)
-          .set({ infoLastUpdatedAt: new Date() })
-          .where(eq(species.id, input.speciesId));
-      });
+          await tx
+            .update(species)
+            .set({ infoLastUpdatedAt: new Date() })
+            .where(eq(species.id, input.speciesId));
+        });
+      } catch (error) {
+        console.log("error", error);
+      }
     }),
 
   deleteSexualDimorphism: writeProcedure
@@ -456,7 +486,7 @@ export const speciesInfoRouter = createTRPCRouter({
       });
     }),
 
-  getSexImages: writeProcedure
+  getSexImages: publicProcedure
     .input(z.object({ sexId: z.number() }))
     .query(async ({ ctx, input }) => {
       const data = await ctx.db
@@ -610,16 +640,23 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
-        await tx.insert(moltStrategies).values({
-          speciesId: input.speciesId,
-          strategy: input.strategy,
+      console.log("input", input);
+      try {
+        await ctx.db.transaction(async (tx) => {
+          await tx.insert(moltStrategies).values({
+            speciesId: input.speciesId,
+            strategy: input.strategy,
+          });
+
+          console.log("inserted");
+          await tx
+            .update(species)
+            .set({ infoLastUpdatedAt: new Date() })
+            .where(eq(species.id, input.speciesId));
         });
-        await tx
-          .update(species)
-          .set({ infoLastUpdatedAt: new Date() })
-          .where(eq(species.id, input.speciesId));
-      });
+      } catch (error) {
+        console.log("error", error);
+      }
     }),
   deleteSpeciesStrategy: writeProcedure
     .input(z.object({ id: z.number() }))
@@ -658,17 +695,24 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
-        await tx.insert(speciesMoltExtensions).values({
-          speciesId: input.speciesId,
-          moltType: input.moltType,
-          extension: input.extension,
+      try {
+        await ctx.db.transaction(async (tx) => {
+          await tx.insert(speciesMoltExtensions).values({
+            speciesId: input.speciesId,
+            moltType: input.moltType,
+            extension: input.extension,
+          });
+          console.log("inserted");
+
+          await tx
+            .update(species)
+            .set({ infoLastUpdatedAt: new Date() })
+            .where(eq(species.id, input.speciesId));
         });
-        await tx
-          .update(species)
-          .set({ infoLastUpdatedAt: new Date() })
-          .where(eq(species.id, input.speciesId));
-      });
+        console.log("updated");
+      } catch (error) {
+        console.log("error", error);
+      }
     }),
   deleteSpeciesMoltExtension: writeProcedure
     .input(z.object({ id: z.number() }))
@@ -807,7 +851,7 @@ export const speciesInfoRouter = createTRPCRouter({
       });
     }),
 
-  getPictures: writeProcedure
+  getPictures: publicProcedure
     .input(z.object({ speciesId: z.number() }))
     .query(async ({ ctx, input }) => {
       const pictures = await ctx.db
@@ -827,7 +871,7 @@ export const speciesInfoRouter = createTRPCRouter({
       return pictures;
     }),
 
-  getSkullInfo: writeProcedure
+  getSkullInfo: publicProcedure
     .input(z.object({ speciesId: z.number() }))
     .query(async ({ ctx, input }) => {
       const data = await ctx.db
@@ -837,7 +881,7 @@ export const speciesInfoRouter = createTRPCRouter({
       return data;
     }),
 
-  getSpeciesMoltExtensions: writeProcedure
+  getSpeciesMoltExtensions: publicProcedure
     .input(z.object({ speciesId: z.number() }))
     .query(async ({ ctx, input }) => {
       const data = await ctx.db

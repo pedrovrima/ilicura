@@ -10,7 +10,12 @@ export default function DeleteBandSize({
   bandSizeData: (typeof cemaveBandSize.$inferSelect)[];
   refetch: () => void;
 }) {
-  const deleteBandSize = api.speciesInfo.deleteBandSize.useMutation();
+  const utils = api.useUtils();
+  const deleteBandSize = api.speciesInfo.deleteBandSize.useMutation({
+    onSuccess: () => {
+      utils.speciesInfo.getBandSize.invalidate();
+    },
+  });
   return (
     <div>
       {bandSizeData?.map((size) => (

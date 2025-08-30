@@ -13,3 +13,27 @@ export const whoAmI = writeProcedure.mutation(async ({ ctx }) => {
     dataSourceId: r?.data_source_id ?? null,
   };
 });
+
+export const test = writeProcedure.mutation(async ({ ctx }) => {
+  try {
+    const result = await ctx.db.execute(
+      sql`select
+  current_database() as db,
+  current_schema()   as schema,
+  session_user,
+  inet_server_addr()::text as host,
+      inet_server_port() as port;`,
+    );
+    console.log("result", result);
+    return result;
+  } catch (error) {
+    console.log("error", error);
+    throw new Error(
+      typeof error === "string"
+        ? error
+        : error instanceof Error
+          ? error.message
+          : "Unknown error",
+    );
+  }
+});
