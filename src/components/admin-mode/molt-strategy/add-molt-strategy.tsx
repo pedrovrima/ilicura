@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import SubmitButton from "@/components/ui/submit-buttons";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type moltStrategiesType = (typeof moltStrategiesEnum.enumValues)[number];
 
@@ -24,7 +25,7 @@ export default function AddMoltStrategy({
   refetch: () => void;
 }) {
   const [strategy, setStrategy] = useState<moltStrategiesType | "">(""); // Set initial value to an empty string
-
+  const [isUncertain, setIsUncertain] = useState<boolean>(false);
   const createPost = api.speciesInfo.addSpeciesStrategy.useMutation();
 
   return (
@@ -33,7 +34,7 @@ export default function AddMoltStrategy({
         e.preventDefault();
         if (strategy === "") return; // If the value is an empty string, return early
         createPost.mutate(
-          { speciesId, strategy },
+          { speciesId, strategy, isCertain: !isUncertain },
           {
             onSuccess: () => {
               refetch();
@@ -63,6 +64,15 @@ export default function AddMoltStrategy({
           ))}
         </SelectContent>
       </Select>
+      <div className="flex flex-row items-center gap-2">
+        <Checkbox
+          checked={isUncertain}
+          onCheckedChange={(checked) => setIsUncertain(checked as boolean)}
+          id="is-certain"
+          className="bg-white text-black"
+        />
+        <p>Incerto?</p>
+      </div>
       <SubmitButton isLoading={createPost.isLoading} />
     </form>
   );

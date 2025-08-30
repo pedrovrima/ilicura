@@ -12,14 +12,15 @@ import SpeciesInitialDescription from "./species-initial-description";
 
 import Link from "next/link";
 import AdminBandSize from "./band-size";
+import TotalCaptures from "./total-captures";
 
 export const AdminMode = ({ id }: { id: number }) => {
   const speciesData = api.species.getById.useQuery({ id });
 
   return (
     <div className="flex w-[600px] flex-col gap-24">
-      <FeaturePictures speciesId={id} />
-      <SpeciesInitialDescription speciesId={id} />
+      <TotalCaptures speciesId={id} />
+
       <AdminBandSize speciesId={id} />
       {speciesData.data?.family === "Trochilidae" && (
         <AdminHummingbirdBandCircumference speciesId={id} />
@@ -31,6 +32,8 @@ export const AdminMode = ({ id }: { id: number }) => {
       <AdminSexualDimorphism speciesId={id} />
       <AdminMoltStrategy speciesId={id} />
       <AdminMoltExtension speciesId={id} />
+      <FeaturePictures speciesId={id} />
+      <SpeciesInitialDescription speciesId={id} />
       <div className="flex ">
         <Link
           href={{

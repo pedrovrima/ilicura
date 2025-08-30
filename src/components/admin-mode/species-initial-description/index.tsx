@@ -24,7 +24,7 @@ export default function SpeciesInitialDescription({
 
   return (
     <div>
-      <h2 className="mb-8 text-xl font-bold">Descrição Inicial da Espécie</h2>
+      <h2 className="mb-8 text-xl font-bold">Notas da Espécie</h2>
 
       <div className="flex flex-col gap-6">
         <AddSpeciesInitialDescription
@@ -35,7 +35,7 @@ export default function SpeciesInitialDescription({
 
         {descriptionData && descriptionData.description && (
           <div className="rounded-md border p-4">
-            <h3 className="mb-2 text-sm font-medium">Descrição Atual:</h3>
+            <h3 className="mb-2 text-sm font-medium">Nota Atual:</h3>
             <p className="whitespace-pre-wrap text-sm text-muted-foreground">
               {descriptionData.description}
             </p>
@@ -45,7 +45,7 @@ export default function SpeciesInitialDescription({
         {!descriptionData && (
           <div className="rounded-md border p-4">
             <p className="text-sm text-muted-foreground">
-              Nenhuma descrição inicial registrada para esta espécie.
+              Nenhuma nota registrada para esta espécie.
             </p>
           </div>
         )}

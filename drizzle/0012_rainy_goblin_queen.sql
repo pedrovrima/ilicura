@@ -1,0 +1,2 @@
+ALTER TABLE "ilicura_total_captures_by_species" ADD CONSTRAINT "ilicura_total_captures_by_species_species_id_unique" UNIQUE("species_id");--> statement-breakpoint
+ALTER TABLE "ilicura_total_captures_by_species" ADD CONSTRAINT "total_captures_by_species_species_id_uq" UNIQUE("species_id","total");

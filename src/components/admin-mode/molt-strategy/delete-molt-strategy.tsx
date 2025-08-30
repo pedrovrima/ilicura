@@ -32,6 +32,7 @@ export default function DeleteMoltStrategy({
             isLoading={deleteStrategy.isLoading}
           >
             {strategy.strategy}
+            {strategy.isCertain ? "" : "(Incerto)"}
           </DeletePill>
         </div>
       ))}

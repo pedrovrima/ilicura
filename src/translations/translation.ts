@@ -1,7 +1,7 @@
 export const skullEnumTranslation = {
-  true: "Fecha",
-  false: "Não fecha",
-  maybe: "Talvez feche",
+  true: "Completa ossificação",
+  false: "Não completa ossificação",
+  maybe: "Pode ou não completar ossificação",
 };
 
 export const moltExtensionEnumTranslation = {

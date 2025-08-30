@@ -7,9 +7,6 @@ const logQuery = (query: string, params: unknown[]) => {
   console.log("[DRIZZLE QUERY]", query, params);
 };
 
-export const db = drizzle(postgres(env.DATABASE_URL), {
+export const db = drizzle(postgres(env.DATABASE_URL, { prepare: false }), {
   schema,
-  logger: {
-    logQuery, // This will log every query and its parameters
-  },
 });

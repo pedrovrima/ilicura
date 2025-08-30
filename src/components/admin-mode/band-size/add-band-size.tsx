@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import SubmitButton from "@/components/ui/submit-buttons";
 
 type bandSizeEnumType = (typeof bandSizeEnum.enumValues)[number];
@@ -21,7 +22,7 @@ export default function AddBandSize({
   refetch: () => void;
 }) {
   const [bandSize, setBandSize] = useState<bandSizeEnumType>(); // Set initial value to an empty string
-
+  const [isSecondary, setIsSecondary] = useState<boolean>(false);
   const addBandSize = api.speciesInfo.addBandSize.useMutation();
 
   return (
@@ -30,7 +31,7 @@ export default function AddBandSize({
         e.preventDefault();
         if (!bandSize) return; // If the value is an empty string, return early
         addBandSize.mutate(
-          { speciesId, bandSize },
+          { speciesId, bandSize, isSecondary },
           {
             onSuccess: () => {
               refetch();
@@ -56,6 +57,15 @@ export default function AddBandSize({
           ))}
         </SelectContent>
       </Select>
+      <div className="flex flex-row items-center gap-2">
+        <Checkbox
+          checked={isSecondary}
+          onCheckedChange={(checked) => setIsSecondary(checked as boolean)}
+          id="is-secondary"
+          className="bg-white text-black"
+        />
+        <p>Incomum?</p>
+      </div>
       <SubmitButton isLoading={addBandSize.isLoading} />
     </form>
   );

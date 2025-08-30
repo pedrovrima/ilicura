@@ -24,13 +24,14 @@ import {
   moltTypesEnum,
   skull,
   skullClosesEnum,
-  species,
   speciesMoltExtensions,
   speciesAgeInfo,
   speciesSexInfo,
   speciesPicture,
   speciesFeaturedPicture,
   speciesInitialDescription,
+  totalCapturesBySpecies,
+  species,
 } from "@/server/db/schema";
 import ImageKit from "imagekit";
 import { env } from "@/env";
@@ -48,25 +49,67 @@ export type CompleteAgeInfo = typeof speciesAgeInfo.$inferSelect & {
 export type NullableCompleteAgeInfo = Nullable<CompleteAgeInfo>;
 
 export const speciesInfoRouter = createTRPCRouter({
-  addBandSize: writeProcedure
+  getTotalCaptures: publicProcedure
+    .input(z.object({ speciesId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .select()
+        .from(totalCapturesBySpecies)
+        .where(eq(totalCapturesBySpecies.speciesId, input.speciesId));
+      console.log(data);
+      return data[0] || null;
+    }),
+  updateTotalCaptures: writeProcedure
+    .input(z.object({ speciesId: z.number(), total: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .insert(totalCapturesBySpecies)
+        .values({
+          speciesId: input.speciesId,
+          total: input.total,
+        })
+        .onConflictDoUpdate({
+          target: totalCapturesBySpecies.speciesId,
+
+          set: { total: input.total },
+        })
+        .returning();
+      console.log("updated", data);
+      await ctx.db
+        .update(species)
+        .set({ infoLastUpdatedAt: new Date() })
+        .where(eq(species.id, input.speciesId));
+      return { ok: true };
+    }),
+  addBandSize: publicProcedure
     .input(
       z.object({
         speciesId: z.number(),
         bandSize: z.enum(bandSizeEnum.enumValues),
+        isSecondary: z.boolean(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       console.log("addBandSize input", input);
       try {
-        const inserted = await ctx.db
-          .insert(cemaveBandSize)
-          .values({
-            speciesId: input.speciesId,
-            bandSize: input.bandSize,
-          })
-          .returning();
+        const inserted = await ctx.db.transaction(async (tx) => {
+          console.log(ctx.user);
+          await tx.execute(
+            sql`select set_config('app.author_id', ${ctx.user!.authorId.toString()}, true)`,
+          );
+          await tx.execute(
+            sql`select set_config('app.data_source_id', ${"1"}, true)`,
+          );
 
-        console.log("Transaction completed, inserted:", inserted);
+          return await tx
+            .insert(cemaveBandSize)
+            .values({
+              speciesId: input.speciesId,
+              bandSize: input.bandSize,
+              isSecondary: input.isSecondary,
+            })
+            .returning();
+        });
 
         return inserted;
       } catch (error) {
@@ -637,6 +680,7 @@ export const speciesInfoRouter = createTRPCRouter({
       z.object({
         speciesId: z.number(),
         strategy: z.enum(moltStrategiesEnum.enumValues),
+        isCertain: z.boolean(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -646,6 +690,7 @@ export const speciesInfoRouter = createTRPCRouter({
           await tx.insert(moltStrategies).values({
             speciesId: input.speciesId,
             strategy: input.strategy,
+            isCertain: input.isCertain,
           });
 
           console.log("inserted");
@@ -789,6 +834,7 @@ export const speciesInfoRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const featuredPictures = await ctx.db
         .select({
+          id: speciesFeaturedPicture.id,
           pictureId: speciesFeaturedPicture.pictureId,
           url: speciesPicture.url,
           thumbnail: speciesPicture.thumbnail,
@@ -812,43 +858,29 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const sppFeaturedPic = await ctx.db
-        .select()
-        .from(speciesFeaturedPicture)
-        .where(
-          and(
-            eq(speciesFeaturedPicture.speciesId, input.speciesId),
-            eq(speciesFeaturedPicture.cover, input.cover),
-          ),
-        );
-
-      if (sppFeaturedPic[0]) {
-        await ctx.db.transaction(async (tx) => {
-          await tx
-            .update(speciesFeaturedPicture)
-            .set({
-              pictureId: input.pictureId,
-            })
-            .where(eq(speciesFeaturedPicture.id, sppFeaturedPic[0]?.id));
-          await tx
-            .update(species)
-            .set({ infoLastUpdatedAt: new Date() })
-            .where(eq(species.id, input.speciesId));
-        });
-        return;
-      }
-
-      return await ctx.db.transaction(async (tx) => {
-        await tx.insert(speciesFeaturedPicture).values({
-          speciesId: input.speciesId,
-          pictureId: input.pictureId,
-          cover: input.cover,
-        });
-        await tx
-          .update(species)
-          .set({ infoLastUpdatedAt: new Date() })
-          .where(eq(species.id, input.speciesId));
+      await ctx.db.insert(speciesFeaturedPicture).values({
+        speciesId: input.speciesId,
+        pictureId: input.pictureId,
+        cover: input.cover,
       });
+      await ctx.db
+        .update(species)
+        .set({ infoLastUpdatedAt: new Date() })
+        .where(eq(species.id, input.speciesId));
+    }),
+
+  deleteFeaturedPicture: writeProcedure
+    .input(z.object({ id: z.number(), speciesId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      console.log("deleteFeaturedPicture input", input);
+      await ctx.db
+        .delete(speciesFeaturedPicture)
+        .where(eq(speciesFeaturedPicture.id, input.id));
+
+      await ctx.db
+        .update(species)
+        .set({ infoLastUpdatedAt: new Date() })
+        .where(eq(species.id, input.speciesId));
     }),
 
   getPictures: publicProcedure

@@ -8,8 +8,8 @@ import { ensureAuthorForSupabaseUser } from "@/server/db/ensureAuthor";
 import { sql } from "drizzle-orm";
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const supabase = await createClient();
-  const { data } = await supabase.auth.getSession();
-  const sUser = data.session?.user;
+  const { data } = await supabase.auth.getUser();
+  const sUser = data.user;
 
   let user: { authorId: number } | null = null;
   if (sUser) {
@@ -44,6 +44,10 @@ export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 
 const requireUser = t.middleware(({ ctx, next }) => {
+  console.table("requireUser");
+  console.table(ctx);
+  console.table("user ctx");
+  console.table(ctx.user);
   if (!ctx.user) throw new TRPCError({ code: "UNAUTHORIZED" });
   return next();
 });
@@ -98,7 +102,7 @@ const actorTx = t.middleware(async ({ ctx, next }) => {
       await tx.execute(
         sql`select set_config('app.data_source_id', ${DATA_SOURCE_ID.toString()}, true)`,
       );
-      const ret = await next({ ctx: { ...ctx, db: tx } });
+      const ret = await next({ ctx: { db: tx } });
       return ret;
     } finally {
       // when the callback returns, mark the tx as closed

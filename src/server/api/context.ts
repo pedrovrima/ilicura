@@ -14,9 +14,14 @@ export async function createTRPCContext(): Promise<Ctx> {
   const db = drizzle(pool);
 
   const supabase = await createClient();
-  const { data } = await supabase.auth.getSession();
-  const supaUser = data.session?.user;
-
+  const { data, error } = await supabase.auth.getUser();
+  console.table("data");
+  console.table(data);
+  console.table("error");
+  console.table(error);
+  const supaUser = data.user;
+  console.table("supaUser");
+  console.table(supaUser);
   let user: Ctx["user"] = null;
   if (supaUser) {
     const authorId = await ensureAuthorForSupabaseUser(db, {

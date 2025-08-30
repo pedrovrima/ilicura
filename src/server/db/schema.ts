@@ -59,15 +59,15 @@ export const moltExtensionEnum = pgEnum("molt_extension_enum", [
 ]);
 
 export const moltTypesEnum = pgEnum("molt_types_enum", [
-  "1PJ",
-  "1PF",
-  "1PA",
+  "FPJ",
+  "FPF",
+  "FPA",
   "DPB",
   "DPA",
-  "2PB",
-  "2PA",
-  "3PB",
-  "3PA",
+  "SPB",
+  "SPA",
+  "TPB",
+  "TPA",
   "4PB",
   "4PA",
 ]);
@@ -267,16 +267,27 @@ export const picturesTags = createTable("pictures_tags", {
   rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
 
-export const totalCapturesBySpecies = createTable("total_captures_by_species", {
-  id: serial("id").primaryKey(),
-  speciesId: integer("species_id").references(() => species.id),
-  total: integer("total"),
-  createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: timestamp("updatedAt"),
-  rowUid: uuid("row_uid").defaultRandom().notNull(),
-});
+export const totalCapturesBySpecies = createTable(
+  "total_captures_by_species",
+  {
+    id: serial("id").primaryKey(),
+    speciesId: integer("species_id")
+      .references(() => species.id)
+      .unique(),
+    total: integer("total"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+    rowUid: uuid("row_uid").defaultRandom().notNull(),
+  },
+  (table) => ({
+    uniqueTest: unique("total_captures_by_species_species_id_uq").on(
+      table.speciesId,
+      table.total,
+    ),
+  }),
+);
 
 export const moltLimits = createTable("molt_limits", {
   id: serial("id").primaryKey(),
@@ -296,6 +307,7 @@ export const cemaveBandSize = createTable("cemave_band_size", {
   id: serial("id").primaryKey(),
   speciesId: integer("species_id").references(() => species.id),
   bandSize: bandSizeEnum("band_size"),
+  isSecondary: boolean("is_secondary"),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
@@ -335,6 +347,7 @@ export const hummingBirdBillCorrugation = createTable(
 export const moltStrategies = createTable("molt_strategy", {
   id: serial("id").primaryKey(),
   strategy: moltStrategiesEnum("strategy"),
+  isCertain: boolean("is_certain").default(true),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

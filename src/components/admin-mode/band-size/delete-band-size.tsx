@@ -33,7 +33,7 @@ export default function DeleteBandSize({
             }}
             isLoading={deleteBandSize.isLoading}
           >
-            {size.bandSize}
+            {size.bandSize} {size.isSecondary ? "(Incomum)" : "(Principal)"}
           </DeletePill>
         </div>
       ))}

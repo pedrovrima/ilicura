@@ -59,14 +59,12 @@ export default function AddSpeciesInitialDescription({
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium">
-          {existingDescription
-            ? "Editar Descrição Inicial"
-            : "Adicionar Descrição Inicial"}
+          {existingDescription ? "Editar notas" : "Adicionar notas"}
         </label>
         <Textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Digite a descrição inicial da espécie..."
+          placeholder="Digite a notas da espécie..."
           className="min-h-[120px]"
           required
         />
