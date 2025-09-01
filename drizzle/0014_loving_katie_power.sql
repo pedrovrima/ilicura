@@ -1,0 +1,2 @@
+CREATE INDEX IF NOT EXISTS "family_id_idx" ON "ilicura_families_info" ("family_id");--> statement-breakpoint
+ALTER TABLE "ilicura_families_info" ADD CONSTRAINT "ilicura_families_info_family_id_unique" UNIQUE("family_id");

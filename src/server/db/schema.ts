@@ -170,17 +170,25 @@ export const families = createTable(
   }),
 );
 
-export const familiesInfo = createTable("families_info", {
-  id: serial("id").primaryKey(),
-  familyId: integer("family_id").references(() => families.id),
-  description: varchar("description", { length: 512 }),
-  n_primary_feathers: integer("n_primary_feathers"),
-  n_secondary_feathers: integer("n_secondary_feathers"),
-  createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: timestamp("updatedAt"),
-});
+export const familiesInfo = createTable(
+  "families_info",
+  {
+    id: serial("id").primaryKey(),
+    familyId: integer("family_id")
+      .references(() => families.id)
+      .unique(),
+    description: varchar("description", { length: 512 }),
+    n_primary_feathers: integer("n_primary_feathers"),
+    n_secondary_feathers: integer("n_secondary_feathers"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+  (example) => ({
+    familyIdIndex: index("family_id_idx").on(example.familyId),
+  }),
+);
 
 export const genus = createTable("genus", {
   id: serial("id").primaryKey(),

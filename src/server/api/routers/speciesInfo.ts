@@ -32,9 +32,12 @@ import {
   speciesInitialDescription,
   totalCapturesBySpecies,
   species,
+  familiesInfo,
+  genus,
 } from "@/server/db/schema";
 import ImageKit from "imagekit";
 import { env } from "@/env";
+import { getUnpackedSettings } from "http2";
 
 type CompleteMoltExtesion = typeof speciesMoltExtensions.$inferSelect & {
   moltLimits: (typeof moltLimits.$inferSelect)[] | [];
@@ -49,6 +52,63 @@ export type CompleteAgeInfo = typeof speciesAgeInfo.$inferSelect & {
 export type NullableCompleteAgeInfo = Nullable<CompleteAgeInfo>;
 
 export const speciesInfoRouter = createTRPCRouter({
+  getFamilyInfo: publicProcedure
+    .input(z.object({ speciesId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const familyId = await ctx.db
+        .select({
+          familyId: genus.familyId,
+          description: familiesInfo.description,
+          n_primary_feathers: familiesInfo.n_primary_feathers,
+          n_secondary_feathers: familiesInfo.n_secondary_feathers,
+        })
+        .from(genus)
+        .leftJoin(species, eq(genus.id, species.genusId))
+        .leftJoin(familiesInfo, eq(familiesInfo.familyId, genus.familyId))
+        .where(eq(species.id, input.speciesId));
+      return familyId;
+    }),
+  updateFamilyDescription: writeProcedure
+    .input(z.object({ familyId: z.number(), description: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .insert(familiesInfo)
+        .values({
+          familyId: input.familyId,
+          description: input.description,
+        })
+        .onConflictDoUpdate({
+          target: familiesInfo.familyId,
+          set: { description: input.description },
+        });
+      return data;
+    }),
+
+  updateFamilyPrimaryFeathers: writeProcedure
+    .input(z.object({ familyId: z.number(), n_primary_feathers: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .insert(familiesInfo)
+        .values({
+          familyId: input.familyId,
+          n_primary_feathers: input.n_primary_feathers,
+        })
+        .onConflictDoUpdate({
+          target: familiesInfo.familyId,
+          set: { n_primary_feathers: input.n_primary_feathers },
+        });
+      console.log("updated", data);
+      return data;
+    }),
+  updateFamilySecondaryFeathers: writeProcedure
+    .input(z.object({ familyId: z.number(), n_secondary_feathers: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const data = await ctx.db
+        .update(familiesInfo)
+        .set({ n_secondary_feathers: input.n_secondary_feathers })
+        .where(eq(familiesInfo.familyId, input.familyId));
+      return data;
+    }),
   getTotalCaptures: publicProcedure
     .input(z.object({ speciesId: z.number() }))
     .query(async ({ ctx, input }) => {

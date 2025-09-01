@@ -13,12 +13,14 @@ import SpeciesInitialDescription from "./species-initial-description";
 import Link from "next/link";
 import AdminBandSize from "./band-size";
 import TotalCaptures from "./total-captures";
+import FamilyInfo from "./family-info";
 
 export const AdminMode = ({ id }: { id: number }) => {
   const speciesData = api.species.getById.useQuery({ id });
 
   return (
     <div className="flex w-[600px] flex-col gap-24">
+      <FamilyInfo speciesId={id} />
       <TotalCaptures speciesId={id} />
 
       <AdminBandSize speciesId={id} />
