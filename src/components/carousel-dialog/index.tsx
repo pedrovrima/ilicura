@@ -27,9 +27,9 @@ export default function CarouselDialog({
             {pictures?.map((image) => (
               <CarouselItem
                 className="flex h-[300px] w-[200px] basis-[200px] items-center justify-center overflow-hidden"
-                key={image.id}
+                key={image?.id}
               >
-                {image.url && (
+                {image?.url && (
                   <DialogTrigger
                     className=" h-[300px] 
                   w-[200px] overflow-hidden rounded-lg
