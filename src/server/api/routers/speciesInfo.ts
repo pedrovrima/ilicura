@@ -635,8 +635,16 @@ export const speciesInfoRouter = createTRPCRouter({
                   .delete(speciesPicture)
                   .where(eq(speciesPicture.id, input.id));
               })
-              .catch((err) => {
+              .catch(async (err) => {
                 console.log(err);
+                if (
+                  err.message.includes("file does not exist.") ||
+                  err.message.includes("invalid fileId parameter.")
+                ) {
+                  await tx
+                    .delete(speciesPicture)
+                    .where(eq(speciesPicture.id, input.id));
+                }
               });
             console.log(del);
 
@@ -807,7 +815,6 @@ export const speciesInfoRouter = createTRPCRouter({
             moltType: input.moltType,
             extension: input.extension,
           });
-          console.log("inserted");
 
           await tx
             .update(species)
