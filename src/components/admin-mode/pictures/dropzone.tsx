@@ -108,9 +108,15 @@ const FileThumb = ({
           onClick={async (e) => {
             setUploadProgress(2);
             e.preventDefault();
-            const { token, expire, signature } = await fetch(
-              "/api/imagekit-auth",
-            ).then((r) => r.json());
+            const token = crypto.randomUUID(); // new per file / attempt
+            const { expire, signature } = await fetch("/api/imagekit-auth", {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                "cache-control": "no-store",
+              },
+              body: JSON.stringify({ token }),
+            }).then((r) => r.json());
 
             const safeFile = await resizeImageFile(file, {
               maxMegaPixels: 24.9, // stay below ImageKit’s pre-processing limit
@@ -148,7 +154,9 @@ const FileThumb = ({
                   refetchImages();
                 }
               })
-              .catch((err) => {});
+              .catch((err) => {
+                setUploadProgress(0);
+              });
           }}
         >
           {addImageApi.isLoading ? (
