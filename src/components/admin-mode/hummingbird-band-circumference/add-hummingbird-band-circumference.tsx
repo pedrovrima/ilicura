@@ -33,7 +33,6 @@ export default function AddHummingbirdBandCircumference({
       className="flex flex-row items-center gap-2"
     >
       <Input
-        type="number"
         value={bandCircumference || ""}
         onChange={(e) => setBandCircumference(Number(e.target.value))}
         placeholder="Circunferência da anilha (mm)"

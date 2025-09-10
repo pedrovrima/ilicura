@@ -177,7 +177,7 @@ export const familiesInfo = createTable(
     familyId: integer("family_id")
       .references(() => families.id)
       .unique(),
-    description: varchar("description", { length: 512 }),
+    description: varchar("description", { length: 3000 }),
     n_primary_feathers: integer("n_primary_feathers"),
     n_secondary_feathers: integer("n_secondary_feathers"),
     createdAt: timestamp("created_at")

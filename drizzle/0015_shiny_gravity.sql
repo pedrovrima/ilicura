@@ -1,0 +1,1 @@
+ALTER TABLE "ilicura_families_info" ALTER COLUMN "description" SET DATA TYPE varchar(3000);
