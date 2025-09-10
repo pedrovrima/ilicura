@@ -244,13 +244,34 @@ export const speciesFeaturedPicture = createTable("species_featured_picture", {
   id: serial("id").primaryKey(),
   speciesId: integer("species_id").references(() => species.id),
   pictureId: integer("picture_id").references(() => speciesPicture.id),
-  cover: boolean("cover"),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt"),
   rowUid: uuid("row_uid").defaultRandom().notNull(),
 });
+
+export const speciesFeaturedPictureCover = createTable(
+  "species_featured_picture_cover",
+  {
+    id: serial("id").primaryKey(),
+    speciesId: integer("species_id")
+      .references(() => species.id)
+      .unique(),
+    cover: boolean("cover"),
+    pictureId: integer("picture_id").references(() => speciesPicture.id),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+    rowUid: uuid("row_uid").defaultRandom().notNull(),
+  },
+  (table) => ({
+    uniqueTest: unique(
+      "species_featured_picture_cover_species_id_picture_id_uq",
+    ).on(table.speciesId, table.pictureId),
+  }),
+);
 
 export const speciesPicture = createTable("species_picture", {
   id: serial("id").primaryKey(),

@@ -34,6 +34,7 @@ import {
   species,
   familiesInfo,
   genus,
+  speciesFeaturedPictureCover,
 } from "@/server/db/schema";
 import ImageKit from "imagekit";
 import { env } from "@/env";
@@ -905,12 +906,19 @@ export const speciesInfoRouter = createTRPCRouter({
           pictureId: speciesFeaturedPicture.pictureId,
           url: speciesPicture.url,
           thumbnail: speciesPicture.thumbnail,
-          cover: speciesFeaturedPicture.cover,
+          cover: speciesFeaturedPictureCover.cover,
         })
         .from(speciesFeaturedPicture)
         .leftJoin(
           speciesPicture,
           eq(speciesFeaturedPicture.pictureId, speciesPicture.id),
+        )
+        .leftJoin(
+          speciesFeaturedPictureCover,
+          eq(
+            speciesFeaturedPicture.pictureId,
+            speciesFeaturedPictureCover.pictureId,
+          ),
         )
         .where(eq(speciesFeaturedPicture.speciesId, input.speciesId));
       return featuredPictures;
@@ -925,15 +933,43 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.insert(speciesFeaturedPicture).values({
-        speciesId: input.speciesId,
-        pictureId: input.pictureId,
-        cover: input.cover,
-      });
+      await ctx.db
+        .update(speciesFeaturedPicture)
+        .values({
+          speciesId: input.speciesId,
+          pictureId: input.pictureId,
+          cover: input.cover,
+        })
+        .where(eq(speciesFeaturedPicture.speciesId, input.speciesId))
+        .where(eq(speciesFeaturedPicture.pictureId, input.pictureId));
+
       await ctx.db
         .update(species)
         .set({ infoLastUpdatedAt: new Date() })
         .where(eq(species.id, input.speciesId));
+    }),
+  addFeaturedPictureCover: writeProcedure
+    .input(
+      z.object({
+        speciesId: z.number(),
+        pictureId: z.number(),
+        cover: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .insert(speciesFeaturedPictureCover)
+        .values({
+          speciesId: input.speciesId,
+          pictureId: input.pictureId,
+          cover: input.cover,
+        })
+        .onConflictDoUpdate({
+          target: [speciesFeaturedPictureCover.speciesId],
+          set: {
+            pictureId: input.pictureId,
+          },
+        });
     }),
 
   deleteFeaturedPicture: writeProcedure

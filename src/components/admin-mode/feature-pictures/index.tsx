@@ -8,6 +8,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
+import { StarIcon } from "lucide-react";
 
 export default function FeaturePictures({ speciesId }: { speciesId: number }) {
   const { isLoading, error, data } = api.speciesInfo.getPictures.useQuery({
@@ -22,6 +23,7 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
     speciesId,
   });
   const addFeature = api.speciesInfo.addFeaturedPicture.useMutation();
+  const addFeatureCover = api.speciesInfo.addFeaturedPictureCover.useMutation();
   const deleteFeature = api.speciesInfo.deleteFeaturedPicture.useMutation();
   //ts-ignore
   if (isLoading || featureLoading) return <p>loading...</p>;
@@ -29,6 +31,7 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
   if (error ?? featureError) return <p>error</p>;
   if (!data) return <p>no pictures</p>;
 
+  console.log(featureData);
   return (
     <div>
       <h2 className="text-2xl font-bold">Fotos Destaque</h2>
@@ -39,7 +42,26 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
           <div className="relative flex w-full  flex-row gap-4 ">
             {featureData.map((f) => (
               <div className="group relative h-[150px] w-[150px] overflow-hidden">
+                <div className="absolute right-0 top-0 z-50">
+                  <StarIcon
+                    fill={f.cover ? "yellow" : "none"}
+                    className="h-6 w-6"
+                  />
+                </div>
                 <div className="absolute hidden h-full w-full flex-col items-center justify-center gap-2 group-hover:flex ">
+                  <Button
+                    onClick={async () => {
+                      await addFeatureCover.mutateAsync({
+                        speciesId,
+                        pictureId: f.pictureId,
+                        cover: true,
+                      });
+                      await refetchFeature();
+                    }}
+                  >
+                    Destaque
+                  </Button>
+
                   <Button
                     onClick={async () => {
                       await deleteFeature.mutateAsync({
@@ -76,7 +98,7 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
                           await addFeature.mutateAsync({
                             speciesId,
                             pictureId: image.id,
-                            cover: true,
+                            cover: false,
                           });
                           await refetchFeature();
                         }}

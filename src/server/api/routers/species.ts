@@ -20,6 +20,7 @@ import {
   sexEnum,
   families,
   genus,
+  speciesFeaturedPictureCover,
 } from "@/server/db/schema";
 
 type AgeEnum = (typeof agesEnum.enumValues)[number];
@@ -90,12 +91,20 @@ export const speciesRouter = createTRPCRouter({
         id: speciesFeaturedPicture.id,
         speciesId: speciesFeaturedPicture.speciesId,
         url: speciesPicture.url,
+        cover: speciesFeaturedPictureCover.cover,
       })
       .from(speciesFeaturedPicture)
+      .leftJoin(
+        speciesFeaturedPictureCover,
+        eq(
+          speciesFeaturedPicture.pictureId,
+          speciesFeaturedPictureCover.pictureId,
+        ),
+      )
       .where(
         and(
           inArray(speciesFeaturedPicture.speciesId, speciesIds),
-          eq(speciesFeaturedPicture.cover, true),
+          eq(speciesFeaturedPictureCover.cover, true),
         ),
       )
       .leftJoin(
@@ -209,6 +218,7 @@ export const speciesRouter = createTRPCRouter({
           age: speciesAgeInfo.age,
           sex: speciesSexInfo.sex,
           url: speciesPicture.url,
+          cover: speciesFeaturedPictureCover.cover,
         })
         .from(speciesFeaturedPicture)
         .leftJoin(
@@ -218,6 +228,13 @@ export const speciesRouter = createTRPCRouter({
         .leftJoin(
           speciesSexInfo,
           eq(speciesPicture.sexInfoId, speciesSexInfo.id),
+        )
+        .leftJoin(
+          speciesFeaturedPictureCover,
+          eq(
+            speciesFeaturedPicture.pictureId,
+            speciesFeaturedPictureCover.pictureId,
+          ),
         )
         .leftJoin(speciesAgeInfo, eq(speciesSexInfo.ageId, speciesAgeInfo.id))
         .where(eq(speciesFeaturedPicture.speciesId, input.id));
