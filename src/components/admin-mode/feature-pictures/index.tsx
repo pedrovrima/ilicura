@@ -59,7 +59,7 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
                       await refetchFeature();
                     }}
                   >
-                    Destaque
+                    Capa
                   </Button>
 
                   <Button
