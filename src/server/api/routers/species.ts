@@ -84,7 +84,8 @@ export const speciesRouter = createTRPCRouter({
           inArray(species.id, speciesIds),
           isNotNull(species.infoLastUpdatedAt),
         ),
-      );
+      )
+      .orderBy(species.id);
 
     const featuredPicture = await ctx.db
       .select({

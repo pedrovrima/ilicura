@@ -9,6 +9,7 @@ import { upload } from "@imagekit/javascript";
 import { env } from "@/env";
 import { Loader } from "lucide-react";
 import { resizeImageFile } from "./utils";
+import heic2any from "heic2any";
 
 type FileWithPreview = File & { preview: string };
 
@@ -34,10 +35,39 @@ export default function Dropzone({
     accept: {
       "image/*": [],
     },
-    onDrop: (acceptedFiles) => {
+    onDrop: async (acceptedFiles) => {
+      const processedFiles: File[] = [];
+
+      for (const file of Array.from(acceptedFiles)) {
+        if (file.type === "image/heic" || file.name.endsWith(".heic")) {
+          try {
+            const convertedBlob = await heic2any({
+              blob: file,
+              toType: "image/jpeg",
+              quality: 0.9,
+            });
+            // heic2any returns a Blob or an array of Blobs
+            const jpegBlob = Array.isArray(convertedBlob)
+              ? convertedBlob[0]
+              : convertedBlob;
+            const jpegFile = new File(
+              [jpegBlob],
+              file.name.replace(/\.heic$/i, ".jpg"),
+              { type: "image/jpeg" },
+            );
+            processedFiles.push(jpegFile);
+          } catch (err) {
+            alert("Failed to convert HEIC image. Please try another image.");
+            continue;
+          }
+        } else {
+          processedFiles.push(file);
+        }
+      }
+
       setFiles((fils) => [
         ...fils,
-        ...acceptedFiles.map((file) =>
+        ...processedFiles.map((file) =>
           Object.assign(file, {
             preview: URL.createObjectURL(file),
           }),

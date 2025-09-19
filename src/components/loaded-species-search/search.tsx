@@ -65,7 +65,7 @@ function LoadedSpeciesSearch({ speciesList }: { speciesList: SpeciesList[] }) {
                   </div>
                   <div className=" absolute h-full w-full bg-gradient-to-b from-transparent via-transparent to-black to-70% opacity-50 transition-all duration-300 ease-in-out group-hover:opacity-80" />
                   <div className="z-50 pb-4 text-center text-white sm:px-2">
-                    <p className="mb-1  font-extrabold capitalize sm:text-lg ">
+                    <p className="c  mb-1 font-extrabold sm:text-lg ">
                       {species.ptName}
                     </p>
                     <p className="sm:text-md text-wrap text-sm italic">

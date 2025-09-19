@@ -31,7 +31,6 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
   if (error ?? featureError) return <p>error</p>;
   if (!data) return <p>no pictures</p>;
 
-  console.log(featureData);
   return (
     <div>
       <h2 className="text-2xl font-bold">Fotos Destaque</h2>
