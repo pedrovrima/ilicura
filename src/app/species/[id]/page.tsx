@@ -23,6 +23,7 @@ export default async function Home({ params }: { params: { id: string } }) {
 
   return (
     <>
+      {/* <pre>{JSON.stringify(speciesData, null, 2)}</pre> */}
       <main className="flex min-h-screen flex-col bg-primary-foreground text-slate-900">
         <div className="p absolute top-0 w-screen bg-secondary-foreground px-4 py-4">
           <Link href="/">

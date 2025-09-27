@@ -404,6 +404,21 @@ export const speciesRouter = createTRPCRouter({
         .map((d) => d.molt_strategy)
         .filter((d) => d !== null);
 
+      console.log({
+        ...speciesData,
+        genus: filteredData[0]?.genus?.genusName,
+        family: filteredData[0]?.families?.name,
+        moltStrategies:
+          moltStrategiesData as (typeof moltStrategies.$inferSelect)[],
+        skull: skullData as (typeof skull.$inferSelect)[],
+        ageInfo: groupedAgeInfo,
+        bandSize: bandSizeData,
+        hummingbirdBandCircumference: hummingbirdBandCircumferenceData,
+        hummingbirdBillCorrugation: hummingbirdBillCorrugationData,
+        initialDescription: initialDescriptionData[0] || null,
+        moltExtensions: groupedExtensions,
+        featuredPictures,
+      });
       return {
         ...speciesData,
         genus: filteredData[0]?.genus?.genusName,
