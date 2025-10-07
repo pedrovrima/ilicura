@@ -218,7 +218,7 @@ export const species = createTable("species", {
 export const speciesInfo = createTable("species_info", {
   id: serial("id").primaryKey(),
   speciesId: integer("species_id").references(() => species.id),
-  description: varchar("description", { length: 512 }),
+  description: varchar("description", { length: 1024 }),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
