@@ -1,7 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&family=Cardo:ital,wght@0,400;0,700;1,400&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
 
 @layer base {
   :root {
@@ -50,8 +51,19 @@
   }
 }
 
- 
 @layer base {
+  @font-face {
+    font-family: "B612";
+    src: url("/fonts/B612-Regular.ttf");
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "B612";
+    src: url("/fonts/B612-Bold.ttf");
+    font-weight: 700;
+    font-style: normal;
+  }
   * {
     @apply border-border;
   }

@@ -10,7 +10,7 @@ export default function AddHummingbirdBandCircumference({
   speciesId: number;
   refetch: () => void;
 }) {
-  const [bandCircumference, setBandCircumference] = useState<number>();
+  const [bandCircumference, setBandCircumference] = useState<string>();
 
   const addHummingbirdBandCircumference =
     api.speciesInfo.addHummingbirdBandCircumference.useMutation();
@@ -34,7 +34,7 @@ export default function AddHummingbirdBandCircumference({
     >
       <Input
         value={bandCircumference || ""}
-        onChange={(e) => setBandCircumference(Number(e.target.value))}
+        onChange={(e) => setBandCircumference(e.target.value)}
         placeholder="Circunferência da anilha (mm)"
         className="w-48"
         required

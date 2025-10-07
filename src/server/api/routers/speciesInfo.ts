@@ -218,7 +218,7 @@ export const speciesInfoRouter = createTRPCRouter({
     .input(
       z.object({
         speciesId: z.number(),
-        bandCircumference: z.number(),
+        bandCircumference: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -933,20 +933,31 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db
-        .update(speciesFeaturedPicture)
-        .values({
+      await ctx.db.transaction(async (tx) => {
+        await tx.insert(speciesFeaturedPicture).values({
           speciesId: input.speciesId,
           pictureId: input.pictureId,
-          cover: input.cover,
-        })
-        .where(eq(speciesFeaturedPicture.speciesId, input.speciesId))
-        .where(eq(speciesFeaturedPicture.pictureId, input.pictureId));
+        });
 
-      await ctx.db
-        .update(species)
-        .set({ infoLastUpdatedAt: new Date() })
-        .where(eq(species.id, input.speciesId));
+        if (input.cover) {
+          await tx
+            .insert(speciesFeaturedPictureCover)
+            .values({
+              speciesId: input.speciesId,
+              pictureId: input.pictureId,
+              cover: true,
+            })
+            .onConflictDoUpdate({
+              target: [speciesFeaturedPictureCover.speciesId],
+              set: { pictureId: input.pictureId, cover: true },
+            });
+        }
+
+        await tx
+          .update(species)
+          .set({ infoLastUpdatedAt: new Date() })
+          .where(eq(species.id, input.speciesId));
+      });
     }),
   addFeaturedPictureCover: writeProcedure
     .input(

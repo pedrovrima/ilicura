@@ -349,7 +349,7 @@ export const hummingBirdBandCircumference = createTable(
   {
     id: serial("id").primaryKey(),
     speciesId: integer("species_id").references(() => species.id),
-    bandCircumference: integer("band_circumference"),
+    bandCircumference: varchar("band_circumference", { length: 256 }),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),

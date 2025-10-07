@@ -21,6 +21,7 @@ import {
   families,
   genus,
   speciesFeaturedPictureCover,
+  familiesInfo,
 } from "@/server/db/schema";
 
 type AgeEnum = (typeof agesEnum.enumValues)[number];
@@ -47,7 +48,7 @@ interface SpeciesByIdReturn extends SpeciesData {
   moltStrategies: (typeof moltStrategies.$inferSelect)[] | [];
   skull: (typeof skull.$inferSelect)[] | [];
   genus: string;
-  family: string;
+  family: typeof familiesInfo.$inferSelect & { name: string };
   moltExtensions: {
     moltType: string;
     extensions: { id: number; extension: string }[];
@@ -152,7 +153,8 @@ export const speciesRouter = createTRPCRouter({
         .where(eq(species.id, input.id))
         .leftJoin(moltStrategies, eq(species.id, moltStrategies.speciesId))
         .leftJoin(genus, eq(genus.id, species.genusId))
-        .leftJoin(families, eq(genus.familyId, families.id));
+        .leftJoin(families, eq(genus.familyId, families.id))
+        .leftJoin(familiesInfo, eq(genus.familyId, familiesInfo.familyId));
 
       const ageInfo = await ctx.db
         .select()
@@ -404,25 +406,13 @@ export const speciesRouter = createTRPCRouter({
         .map((d) => d.molt_strategy)
         .filter((d) => d !== null);
 
-      console.log({
-        ...speciesData,
-        genus: filteredData[0]?.genus?.genusName,
-        family: filteredData[0]?.families?.name,
-        moltStrategies:
-          moltStrategiesData as (typeof moltStrategies.$inferSelect)[],
-        skull: skullData as (typeof skull.$inferSelect)[],
-        ageInfo: groupedAgeInfo,
-        bandSize: bandSizeData,
-        hummingbirdBandCircumference: hummingbirdBandCircumferenceData,
-        hummingbirdBillCorrugation: hummingbirdBillCorrugationData,
-        initialDescription: initialDescriptionData[0] || null,
-        moltExtensions: groupedExtensions,
-        featuredPictures,
-      });
       return {
         ...speciesData,
         genus: filteredData[0]?.genus?.genusName,
-        family: filteredData[0]?.families?.name,
+        family: {
+          ...filteredData[0]?.families_info,
+          name: filteredData[0]?.families?.name,
+        },
         moltStrategies:
           moltStrategiesData as (typeof moltStrategies.$inferSelect)[],
         skull: skullData as (typeof skull.$inferSelect)[],
