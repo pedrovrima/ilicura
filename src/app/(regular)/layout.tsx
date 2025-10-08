@@ -150,7 +150,7 @@ export default function RootLayout({
             </div>
           </div>
 
-          <div className="container h-full">{children}</div>
+          <div className=" h-full">{children}</div>
         </main>
       </body>
     </html>

@@ -86,7 +86,6 @@ export default function Sobre() {
               <strong>ICMBio / CEMAVE</strong>
             </li>
           </ul>
-
           <h3 className="mt-8 text-2xl font-bold text-secondary-foreground">
             Referências bibliográficas
           </h3>
@@ -132,6 +131,51 @@ export default function Sobre() {
               Brasília.
             </li>
           </ul>
+
+          <h3 className="mt-8 text-2xl font-bold text-secondary-foreground">
+            Equipe
+          </h3>
+          <ul className="list-disc space-y-2 pl-6">
+            <li>
+              <strong>Pedro Martins</strong> — Idealizador e desenvolvedor do
+              produto
+            </li>
+            <li>
+              <strong>Luiza Figueira</strong> — coordenadora de execução e
+              colaboradora de conteúdo
+            </li>
+            <li>
+              <strong>Danielle Santos</strong> — colaboradora de conteúdo
+            </li>
+            <li>
+              <strong>Natália Almeida</strong> — colaboradora de conteúdo
+            </li>
+            <li>
+              <strong>Rachel Fidelis</strong> — colaboradora de conteúdo
+            </li>
+            <li>
+              <strong>Andreza Freitas</strong> — colaboradora de conteúdo
+            </li>
+            <li>
+              <strong>Victor Sanchez</strong> — colaborador de conteúdo
+            </li>
+            <li>
+              <strong>Affonso Souza</strong> — apoio desenvolvimento de projeto
+            </li>
+            <li>
+              <strong>Veronica Battezini</strong> — apoio desenvolvimento de
+              projeto
+            </li>
+          </ul>
+
+          <h3 className="mt-8 text-2xl font-bold text-secondary-foreground">
+            Como citar
+          </h3>
+          <p>
+            WikiMudas - plataforma de conhecimento sobre mudas e idade em aves
+            do Brasil por Observatório de Aves da Mantiqueira - acessado online
+            em dd/mm/aaaa.
+          </p>
         </section>
       </div>
     </main>

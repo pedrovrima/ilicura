@@ -7,7 +7,9 @@ import {
 } from "@/translations/translation";
 import Link from "next/link";
 import CarouselDialog from "@/components/carousel-dialog";
-import CarouselDialogEntry from "@/components/carousel-dialog/entry";
+import CarouselDialogEntry, {
+  DialogCarousel,
+} from "@/components/carousel-dialog/entry";
 import { ArrowLeftIcon, Bird, Dna, Feather } from "lucide-react";
 import PWAImage from "@/components/pwa-image";
 import {
@@ -16,6 +18,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
 import Image from "next/image";
 
 type SpeciesData = Awaited<ReturnType<typeof api.species.getById.query>>;
@@ -34,13 +37,13 @@ export default async function Home({ params }: { params: { id: string } }) {
   return (
     <>
       {/* <pre>{JSON.stringify(speciesData, null, 2)}</pre> */}
-      <main className="flex min-h-screen flex-col  text-slate-900">
-        <div className=" container w-full items-center  py-24">
+      <main className="container flex min-h-screen flex-col  text-slate-900">
+        <div className=" w-full items-center  py-24">
           <div className="variant mb-4 flex w-full flex-col gap-8 overflow-hidden md:flex-row md:justify-between">
             <CarouselDialogEntry pictures={speciesData.featuredPictures} />
           </div>
           <div className="mx-auto flex max-w-[900px] flex-col">
-            <div className="flex flex-col justify-between md:flex-row ">
+            <div className="flex flex-col md:flex-row md:justify-between ">
               <div className="flex flex-col  gap-0  font-cardo">
                 <div className="mb-12 flex flex-col gap-1">
                   <h1 className="  w-full font-cardo text-3xl font-extrabold  tracking-tight md:text-6xl ">
@@ -196,38 +199,41 @@ export default async function Home({ params }: { params: { id: string } }) {
               <h2 className="mb-1 mt-2 w-full text-left font-b612 text-sm ">
                 Idade e Sexo
               </h2>
-              <div>
-                {speciesData.ageInfo.length === 0 && (
-                  <p className="text-gray-600  ">Sem registros</p>
-                )}
-                <ul className="font-b612">
-                  {speciesData.ageInfo
-                    ?.sort(
-                      //sort by enum order
-                      (a, b) =>
-                        agesEnum.enumValues.indexOf(a.age!) -
-                        agesEnum.enumValues.indexOf(b.age!),
-                    )
-                    .map((age) => (
-                      <li key={age?.id} className="mb-16">
-                        <div className="mb-4">
-                          {age?.sex.map((sex, i) => (
-                            <div className="mb-8" key={sex.id}>
-                              <p className="mb-4 text-lg">
-                                <span className=" font-bold">
-                                  {age.age} - {sex.sex}
-                                </span>
-                                {sex.description && (
-                                  <span>: {sex.description}</span>
-                                )}
-                              </p>
 
-                              {sex.pictures?.length > 0 && (
-                                <div className="grid grid-cols-2 gap-1 md:grid-cols-4">
-                                  {sex.pictures
-                                    ?.filter((picture) => picture?.thumbnail)
-                                    .map((picture) => (
-                                      <div key={picture?.id}>
+              {speciesData.ageInfo.length === 0 && (
+                <p className="text-gray-600  ">Sem registros</p>
+              )}
+              <ul className="font-b612">
+                {speciesData.ageInfo
+                  ?.sort(
+                    //sort by enum order
+                    (a, b) =>
+                      agesEnum.enumValues.indexOf(a.age!) -
+                      agesEnum.enumValues.indexOf(b.age!),
+                  )
+                  .map((age) => (
+                    <li key={age?.id} className="mb-16">
+                      <div className="mb-4">
+                        {age?.sex.map((sex, i) => (
+                          <div className="mb-8" key={sex.id}>
+                            <p className="mb-4 text-lg">
+                              <span className=" font-bold">
+                                {age.age} - {sex.sex}
+                              </span>
+                              {sex.description && (
+                                <span>: {sex.description}</span>
+                              )}
+                            </p>
+
+                            {sex.pictures?.length > 0 && (
+                              <div className="grid grid-cols-2 gap-1 md:grid-cols-4">
+                                {sex.pictures
+                                  ?.filter((picture) => picture?.thumbnail)
+                                  .map((picture, i) => (
+                                    <div key={picture?.id}>
+                                      <CarouselDialog
+                                        image={picture?.url ?? ""}
+                                      >
                                         <PWAImage
                                           src={
                                             picture?.url
@@ -237,31 +243,41 @@ export default async function Home({ params }: { params: { id: string } }) {
                                           alt={picture?.thumbnail ?? ""}
                                           className="h-full w-full object-cover"
                                         />
-                                      </div>
-                                    ))}
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </li>
-                    ))}
-                </ul>
-              </div>
+                                      </CarouselDialog>
+                                    </div>
+                                  ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </li>
+                  ))}
+              </ul>
             </div>
             {speciesData.initialDescription && (
-              <div className="mb-8 px-4">
-                <h2 className="mb-6 mt-2 w-full text-center text-3xl font-bold">
-                  Notas{" "}
-                </h2>
-                <div className="rounded-lg border p-6">
-                  <p className="whitespace-pre-wrap text-lg leading-relaxed">
-                    {speciesData.initialDescription.description}
-                  </p>
-                </div>
+              <div>
+                <h2 className="text-sm">Notas </h2>
+
+                <p className="whitespace-pre-wrap text-lg leading-relaxed">
+                  {speciesData.initialDescription.description}
+                </p>
               </div>
             )}
+            <div className="mt-12">
+              <h2 className="text-sm">Fontes</h2>
+
+              <p className="text-md whitespace-pre-wrap leading-relaxed">
+                <span className="font-bold">
+                  Monitoramento de Longo Prazo do Observatório de Aves da
+                  Mantiqueira
+                </span>{" "}
+                Serra da Mantiqueira, Sudeste, Brasil. ( N=
+                {speciesData.totalCaptures}).
+              </p>
+            </div>
           </div>
+
           <Link
             href={`/admin/species/${id}`}
             className=" rounded-lg  border-transparent bg-transparent px-12 py-12  text-white hover:border-slate-400 hover:text-slate-400"
@@ -280,8 +296,8 @@ const BandSizeSection = ({ speciesData }: { speciesData: SpeciesData }) => {
   );
 
   return (
-    <div className="flex h-full flex-col items-end justify-end rounded-lg  px-8 py-2 text-right font-b612 ">
-      <p className="text-right  text-sm">Anilha</p>
+    <div className="flex h-full flex-col font-b612 md:items-end md:justify-end md:px-8 md:py-2 md:text-right ">
+      <p className="text-sm  md:text-right">Anilha</p>
 
       <p className="text-2xl font-bold">
         {speciesData.bandSize

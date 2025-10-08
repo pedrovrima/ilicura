@@ -22,6 +22,7 @@ import {
   genus,
   speciesFeaturedPictureCover,
   familiesInfo,
+  totalCapturesBySpecies,
 } from "@/server/db/schema";
 
 type AgeEnum = (typeof agesEnum.enumValues)[number];
@@ -65,6 +66,7 @@ interface SpeciesByIdReturn extends SpeciesData {
   hummingbirdBillCorrugation: (typeof hummingBirdBillCorrugation.$inferSelect)[];
   initialDescription: typeof speciesInitialDescription.$inferSelect | null;
   ageInfo: CompleteAgeInfo[];
+  totalCaptures: number;
 }
 
 export const speciesRouter = createTRPCRouter({
@@ -154,7 +156,11 @@ export const speciesRouter = createTRPCRouter({
         .leftJoin(moltStrategies, eq(species.id, moltStrategies.speciesId))
         .leftJoin(genus, eq(genus.id, species.genusId))
         .leftJoin(families, eq(genus.familyId, families.id))
-        .leftJoin(familiesInfo, eq(genus.familyId, familiesInfo.familyId));
+        .leftJoin(familiesInfo, eq(genus.familyId, familiesInfo.familyId))
+        .leftJoin(
+          totalCapturesBySpecies,
+          eq(species.id, totalCapturesBySpecies.speciesId),
+        );
 
       const ageInfo = await ctx.db
         .select()
@@ -413,6 +419,8 @@ export const speciesRouter = createTRPCRouter({
           ...filteredData[0]?.families_info,
           name: filteredData[0]?.families?.name,
         },
+        totalCaptures:
+          filteredData[0]?.total_captures_by_species?.total || null,
         moltStrategies:
           moltStrategiesData as (typeof moltStrategies.$inferSelect)[],
         skull: skullData as (typeof skull.$inferSelect)[],
