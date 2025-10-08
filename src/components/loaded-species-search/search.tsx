@@ -52,7 +52,7 @@ function LoadedSpeciesSearch({ speciesList }: { speciesList: SpeciesList[] }) {
           <ul className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 ">
             {searchResults?.map((species) => (
               <Link key={species.id} href={`/species/${species.id}`}>
-                <li className=" group relative flex h-[400px] w-[300px] flex-col items-center justify-end gap-4 overflow-hidden   rounded-lg border-2 border-secondary-foreground text-primary shadow-lg   hover:bg-primary hover:text-primary-foreground ">
+                <li className=" group relative flex h-[250px] w-[43vw] flex-col items-center justify-end gap-4 overflow-hidden rounded-lg border-2 border-secondary-foreground   text-primary shadow-lg hover:bg-primary hover:text-primary-foreground    sm:w-[27vw] md:h-[400px] lg:w-[20vw] ">
                   <div className="absolute h-full w-full overflow-hidden">
                     <img
                       className="h-full w-full origin-center object-cover transition-all  duration-300 ease-in-out"
@@ -63,7 +63,7 @@ function LoadedSpeciesSearch({ speciesList }: { speciesList: SpeciesList[] }) {
                       }
                     ></img>
                   </div>
-                  <div className=" absolute h-full w-full bg-gradient-to-b from-transparent via-transparent to-black to-70%  opacity-80 transition-all duration-300 ease-in-out" />
+                  <div className=" absolute h-full w-full bg-gradient-to-b from-transparent via-transparent to-black to-90%  opacity-80 transition-all duration-300 ease-in-out" />
                   <div className="z-50 pb-4 text-center text-white sm:px-2">
                     <p className="text-wrap font-cardo text-lg ">
                       {species.scientificName}
