@@ -5,6 +5,8 @@ import { Inter } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/react";
 import type { Metadata, Viewport } from "next";
 import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
 
 const APP_NAME = "WikiMudas";
 const APP_DEFAULT_TITLE = "WikiMudas";
@@ -114,7 +116,43 @@ export default function RootLayout({
         rel="apple-touch-startup-image"
       />
       <body className={`font-sans ${inter.variable}`}>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <main className="flex min-h-screen flex-col bg-[#f1e4ca] text-secondary">
+          <div className="absolute left-0 top-0 z-50 flex h-fit w-screen items-center justify-between bg-black px-4 py-4">
+            <Link href="/">
+              <div className="flex items-center gap-2">
+                <Image
+                  alt="wikimudas logo"
+                  width={10}
+                  height={30}
+                  src={"/logo_slim.png"}
+                />
+                <h1 className="text-md font-extrabold tracking-tight text-white">
+                  Wiki<span className="text-primary">Mudas</span>
+                </h1>
+              </div>
+            </Link>
+            <div className="flex items-center gap-4">
+              <Link className="hidden md:block" href="/species">
+                Explorar
+              </Link>
+              <Link className="hidden md:block" href="/sobre">
+                Sobre
+              </Link>
+              <a
+                href="https://oama.eco.br/apoie"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <button className="text-md rounded-full bg-yellow-400 px-4 py-1 font-bold text-yellow-900  hover:bg-yellow-500">
+                  Apoie
+                </button>
+              </a>
+            </div>
+          </div>
+          <TRPCReactProvider>
+            <div className="container h-full">{children}</div>
+          </TRPCReactProvider>
+        </main>
       </body>
     </html>
   );
