@@ -25,6 +25,7 @@ export default async function Home() {
       <div className="flex  h-screen flex-col justify-between font-b612 md:w-1/2 lg:w-1/3">
         <div className="container relative flex  h-full  flex-col items-center justify-between gap-12 px-4 pb-4 pt-16">
           <div className="container z-10  flex  flex-col items-center justify-start gap-12 px-4 pt-16">
+            <div></div>
             <div className="z-10 flex flex-col items-center justify-center">
               <div className="mb-4 flex flex-col items-end ">
                 <div className="flex items-baseline gap-2">

@@ -34,15 +34,7 @@ export default async function Home({ params }: { params: { id: string } }) {
   return (
     <>
       {/* <pre>{JSON.stringify(speciesData, null, 2)}</pre> */}
-      <main className="flex min-h-screen flex-col bg-primary-foreground text-slate-900">
-        <div className="p absolute top-0 w-screen bg-secondary-foreground px-4 py-4">
-          <Link href="/">
-            <button>
-              <ArrowLeftIcon className="h-8 w-8 text-primary" />
-            </button>
-          </Link>
-        </div>
-
+      <main className="flex min-h-screen flex-col  text-slate-900">
         <div className=" container w-full items-center  py-24">
           <div className="variant mb-4 flex w-full flex-col gap-8 overflow-hidden md:flex-row md:justify-between">
             <CarouselDialogEntry pictures={speciesData.featuredPictures} />
@@ -309,7 +301,10 @@ const BandSizeSection = ({ speciesData }: { speciesData: SpeciesData }) => {
             {" "}
             (
             {speciesData.hummingbirdBandCircumference
-              .map((size) => `${size.bandCircumference} mm`)
+              .map(
+                (size) =>
+                  `${size.bandCircumference}${size.bandCircumference?.includes("mm") ? "" : " mm"}`,
+              )
               .join(", ")}
             )
           </span>
