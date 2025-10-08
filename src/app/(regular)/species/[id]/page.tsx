@@ -281,12 +281,12 @@ export default async function Home({ params }: { params: { id: string } }) {
             </div>
           </div>
 
-          <Link
+          {/* <Link
             href={`/admin/species/${id}`}
             className=" rounded-lg  border-transparent bg-transparent px-12 py-12  text-white hover:border-slate-400 hover:text-slate-400"
           >
             ADMIN
-          </Link>
+          </Link> */}
         </div>
       </main>
     </>
