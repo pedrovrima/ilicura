@@ -113,6 +113,13 @@
       "when": 1757541960929,
       "tag": "0016_brown_killmonger",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "5",
+      "when": 1759859546891,
+      "tag": "0017_silent_jigsaw",
+      "breakpoints": true
     }
   ]
 }

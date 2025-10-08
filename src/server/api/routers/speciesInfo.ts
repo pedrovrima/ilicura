@@ -924,6 +924,18 @@ export const speciesInfoRouter = createTRPCRouter({
       return featuredPictures;
     }),
 
+  deleteFeaturedPicture: writeProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .delete(speciesFeaturedPicture)
+        .where(eq(speciesFeaturedPicture.id, input.id));
+
+      await ctx.db
+        .delete(speciesFeaturedPictureCover)
+        .where(eq(speciesFeaturedPictureCover.pictureId, input.id));
+    }),
+
   addFeaturedPicture: writeProcedure
     .input(
       z.object({

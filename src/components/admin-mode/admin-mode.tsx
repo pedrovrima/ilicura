@@ -24,10 +24,10 @@ export const AdminMode = ({ id }: { id: number }) => {
       <TotalCaptures speciesId={id} />
 
       <AdminBandSize speciesId={id} />
-      {speciesData.data?.family === "Trochilidae" && (
+      {speciesData.data?.family.name === "Trochilidae" && (
         <AdminHummingbirdBandCircumference speciesId={id} />
       )}
-      {speciesData.data?.family === "Trochilidae" && (
+      {speciesData.data?.family.name === "Trochilidae" && (
         <HummingbirdBillCorrugation speciesId={id} />
       )}
       <AdminSkull speciesId={id} />
