@@ -39,6 +39,9 @@ export default async function Home({ params }: { params: { id: string } }) {
       {/* <pre>{JSON.stringify(speciesData, null, 2)}</pre> */}
       <main className="container flex min-h-screen flex-col  text-slate-900">
         <div className=" w-full items-center  py-24">
+          <div className="mx-auto  flex max-w-[900px] flex-row items-center justify-start gap-2">
+            <ArrowLeftIcon /> <Link href="/species">Explorar</Link>
+          </div>
           <div className="variant mb-4 flex w-full flex-col gap-8 overflow-hidden md:flex-row md:justify-between">
             <CarouselDialogEntry pictures={speciesData.featuredPictures} />
           </div>

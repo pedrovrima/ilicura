@@ -11,7 +11,7 @@ export default async function Home() {
   const speciesList = await api.species.getAllSpecies.query();
 
   return (
-    <main className="flex min-h-screen flex-col bg-[#f1e4ca] text-secondary">
+    <main className="flex min-h-screen flex-col bg-[#f1e4ca] pt-12 text-secondary">
       <div className="container flex flex-col items-center justify-start gap-12 px-4 py-16 ">
         <div className="mb-4 flex flex-col items-end">
           <div className="flex items-baseline gap-2">
