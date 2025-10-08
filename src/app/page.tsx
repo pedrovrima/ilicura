@@ -2,6 +2,8 @@ import { unstable_noStore as noStore } from "next/cache";
 import { api } from "@/trpc/server";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Feather } from "lucide-react";
+import { FeatherIcon } from "lucide-react";
 
 import LoadedSpeciesSearch from "../../components/loaded-species-search/search";
 
@@ -49,12 +51,17 @@ export default async function Home() {
                 Enciclopédia colaborativa de muda e idade de aves brasileiras.
               </p>
             </div>
-            <div className="fle flex gap-4">
-              <Link href={"/species"}>
-                <Button>Explorar a plataforma</Button>
+            <div className="flex flex-col gap-4 md:flex-row">
+              <Link href={"/species"} className="flex w-full gap-4 md:w-auto">
+                <Button className="w-ful rounded-full">
+                  <FeatherIcon className="h-4 w-4 scale-x-[-1]" /> Explorar a
+                  plataforma
+                </Button>
               </Link>
-              <Link href={"/sobre"}>
-                <Button variant="secondary">Sobre</Button>
+              <Link href={"/sobre"} className="w-full md:w-auto">
+                <Button className="w-full rounded-full" variant="secondary">
+                  Sobre
+                </Button>
               </Link>
             </div>
           </div>
