@@ -115,7 +115,7 @@ export default function RootLayout({
         media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)"
         rel="apple-touch-startup-image"
       />
-      <body className={`font-sans ${inter.variable}`}>
+      <body className={`font-b612`}>
         <main className="flex min-h-screen flex-col bg-[#f1e4ca] text-secondary">
           <div className="absolute left-0 top-0 z-50 flex h-fit w-screen items-center justify-between bg-black px-4 py-4">
             <Link href="/">
