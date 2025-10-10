@@ -27,6 +27,7 @@ Offline usage is important for the target audience (field biologists, usually in
   - `drizzle/`: SQL migrations and metadata snapshots.
   - `public/`: static assets, PWA files (manifest, SW).
   - `scripts/`: database migration scripts.
+  - `data-management/`: few R scripts to get the species metadata in the correct structure.
 
 - **Data flow**
   - UI calls `tRPC` hooks provided by `TRPCReactProvider` in `src/app/layout.tsx`.

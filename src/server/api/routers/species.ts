@@ -84,7 +84,7 @@ export const speciesRouter = createTRPCRouter({
       .from(species)
       .where(
         and(
-          inArray(species.id, speciesIds),
+          inArray(species.id, speciesIds as number[]),
           isNotNull(species.infoLastUpdatedAt),
         ),
       )
@@ -107,7 +107,7 @@ export const speciesRouter = createTRPCRouter({
       )
       .where(
         and(
-          inArray(speciesFeaturedPicture.speciesId, speciesIds),
+          inArray(speciesFeaturedPicture.speciesId, speciesIds as number[]),
           eq(speciesFeaturedPictureCover.cover, true),
         ),
       )
@@ -366,10 +366,10 @@ export const speciesRouter = createTRPCRouter({
           curr,
         ) => {
           const key = curr.moltType;
-          if (!curr.extension ?? !key) return acc;
+          if (!curr.extension && !key) return acc;
           if (!acc.find((d) => d.moltType === key)) {
             acc.push({
-              moltType: key,
+              moltType: key || "",
               extensions: [{ id: curr.id, extension: curr.extension }],
               molLimits: curr.moltLimits.map((d) => ({
                 id: d.id,

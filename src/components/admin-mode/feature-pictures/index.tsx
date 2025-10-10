@@ -39,46 +39,53 @@ export default function FeaturePictures({ speciesId }: { speciesId: number }) {
           <h3>Selecionadas</h3>
 
           <div className="relative flex w-full  flex-row gap-4 ">
-            {featureData.map((f) => (
-              <div className="group relative h-[150px] w-[150px] overflow-hidden">
-                <div className="absolute right-0 top-0 z-50">
-                  <StarIcon
-                    fill={f.cover ? "yellow" : "none"}
-                    className="h-6 w-6"
-                  />
-                </div>
-                <div className="absolute hidden h-full w-full flex-col items-center justify-center gap-2 group-hover:flex ">
-                  <Button
-                    onClick={async () => {
-                      await addFeatureCover.mutateAsync({
-                        speciesId,
-                        pictureId: f.pictureId,
-                        cover: true,
-                      });
-                      await refetchFeature();
-                    }}
-                  >
-                    Capa
-                  </Button>
+            {featureData.map(
+              (f: {
+                id: number;
+                pictureId: number;
+                url: string;
+                cover: boolean;
+              }) => (
+                <div className="group relative h-[150px] w-[150px] overflow-hidden">
+                  <div className="absolute right-0 top-0 z-50">
+                    <StarIcon
+                      fill={f.cover ? "yellow" : "none"}
+                      className="h-6 w-6"
+                    />
+                  </div>
+                  <div className="absolute hidden h-full w-full flex-col items-center justify-center gap-2 group-hover:flex ">
+                    <Button
+                      onClick={async () => {
+                        await addFeatureCover.mutateAsync({
+                          speciesId,
+                          pictureId: f.pictureId,
+                          cover: true,
+                        });
+                        await refetchFeature();
+                      }}
+                    >
+                      Capa
+                    </Button>
 
-                  <Button
-                    onClick={async () => {
-                      await deleteFeature.mutateAsync({
-                        id: f.id,
-                        speciesId,
-                      });
-                      await refetchFeature();
-                    }}
-                  >
-                    Remover
-                  </Button>
+                    <Button
+                      onClick={async () => {
+                        await deleteFeature.mutateAsync({
+                          id: f.id,
+                          speciesId,
+                        });
+                        await refetchFeature();
+                      }}
+                    >
+                      Remover
+                    </Button>
+                  </div>
+                  <img
+                    className="h-full w-full object-cover"
+                    src={`${f.url}?tr=q-5`}
+                  ></img>
                 </div>
-                <img
-                  className="h-full w-full object-cover"
-                  src={`${f.url}?tr=q-5`}
-                ></img>
-              </div>
-            ))}
+              ),
+            )}
           </div>
         </div>
         <Carousel className="w-full md:min-w-[75%] md:max-w-[90vw] ">

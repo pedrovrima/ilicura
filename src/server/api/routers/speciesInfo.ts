@@ -1,8 +1,6 @@
-import { Pool } from "pg";
 import { z } from "zod";
-import { drizzle as drizzleNodePg } from "drizzle-orm/node-postgres";
-import { eq, and } from "drizzle-orm";
-import { sql } from "drizzle-orm";
+
+import { eq, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 
 import {
@@ -38,7 +36,6 @@ import {
 } from "@/server/db/schema";
 import ImageKit from "imagekit";
 import { env } from "@/env";
-import { getUnpackedSettings } from "http2";
 
 type CompleteMoltExtesion = typeof speciesMoltExtensions.$inferSelect & {
   moltLimits: (typeof moltLimits.$inferSelect)[] | [];
@@ -223,7 +220,7 @@ export const speciesInfoRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        await ctx.db.transaction(async (tx) => {
+        await ctx.db.transaction(async (tx: any) => {
           await tx.insert(hummingBirdBandCircumference).values({
             speciesId: input.speciesId,
             bandCircumference: input.bandCircumference,
@@ -240,7 +237,7 @@ export const speciesInfoRouter = createTRPCRouter({
   deleteHummingbirdBandCircumference: writeProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         const bandCircumferenceRecord = await tx
           .select({ speciesId: hummingBirdBandCircumference.speciesId })
           .from(hummingBirdBandCircumference)
@@ -277,7 +274,7 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         await tx.insert(hummingBirdBillCorrugation).values({
           speciesId: input.speciesId,
           age: input.age,
@@ -292,7 +289,7 @@ export const speciesInfoRouter = createTRPCRouter({
   deleteHummingbirdBillCorrugation: writeProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         const billCorrugationRecord = await tx
           .select({ speciesId: hummingBirdBillCorrugation.speciesId })
           .from(hummingBirdBillCorrugation)
@@ -328,7 +325,7 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         await tx.insert(speciesInitialDescription).values({
           speciesId: input.speciesId,
           description: input.description,
@@ -347,7 +344,7 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(({ ctx, input }) => {
-      return ctx.db.transaction(async (tx) => {
+      return ctx.db.transaction(async (tx: any) => {
         await tx
           .update(speciesInitialDescription)
           .set({ description: input.description })
@@ -362,7 +359,7 @@ export const speciesInfoRouter = createTRPCRouter({
   deleteSpeciesInitialDescription: writeProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         const descriptionRecord = await tx
           .select({ speciesId: speciesInitialDescription.speciesId })
           .from(speciesInitialDescription)
@@ -399,7 +396,7 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         const moltExtensionRecord = await tx
           .select({ speciesId: speciesMoltExtensions.speciesId })
           .from(speciesMoltExtensions)
@@ -423,7 +420,7 @@ export const speciesInfoRouter = createTRPCRouter({
   deleteMoltLimits: writeProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         const moltLimitRecord = await tx
           .select({
             speciesMoltExtensionId: moltLimits.speciesMoltExtensionId,
@@ -474,7 +471,7 @@ export const speciesInfoRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        await ctx.db.transaction(async (tx) => {
+        await ctx.db.transaction(async (tx: any) => {
           const ageInfo = await tx
             .insert(speciesAgeInfo)
             .values({
@@ -518,7 +515,7 @@ export const speciesInfoRouter = createTRPCRouter({
   deleteSexualDimorphism: writeProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         const ageInfoRecord = await tx
           .select({ speciesId: speciesAgeInfo.speciesId })
           .from(speciesAgeInfo)
@@ -561,7 +558,7 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         const sexInfoRecord = await tx
           .select({ ageId: speciesSexInfo.ageId })
           .from(speciesSexInfo)
@@ -610,7 +607,7 @@ export const speciesInfoRouter = createTRPCRouter({
       });
       if (!input.fileId) return;
 
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         const pictureRecord = await tx
           .select({ sexInfoId: speciesPicture.sexInfoId })
           .from(speciesPicture)
@@ -670,7 +667,7 @@ export const speciesInfoRouter = createTRPCRouter({
         .where(eq(speciesAgeInfo.speciesId, input.speciesId));
 
       const sexedAge = data.reduce(
-        (age: CompleteAgeInfo[], ageInfo): CompleteAgeInfo[] => {
+        (age: CompleteAgeInfo[], ageInfo: any): CompleteAgeInfo[] => {
           const thisAge = age.find(
             (d) => d.age === ageInfo.species_age_info.age,
           );
@@ -712,7 +709,7 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         await tx.insert(skull).values({
           speciesId: input.speciesId,
           closes: input.closes,
@@ -727,7 +724,7 @@ export const speciesInfoRouter = createTRPCRouter({
   deleteSpeciesSkullInfo: writeProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         const skullRecord = await tx
           .select({ speciesId: skull.speciesId })
           .from(skull)
@@ -755,7 +752,7 @@ export const speciesInfoRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       console.log("input", input);
       try {
-        await ctx.db.transaction(async (tx) => {
+        await ctx.db.transaction(async (tx: any) => {
           await tx.insert(moltStrategies).values({
             speciesId: input.speciesId,
             strategy: input.strategy,
@@ -775,7 +772,7 @@ export const speciesInfoRouter = createTRPCRouter({
   deleteSpeciesStrategy: writeProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         const strategyRecord = await tx
           .select({ speciesId: moltStrategies.speciesId })
           .from(moltStrategies)
@@ -810,7 +807,7 @@ export const speciesInfoRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        await ctx.db.transaction(async (tx) => {
+        await ctx.db.transaction(async (tx: any) => {
           await tx.insert(speciesMoltExtensions).values({
             speciesId: input.speciesId,
             moltType: input.moltType,
@@ -830,7 +827,7 @@ export const speciesInfoRouter = createTRPCRouter({
   deleteSpeciesMoltExtension: writeProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         const moltExtensionRecord = await tx
           .select({ speciesId: speciesMoltExtensions.speciesId })
           .from(speciesMoltExtensions)
@@ -865,7 +862,7 @@ export const speciesInfoRouter = createTRPCRouter({
         .where(eq(speciesMoltExtensions.speciesId, input.speciesId));
 
       const combinedExtensionData = data.reduce(
-        (combinedExtensions: CompleteMoltExtesion[], extension) => {
+        (combinedExtensions: CompleteMoltExtesion[], extension: any) => {
           if (!extension) return combinedExtensions;
           const thisMoltType = combinedExtensions.find(
             (d) =>
@@ -945,7 +942,7 @@ export const speciesInfoRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx: any) => {
         await tx.insert(speciesFeaturedPicture).values({
           speciesId: input.speciesId,
           pictureId: input.pictureId,
@@ -995,7 +992,7 @@ export const speciesInfoRouter = createTRPCRouter({
         });
     }),
 
-  deleteFeaturedPicture: writeProcedure
+  deleteFeaturedPictureCover: writeProcedure
     .input(z.object({ id: z.number(), speciesId: z.number() }))
     .mutation(async ({ ctx, input }) => {
       console.log("deleteFeaturedPicture input", input);
